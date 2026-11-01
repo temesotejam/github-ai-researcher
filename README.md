@@ -21,6 +21,24 @@ GitHub上にある自分の**公開リポジトリだけ**を横断調査し、�
 5. 新しい研究・開発テーマと、次に試す具体的な実験を提案
 6. Markdownレポートをこのリポジトリに蓄積
 
+## ダッシュボード
+
+GitHub Pagesで、分析結果を検索・閲覧できる専用画面を公開します。
+
+**[GitHub AI Researcher Dashboard](https://temesotejam.github.io/github-ai-researcher/)**
+
+- 公開リポジトリ数・分析済み数・調査進捗
+- リポジトリ名・技術・アルゴリズムによる検索
+- 言語・確信度・成熟度による絞り込み
+- 個別プロフィールと根拠ファイルへのリンク
+- 再利用コンポーネントと共有技術の一覧
+- 最大3リポジトリの横並び比較
+- 最新の横断分析レポート表示
+
+分析結果が更新されると、AI Research完了後にGitHub Pagesも自動で再デプロイします。
+
+初回のみ、Settings → Pages で GitHub Actions を公開元に設定してください（Pages workflowにも自動有効化処理を入れています）。
+
 ## 実行方法
 
 GitHubの Actions タブから **AI Research** を選び、Run workflow を押してください。
