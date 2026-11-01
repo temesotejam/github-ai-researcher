@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-01T06:19:12.261Z",
+  "generated_at": "2026-11-01T06:36:50.426Z",
   "owner": "temesotejam",
   "repository_count": 109,
   "profiles": {
     "temesotejam/atoms3r-lateral-energy-control": {
       "url": "https://github.com/temesotejam/atoms3r-lateral-energy-control",
       "default_branch": "main",
-      "pushed_at": "2026-11-01T05:38:45Z",
+      "pushed_at": "2026-11-01T06:14:21Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -130,6 +130,7 @@
         "docs/wheel_work_20261016.md",
         "platformio.ini",
         "site",
+        "site/flasher-completion.js",
         "site/index.html",
         "site/manifest-freefoot-runtime-v2.json",
         "site/manifest-phase1d.json",
@@ -150,6 +151,7 @@
         "site/manifest.json",
         "site/one-peak-energy.js",
         "site/serial-monitor.js",
+        "site/soft-boot.js",
         "site/styles.css",
         "site/wheel-work.html",
         "site/wheel-work.js",
@@ -206,73 +208,69 @@
         "src/imu_poll_profile.h",
         "src/imu_poll_timer.h",
         "src/imu_startup_boundary.h",
-        "src/lateral_cg_energy.h",
-        "src/lateral_cg_store.cpp",
-        "src/lateral_energy_control.h"
+        "src/lateral_cg_energy.h"
       ],
       "recent_commits": [
         {
-          "sha": "3281dffd",
-          "message": "Update firmware version in flasher and fixture"
+          "sha": "3e871116",
+          "message": "Show completed flash without waiting for serial reopen"
         },
         {
-          "sha": "4c2a5c17",
-          "message": "Guard walking pulse exploration with measured response"
+          "sha": "215f333a",
+          "message": "Skip unsupported Improv detection after flashing"
         },
         {
-          "sha": "d78a1fce",
-          "message": "Adapt walking assistance using measured arrival wheel speed"
+          "sha": "2512a80e",
+          "message": "Limit sustained wheel bias and add USB download entry"
         }
       ],
       "archived": false,
-      "fingerprint": "13252293b02ee962022a218d78ad5c4f894ef9e1ceb79d72bb6524f40dd20a46",
-      "analyzed_at": "2026-11-01T05:53:07.927Z",
+      "fingerprint": "2b63ae5bff7dc4a129b3a21277cc8874776f13c9d112f18c2b86c6c38e15f2c4",
+      "analyzed_at": "2026-11-01T06:32:02.618Z",
       "profile": {
-        "purpose": "AtomS3Rとリアクションホイールを使った左右揺動の制御・実機測定用ファームウェア。READMEでは、MEKFで推定した姿勢とピーク・ZEROクロスを用いるエネルギー制御や、実験ログの取得・解析が説明されています。",
-        "architecture": "C++ファームウェアに、制御状態機械、制御遅延計測、姿勢基準処理などのモジュールがあり、Web画面から実験を操作し、RWLOGをブラウザーで解析する構成です。エネルギー制御の詳細はREADMEと関連資料に記載されていますが、該当するソースコード本文は提示されていません。",
+        "purpose": "AtomS3Rとリアクションホイールを使った左右揺動の制御・実機測定用ファームウェア。READMEでは、姿勢推定とピーク・ZEROクロス検出を用いて入力時間を調整する方式や、実験ログの解析を説明している。",
+        "architecture": "C++ファームウェアに、制御・タイミング計測用モジュールとブラウザ上のログ解析・書き込み用ページを組み合わせる構成とみられる。エネルギー制御やRWLOGの詳細はREADME・関連文書に記載があるが、提示されたソース抜粋だけでは全体の呼び出し関係を確認できない。",
         "technologies": [
           "C++",
           "Arduino",
           "FreeRTOS",
-          "PlatformIO",
-          "MEKF（README記載）",
-          "HTML/CSS/JavaScriptによる実験・ログ解析ページ"
+          "PlatformIO"
         ],
         "algorithms": [
-          "README記載：左右別の係数を使う次ピーク位置エネルギー予測と、符号付き電流積分からのパルス幅算出。係数は暫定で、実機での閉ループ性能は未確認。",
-          "提示ソース：入力後の角速度符号反転を確認する位相状態機械と、復帰進捗に応じた指数補間（BetaPhaseController）。",
-          "提示ソース：複数サンプルで反転を確認後、smoothstepで復帰する動的β制御（BetaTurnFastController）。",
-          "提示ソース：受信から制御完了までの遅延・I/O重複時間・予算超過を集計する計測方式（control_latency）。"
+          "BetaPhaseControllerはパルス開始からのジャイロ積分、旋回検出、帰還進捗に基づいてbeta上限を変える。",
+          "BetaTurnFastControllerは複数サンプルでの逆向き角速度を使って旋回を確認し、smoothstepでbetaを回復する。",
+          "READMEでは、MEKF推定角、ZEROクロス時の角速度、左右別の暫定係数を使うエネルギー制御を説明している。係数の妥当性と実機での閉ループ性能は未確定。"
         ],
         "hardware": [
           "AtomS3R",
           "Unit Roller485",
-          "リアクションホイール"
+          "リアクションホイール",
+          "BMI270（関連する取得・タイミング用ファイル名から確認。実機構成での使用詳細は未確認）"
         ],
         "interfaces": [
-          "Web画面からの測定・制御操作（README記載）",
-          "RWLOG形式の測定記録とブラウザー解析・CSV出力（README記載）",
-          "Arduino/FreeRTOS上のC++モジュール",
-          "具体的な通信プロトコルやRWLOGの全フィールド仕様は、提示情報だけでは確定できません。"
+          "実機Web画面からの測定操作",
+          "RWLOG形式の測定ログ",
+          "ブラウザでのログ解析とCSV保存",
+          "PlatformIOのatoms3cam環境"
         ],
         "reusable_components": [
           {
             "name": "BetaPhaseController",
-            "purpose": "入力後の角速度積分、入力保護中の判定抑制、旋回確認、復帰進捗に応じた指数型のβ上限を提供する状態機械。",
+            "purpose": "パルス中の保護期間を考慮して運動方向の反転を検出し、帰還進捗に応じたbeta上限を計算する。制御対象に依存する定数はConfig経由で適応が必要。",
             "evidence": [
               "src/beta_phase_controller.h"
             ]
           },
           {
             "name": "BetaTurnFastController",
-            "purpose": "複数回の逆向き角速度サンプルで旋回を確認し、確認後またはタイムアウト後にsmoothstepでβを復帰させる。",
+            "purpose": "逆向き角速度の複数サンプルで旋回を確認し、確認後またはタイムアウト後にsmoothstepでbetaを回復する。",
             "evidence": [
               "src/beta_turn_fast_controller.h"
             ]
           },
           {
             "name": "control_latency::Profile",
-            "purpose": "サンプル受信から処理完了までの段階別遅延、I/Oとの時間重複、予算超過を固定容量で記録し、JSONへ出力する。",
+            "purpose": "センサーサンプルから制御処理完了までの経過時間、I/Oとの時間重複、予算超過を固定容量で記録し、JSON出力する。計測はCPU時間ではなく壁時計時間として扱う。",
             "evidence": [
               "src/control_latency.h",
               "src/control_latency.cpp"
@@ -280,26 +278,26 @@
           },
           {
             "name": "control_angle_reference::origin",
-            "purpose": "制御モードに応じて重力基準角または保存姿勢を原点として選択する小さな再利用関数。",
+            "purpose": "work_modeに応じて重力基準の角度原点または保存姿勢を返す。角度基準選択を小さな独立関数として再利用できる。",
             "evidence": [
               "src/control_angle_reference.h"
             ]
           },
           {
-            "name": "RWLOGを用いた実験・解析手順",
-            "purpose": "入力条件、実測ピーク、予測誤差などを記録し、ブラウザー上で解析・CSV出力する実験ワークフロー。既存プロジェクトへ移すにはログ形式と制御条件の適合が必要です。",
+            "name": "左右別エネルギー制御方式",
+            "purpose": "README記載の、ZEROクロス時の状態から次ピークのエネルギーを予測し、入力方向とパルス幅を決める方式。実装詳細・他機構への適用条件は提示された抜粋から確認できず、係数の再同定が必要。",
             "evidence": [
               "README.md",
-              "docs/rwlog_format.md",
-              "site/wheel-work.js"
+              "src/lateral_cg_energy.h",
+              "docs/LATERAL_CG_ENERGY.md",
+              "docs/energy_model_validation_20261014.md"
             ]
           }
         ],
         "constraints": [
-          "エネルギー係数は暫定値であり、READMEでは正側の無入力記録不足や逆入力効果の独立同定不足が説明されています。",
-          "READMEは実機での閉ループ性能を自動試験だけでは確認できないと明記しています。",
-          "提示されたソース抜粋は一部モジュールに限られるため、全体の呼び出し関係、センサー構成、制御ループの実装詳細は未確認です。",
-          "BetaPhaseControllerとBetaTurnFastControllerの制御効果・実機適合性は、提示されたコードだけでは検証されていません。"
+          "提供されたソース抜粋は一部のみで、主要な実行経路や各モジュールの統合状況は確認できない。",
+          "READMEはエネルギー係数を暫定値とし、逆入力の応答同定が不十分であること、実機での閉ループ性能が自動試験だけでは確認できないことを記載している。",
+          "制御定数、センサー構成、タイミング特性は対象ハードウェアや機構に依存する。"
         ],
         "maturity": "実験",
         "confidence": "medium",
@@ -308,10 +306,11 @@
           "src/beta_phase_controller.h",
           "src/beta_turn_fast_controller.h",
           "src/control_angle_reference.h",
-          "src/control_latency.cpp",
           "src/control_latency.h",
-          "docs/rwlog_format.md",
-          "site/wheel-work.js",
+          "src/control_latency.cpp",
+          "src/lateral_cg_energy.h",
+          "docs/LATERAL_CG_ENERGY.md",
+          "docs/energy_model_validation_20261014.md",
           "platformio.ini"
         ]
       }
@@ -319,7 +318,7 @@
     "temesotejam/github-tavern": {
       "url": "https://github.com/temesotejam/github-tavern",
       "default_branch": "main",
-      "pushed_at": "2026-10-31T21:43:54Z",
+      "pushed_at": "2026-11-01T06:25:05Z",
       "available_paths": [
         ".github",
         ".github/agents",
@@ -348,88 +347,89 @@
       ],
       "recent_commits": [
         {
+          "sha": "7da7bdf8",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
           "sha": "3240a256",
           "message": "chore: refresh tavern summaries"
         },
         {
           "sha": "30c6c5b0",
           "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "a3016ba8",
-          "message": "chore: refresh tavern summaries"
         }
       ],
       "archived": false,
-      "fingerprint": "b82730af446dc2ef6a842db6fd7061fc459d0a94e6186844c74ba509a90255dd",
-      "analyzed_at": "2026-11-01T05:30:47.357Z",
+      "fingerprint": "48bc9b40f089605ce06b8b9796c3a1169b2cffad30203e02d53a206e21436647",
+      "analyzed_at": "2026-11-01T06:31:42.978Z",
       "profile": {
-        "purpose": "公開GitHubリポジトリを検索・分類し、詳細や説明を閲覧する静的な個人向けポータル。",
-        "architecture": "index.htmlとCSSを基盤に、app.jsがGitHub APIからの取得、検索・分類・詳細表示を担う構成とREADMEに記載されている。説明や公開ページ情報はJSONデータとして保持し、専用クライアントが詳細画面へ反映する。自動更新用スクリプトとGitHub Actionsのワークフローも配置されているが、ワークフロー本体の実装は提示資料から確認できない。",
+        "purpose": "公開GitHubリポジトリを検索・分類し、詳細や説明を閲覧する個人向け静的ポータル。",
+        "architecture": "ブラウザー上のJavaScriptがGitHub APIからリポジトリ情報を取得し、検索・分類・表示する。要約や公開ページ情報はJSONファイルから読み込む。READMEの記載では、別途ActionsでCopilot要約を生成・更新する構成。",
         "technologies": [
           "JavaScript",
           "HTML",
           "CSS",
           "GitHub REST API",
           "GitHub Pages",
-          "GitHub Actions"
+          "GitHub Actions",
+          "GitHub Copilot CLI"
         ],
         "algorithms": [
-          "キーワード規則に基づくリポジトリ分類（学習・AI、制御、センサ、画像、Webなど）",
-          "カードのREADME取得を最大6件並行で処理するキュー",
-          "正規表現によるMarkdownの除去・短縮プレビュー生成",
-          "正規表現による日本語説明文の口語調変換"
+          "名前・説明・言語・Topics・要約などを連結した文字列に対するキーワード分類（app.js）",
+          "READMEのMarkdownを整形し、ノイズ除去後に短い説明文を抽出するヒューリスティック（card-enricher.js）",
+          "同時実行数を6に制限したREADME取得キュー（card-enricher.js）",
+          "日本語の文体変換を置換規則で行う処理（spoken-overview-client.js）"
         ],
         "hardware": [],
         "interfaces": [
-          "GitHub REST APIおよびraw.githubusercontent.comからのHTTP取得",
-          "summaries.jsonとpublic-pages.jsonのJSONデータ",
-          "DOMのMutationObserverを使った画面更新",
-          "GitHub Pagesの静的Web UI"
+          "GitHub REST APIからの公開リポジトリ情報取得",
+          "raw.githubusercontent.comからのREADME取得",
+          "data/summaries.jsonおよびdata/public-pages.jsonの読み込み",
+          "ブラウザー上の検索・カテゴリ選択・詳細表示",
+          "HTTP/HTTPSの公開ページリンク"
         ],
         "reusable_components": [
           {
-            "name": "categoryOf",
-            "purpose": "リポジトリ名・説明・言語・Topics・要約にキーワード規則を適用してカテゴリを決定する。",
-            "evidence": [
-              "app.js"
-            ]
-          },
-          {
             "name": "cleanMarkdown / shortPreview",
-            "purpose": "READMEのMarkdown装飾や画像・リンクなどを除き、カード表示向けの短い説明文を生成する。",
+            "purpose": "READMEからコードブロック、画像、リンクなどを除き、カード表示向けの短い説明を抽出する。",
             "evidence": [
               "card-enricher.js"
             ]
           },
           {
             "name": "README取得キュー",
-            "purpose": "キャッシュと重複登録防止を備え、README取得を最大6件並行で処理してカードを更新する。",
+            "purpose": "複数リポジトリのREADME取得をキャッシュし、同時実行数を6件に制限する。一般化する場合は所有者や取得対象ブランチを設定可能にする適応が必要。",
             "evidence": [
               "card-enricher.js"
             ]
           },
           {
             "name": "validEntry",
-            "purpose": "公開ページ情報のURLを解析し、HTTPまたはHTTPSの場合だけリンク表示に利用する。",
+            "purpose": "公開ページのURLを解析し、HTTP/HTTPS以外のスキームを除外する。",
             "evidence": [
               "public-pages-client.js"
             ]
           },
           {
             "name": "spokenize",
-            "purpose": "説明文を規則ベースで口語調に変換する純粋関数。グローバルへ公開し、ブラウザーなしでのCI実行にも利用できる設計。",
+            "purpose": "日本語説明文を口語調に変換する純粋関数。Node.js環境からもテストできるようグローバルに公開している。",
             "evidence": [
               "spoken-overview-client.js"
+            ]
+          },
+          {
+            "name": "withTimeout",
+            "purpose": "AbortControllerを用いてfetchにタイムアウトを設定する。",
+            "evidence": [
+              "app.js"
             ]
           }
         ],
         "constraints": [
-          "READMEでは公開リポジトリのみを対象とし、サイトからリポジトリへの書き込み操作を行わない方針が記載されている。",
-          "分類は単語リストによる規則ベースであり、複数カテゴリに該当する場合の優先順位は規則配列の順序に依存する。",
-          "READMEプレビュー取得はmain/masterとREADMEの一般的な大文字小文字表記を試す実装で、他のブランチ名や配置への対応は確認できない。",
-          "ワークフローと更新スクリプトの内容、JSONデータの実例、テスト結果は提示されていないため、自動解析・更新の実動作は確認できない。",
-          "ハードウェア関連の実装は確認できない。"
+          "提示されたソース抜粋は一部に限られるため、app.jsの全検索・描画処理や更新スクリプト、ワークフローの実装詳細は確認できない。",
+          "READMEの自動要約生成に関する説明はあるが、scripts/update-summaries.mjsおよびワークフローの内容は提示されていない。",
+          "README取得処理はmain/masterと一般的なREADMEファイル名を試す実装で、すべてのリポジトリ構成を網羅するとは確認できない。",
+          "サイト側の対象は公開リポジトリとされており、認証付きの非公開リポジトリ対応は確認できない。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
@@ -437,20 +437,16 @@
           "README.md",
           "app.js",
           "card-enricher.js",
-          "public-pages-client.js",
-          "spoken-overview-client.js",
           "keeper-closing-client.js",
-          "scripts/update-public-pages.mjs",
-          "scripts/update-summaries.mjs",
-          ".github/workflows/copilot-summaries.yml",
-          ".github/workflows/js-syntax-check.yml"
+          "public-pages-client.js",
+          "spoken-overview-client.js"
         ]
       }
     },
     "temesotejam/2026_10_24": {
       "url": "https://github.com/temesotejam/2026_10_24",
       "default_branch": "main",
-      "pushed_at": "2026-10-31T21:30:02Z",
+      "pushed_at": "2026-11-01T05:57:19Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -467,101 +463,96 @@
       ],
       "recent_commits": [
         {
+          "sha": "694dac31",
+          "message": "Update automatic news feed"
+        },
+        {
           "sha": "31878327",
           "message": "Update automatic news feed"
         },
         {
           "sha": "bff1f80d",
           "message": "Update automatic news feed"
-        },
-        {
-          "sha": "7a766814",
-          "message": "Update automatic news feed"
         }
       ],
       "archived": false,
-      "fingerprint": "ba26067b9c8b53ee9c1d3e6ddc8bb9d9c20e66c871fef79b1a45e1a196b29015",
-      "analyzed_at": "2026-11-01T05:31:03.289Z",
+      "fingerprint": "22859a4d38eae34d29c4302ab6f81e19ff0e99ef9477b7cfe32bcfef956c6155",
+      "analyzed_at": "2026-11-01T06:32:19.306Z",
       "profile": {
-        "purpose": "ニュース見出しを題材に、現象を仲間にしながら探索する一人用ブラウザーゲーム。",
-        "architecture": "app.js がゲーム状態とニュース選択・表示を扱い、index.html と styles.css が画面を構成する。scripts/fetch-news.mjs と GitHub Actions のワークフローがニュースデータを取得し、data/news.json をゲーム側で読み込む構成とREADMEに記載されている。取得スクリプトとワークフローの実装詳細は未確認。",
+        "purpose": "ニュース見出しなどの現象を題材に、ニュース情報を迷宮のテーマや敵に反映する一人用探索ゲーム。",
+        "architecture": "ブラウザーで動くJavaScriptゲーム。app.jsがゲーム状態と画面処理を担い、data/news.jsonを読み込んでニュース選択肢を表示する。README.mdによると、GitHub ActionsがRSSからニュースデータを更新し、GitHub Pagesで公開する構成。",
         "technologies": [
           "JavaScript",
           "HTML Canvas",
-          "ブラウザー Fetch API",
+          "HTML",
+          "CSS",
+          "Fetch API",
           "localStorage",
           "GitHub Actions",
-          "RSS（READMEに記載）"
+          "RSS"
         ],
         "algorithms": [
-          "ニュース見出しをカテゴリー・危険語・配信元で絞り込み、表示件数を制限する処理。",
-          "HTTP/HTTPS以外のURLを除外する検証。",
-          "日付を整数化し、ニュース件数で剰余を取って初期ニュースを選ぶ方式。",
-          "ゲームの乱数選択に Math.random を使う処理。"
+          "マンハッタン距離による距離計算（app.jsのdist）",
+          "乱数による選択（app.jsのrand）",
+          "ニュース見出しのキーワード除外とカテゴリ絞り込み",
+          "プレイヤーの行動に応じたターン進行（README.mdに記載）"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザー上のCanvasゲーム画面",
-          "data/news.json のJSONデータ",
-          "RSSニュース取得（READMEに記載）",
-          "GitHub Pagesでの公開（READMEに記載）"
+          "Canvasによるゲーム画面",
+          "矢印キー・WASD・画面上の方向ボタンによる操作（README.mdに記載）",
+          "data/news.jsonのJSONニュースデータ",
+          "RSSによるニュース取得（README.mdに記載）",
+          "localStorageのreality-dungeon-seedキーによる選択ニュースの保存",
+          "GitHub Pages"
         ],
         "reusable_components": [
           {
-            "name": "safeHttpUrl(value)",
-            "purpose": "URLを解析し、HTTP/HTTPSだけを許可する。ニュースリンクや保存済みデータの入力検証に再利用できる。",
+            "name": "safeHttpUrl",
+            "purpose": "URLを解析し、HTTP・HTTPS以外のプロトコルを除外する。ニュースリンクなどの入力検証に再利用できる。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "esc(v)",
-            "purpose": "HTMLで特別な意味を持つ文字をエスケープする。動的文字列をHTMLへ出力する場面に再利用できる。",
+            "name": "loadAutomaticNews",
+            "purpose": "JSONニュースを取得し、タイトルのキーワード除外、カテゴリ制限、文字数制限、URL検証を行ってゲーム内データに変換する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "loadAutomaticNews()",
-            "purpose": "JSONニュースを取得し、カテゴリー・見出し・配信元を検査してゲーム用データへ整形する。記事本文を確認済みとは扱わない設定も付与する。",
-            "evidence": [
-              "app.js",
-              "data/news.json"
-            ]
-          },
-          {
-            "name": "renderAutomaticNews()",
-            "purpose": "ニュースをDOM要素として表示し、テキストをtextContentで設定して選択イベントを関連付ける。",
+            "name": "renderAutomaticNews",
+            "purpose": "ニュース選択肢をDOM要素とtextContentで構築し、選択時にゲーム開始へつなぐ。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "savedSeed()",
-            "purpose": "localStorageから保存データを読み込み、JSON解析とリンク検証を行う。保存データを外部入力として扱う例として再利用できる。",
+            "name": "categoryThemes",
+            "purpose": "ニュースカテゴリと迷宮の配色・敵タイプ・表示文言を対応付ける。",
             "evidence": [
               "app.js"
             ]
           }
         ],
         "constraints": [
-          "確認できるapp.jsの抜粋は一部のみで、迷宮生成・戦闘・ターン進行の具体的な実装詳細は確認できない。",
-          "ニュースの安全語句除外は見出しの部分一致に基づくため、記事内容の正確性や安全性を保証する仕組みとは確認できない。",
-          "ニュース取得処理は失敗時に空配列へ切り替わる。READMEにはActions側で取得失敗時に直前データを維持するとあるが、実装は未確認。",
-          "RSS配信元、収集件数や品質、テスト状況は提示情報だけでは確認できない。",
-          "READMEは元作品の設計を研究対象としていると述べるが、具体的な対応関係は提示されたコード抜粋から検証できない。"
+          "提示されたapp.js抜粋は一部のみのため、迷宮生成・戦闘・ターン処理の実装詳細は確認できない。",
+          "ニュースの取得元、RSS解析方法、更新時の検証処理は提示された抜粋から確認できない。",
+          "README.mdには記事本文を保持せず、見出し・日時・出典リンクを保存するとある。記事本文の事実確認も行わない設計とされている。",
+          "自動ニュースの読み込みに失敗した場合、提示コードでは空のニュース一覧になる。"
         ],
         "maturity": "試作",
         "confidence": "medium",
         "evidence": [
           "README.md",
           "app.js",
-          "index.html",
-          "styles.css",
-          "scripts/fetch-news.mjs",
+          "data/news.json",
           ".github/workflows/news.yml",
           ".github/workflows/pages.yml",
-          "data/news.json"
+          "scripts/fetch-news.mjs",
+          "index.html",
+          "styles.css"
         ]
       }
     },
