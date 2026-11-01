@@ -62,13 +62,13 @@ jobs:
 
       - name: Commit research results
         run: |
-          if git diff --quiet -- data/profiles.json data/repository-index.json reports; then
+          if git diff --quiet -- data/profiles.json data/repository-index.json data/graph.json reports; then
             echo "No research output changed."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/profiles.json data/repository-index.json reports
+          git add data/profiles.json data/repository-index.json data/graph.json reports
           git commit -m "research: update public repository analysis"
           git fetch origin main
           git rebase origin/main
