@@ -36,6 +36,9 @@ jobs:
       - name: Validate dashboard JavaScript
         run: node --check docs/app.js
 
+      - name: Validate knowledge graph JavaScript
+        run: node --check docs/graph.js
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
         with:
