@@ -26,7 +26,7 @@ function position(){
  const a=S.nodes.find(n=>n.type==="account");if(a){a.x=0;a.y=0;}
 }
 function resize(){const r=wrap.getBoundingClientRect();S.w=Math.max(300,r.width);S.h=Math.max(440,r.height);S.dpr=Math.min(2,devicePixelRatio||1);canvas.width=S.w*S.dpr;canvas.height=S.h*S.dpr;canvas.style.width=S.w+"px";canvas.style.height=S.h+"px";ctx.setTransform(S.dpr,0,0,S.dpr,0,0);fit();}
-function visible(n){return S.type==="all"||n.type===S.type||n.type==="account";}
+function visible(n){return S.type==="all"||n.type===S.type||n.type==="account"||(S.type!=="repository"&&n.type==="repository");}
 function match(n){return !S.query||[n.label,n.repo,n.description,n.purpose,n.language].filter(Boolean).join(" ").toLowerCase().includes(S.query);}
 function scr(x,y){return{x:S.w/2+(x+S.ox)*S.scale,y:S.h/2+(y+S.oy)*S.scale};}
 function wrd(x,y){return{x:(x-S.w/2)/S.scale-S.ox,y:(y-S.h/2)/S.scale-S.oy};}
