@@ -8,6 +8,10 @@ on:
       - "data/**"
       - "reports/**"
       - ".github/workflows/pages.yml"
+  workflow_run:
+    workflows: ["AI Research"]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -21,10 +25,21 @@ concurrency:
 
 jobs:
   build:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout latest main
         uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Validate dashboard JavaScript
+        run: node --check docs/app.js
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Prepare static site
         run: |
@@ -43,6 +58,7 @@ jobs:
           path: public
 
   deploy:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
