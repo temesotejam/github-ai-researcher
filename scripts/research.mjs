@@ -155,9 +155,19 @@ async function main() {
   const cache=load("data/profiles.json",{schema_version:1,profiles:{}});
   const profiles=cache.profiles||{};
   const valid=new Set(repos.map(r=>r.full_name));
-  for(const name of Object.keys(profiles)) if(!valid.has(name)) delete profiles[name];
+  const removed=Object.keys(profiles).filter(name=>!valid.has(name));
+  for(const name of removed) delete profiles[name];
   const pending=repos.filter(r=>force||!profiles[r.full_name]||profiles[r.full_name].fingerprint!==fp(r))
     .sort((a,b)=>new Date(b.pushed_at||0)-new Date(a.pushed_at||0));
+
+  // On scheduled runs, do not invoke AI or rewrite reports when nothing changed.
+  // A profile remains pending until its analysis succeeds, so failed items retry next time.
+  if(!force && pending.length===0 && removed.length===0){
+    console.log("No public repository changes since the previous successful check. Skipping AI analysis and report generation.");
+    return;
+  }
+
+  console.log("Changed or new repositories: "+pending.length+"; removed or no-longer-public repositories: "+removed.length);
   let done=0;
   const errors=[];
   for(const repo of pending.slice(0,limit)){
