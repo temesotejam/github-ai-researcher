@@ -4,14 +4,12 @@ import crypto from "node:crypto";
 import { execFileSync } from "node:child_process";
 
 const owner = process.env.RESEARCH_OWNER || "temesotejam";
-const token = process.env.GITHUB_TOKEN || "";
 const limit = Math.min(20, Math.max(1, Number(process.env.MAX_REPOS || 8)));
 const force = process.env.FORCE_PROFILES === "true";
 const headers = {
   Accept: "application/vnd.github+json",
   "X-GitHub-Api-Version": "2022-11-28",
-  "User-Agent": "github-ai-researcher",
-  ...(token ? { Authorization: "Bearer " + token } : {})
+  "User-Agent": "github-ai-researcher"
 };
 async function gh(url) {
   const r = await fetch(url.startsWith("http") ? url : "https://api.github.com" + url, { headers });
@@ -36,11 +34,14 @@ function jsonResult(s) {
   return JSON.parse(s.slice(a,b+1));
 }
 async function file(repo, p) {
-  const url = "https://api.github.com/repos/" + repo.full_name + "/contents/" +
-    p.split("/").map(encodeURIComponent).join("/") + "?ref=" + encodeURIComponent(repo.default_branch);
-  const x = await gh(url);
-  if(!x || !x.content || x.encoding!=="base64" || x.size>60000) return "";
-  return Buffer.from(x.content.replace(/\n/g,""),"base64").toString("utf8");
+  const branch = repo.default_branch.split("/").map(encodeURIComponent).join("/");
+  const filePath = p.split("/").map(encodeURIComponent).join("/");
+  const url = "https://raw.githubusercontent.com/" + repo.full_name + "/" + branch + "/" + filePath;
+  const response = await fetch(url, { headers: { "User-Agent": "github-ai-researcher" } });
+  if (!response.ok) return "";
+  const text = await response.text();
+  if (Buffer.byteLength(text, "utf8") > 60000) return "";
+  return text;
 }
 async function publicRepos() {
   const out=[];
