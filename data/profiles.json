@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-01T06:52:21.341Z",
+  "generated_at": "2026-11-01T07:18:08.725Z",
   "owner": "temesotejam",
   "repository_count": 109,
   "profiles": {
     "temesotejam/atoms3r-lateral-energy-control": {
       "url": "https://github.com/temesotejam/atoms3r-lateral-energy-control",
       "default_branch": "main",
-      "pushed_at": "2026-11-01T06:42:41Z",
+      "pushed_at": "2026-11-01T07:04:02Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -198,6 +198,7 @@
         "src/foot_range_diagnostics.h",
         "src/foot_tracking_config.h",
         "src/foot_zero.h",
+        "src/gradual_start.h",
         "src/gyro_steering.h",
         "src/immutable_export.cpp",
         "src/immutable_export.h",
@@ -207,73 +208,71 @@
         "src/imu_manager.cpp",
         "src/imu_manager.h",
         "src/imu_poll_profile.h",
-        "src/imu_poll_timer.h",
-        "src/imu_startup_boundary.h"
+        "src/imu_poll_timer.h"
       ],
       "recent_commits": [
         {
+          "sha": "2002c6dd",
+          "message": "Keep gradual start helpers outside the motion body"
+        },
+        {
+          "sha": "c02ae39c",
+          "message": "Ramp walking target from measured peak pairs"
+        },
+        {
           "sha": "feb43374",
           "message": "Move peak prediction out of the motion code body"
-        },
-        {
-          "sha": "e7603fe6",
-          "message": "Add bounded two-peak predictive control"
-        },
-        {
-          "sha": "3e871116",
-          "message": "Show completed flash without waiting for serial reopen"
         }
       ],
       "archived": false,
-      "fingerprint": "0f7c775df258108087e0b289affededee237ecc69c91956b31ebffa26555f08c",
-      "analyzed_at": "2026-11-01T06:48:36.365Z",
+      "fingerprint": "93e6c38d80e6b2b29bc3afa7644a965ad9213924a55dece85962e5470e5757ba",
+      "analyzed_at": "2026-11-01T07:13:12.025Z",
       "profile": {
-        "purpose": "AtomS3Rとリアクションホイールを使った左右揺動の制御・実機測定用ファームウェア。READMEでは、MEKFによる姿勢推定とピーク角を目標に近づける電流入力を説明している。",
-        "architecture": "C++ファームウェアに、制御器、入力・センサー処理、計測・ログ機能がある構成とみられる。確認できるコードには、パルス後の位相に応じてβを調整する2種類の制御器と、制御・I/O遅延を計測するプロファイラがある。READMEにはブラウザ画面での実験操作とRWLOG解析も記載されている。制御器の実機ループへの接続状況は、提示された抜粋からは不明。",
+        "purpose": "AtomS3Rとリアクションホイールを使った左右揺動の制御・実機測定用ファームウェア。姿勢推定とピーク・ZEROクロス検出を用いて入力を調整する。",
+        "architecture": "Arduino系C++ファームウェア。制御戦略の状態管理を個別コントローラに分け、制御処理・I/Oの遅延を別モジュールで計測する。READMEによればMEKFとRWLOGを利用する。",
         "technologies": [
           "C++",
           "Arduino",
           "FreeRTOS",
-          "PlatformIO",
           "MEKF（README記載）"
         ],
         "algorithms": [
-          "バイアス補正済み角速度の積分によるパルス相対位相・ピーク角の推定",
-          "角速度の符号反転を複数サンプルで確認するターン検出",
-          "指数補間またはsmoothstepによるβの復帰",
-          "制御サンプルの処理段階・キュー遅延・I/O時間の計測と、上限付き遅延記録",
-          "README記載の左右別エネルギー予測と入力逆算。係数・逆入力の有効性には未検証事項がある"
+          "バイアス補正済み角速度の積分によるパルス相対位相・ピーク推定",
+          "角速度の符号反転確認による旋回検出",
+          "指数関数またはsmoothstepによるbeta回復",
+          "処理段階・I/O・キュー配送の遅延計測と上限付きオーバーラン記録"
         ],
         "hardware": [
-          "AtomS3R",
+          "M5Stack AtomS3R",
           "Unit Roller485",
-          "リアクションホイール",
-          "BMI270（ファイル名から読み取り機能の存在は示唆されるが、抜粋だけでは接続・用途の詳細は不明）"
+          "リアクションホイール（README記載）"
         ],
         "interfaces": [
-          "ファームウェア内C++クラス／関数",
-          "FreeRTOSのキューAPI（遅延計測コード）",
-          "RWLOG形式の実験ログ（README記載）",
-          "ブラウザ上の実験操作・ログ解析（README記載）"
+          "BetaPhaseControllerのreset/beginPulse/update/betaCeiling",
+          "BetaTurnFastControllerのreset/beginPulse/update/betaTarget",
+          "制御遅延プロファイルのJSON出力",
+          "RWLOGおよび本体Web画面（README記載）"
         ],
         "reusable_components": [
           {
             "name": "BetaPhaseController",
-            "purpose": "パルス開始後の角速度を積分し、入力保護中はターン判定を保留して、復帰位相に応じた指数補間のβ上限を計算する。",
+            "purpose": "入力保護中は旋回判定を保留し、旋回後の戻り進捗からbeta上限を指数補間する、パルス単位の状態機械。",
             "evidence": [
-              "src/beta_phase_controller.h"
+              "src/beta_phase_controller.h",
+              "src/config.h"
             ]
           },
           {
             "name": "BetaTurnFastController",
-            "purpose": "パルス後の角速度反転を連続サンプルで確認し、確認後またはタイムアウト後にsmoothstepでβを復帰させる。",
+            "purpose": "複数サンプルで角速度反転を確認するか、タイムアウト後に回復を開始し、smoothstepでbetaを回復する制御器。",
             "evidence": [
-              "src/beta_turn_fast_controller.h"
+              "src/beta_turn_fast_controller.h",
+              "src/config.h"
             ]
           },
           {
             "name": "control_latency::Profile",
-            "purpose": "受信から処理完了までの段階別時間、キュー遅延、ポーリング／I/Oとの重なりを集計する。1秒区間の最悪値と遅延超過の詳細を固定容量で保持し、JSONへ出力できる。",
+            "purpose": "サンプル受信から処理完了までの段階別年齢、I/O・ポーリングとの重なり、キュー配送時間、予算超過を集計しJSON化する。固定容量の記録領域を持つ。",
             "evidence": [
               "src/control_latency.h",
               "src/control_latency.cpp"
@@ -281,35 +280,34 @@
           },
           {
             "name": "control_angle_reference::origin",
-            "purpose": "制御モードに応じて、重力基準の角度ゼロまたは保存姿勢を基準として選択する。",
+            "purpose": "work_modeに応じて重力基準の角度原点または保存姿勢を返す小さなモード切替関数。",
             "evidence": [
               "src/control_angle_reference.h"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋は一部に限られ、各機能が製品コードでどのように呼び出されるかは確認できない。",
-          "READMEはエネルギー係数や逆入力応答を暫定・未同定として記述し、閉ループ性能も自動試験だけでは確認できないとしている。",
-          "control_latencyの時間値はホスト壁時計時間であり、コメント上、純粋なCPU処理時間やプリエンプション時間ではない。",
-          "実機での最新制御器の性能・安全性を裏付ける試験結果は、提示資料だけでは確認できない。"
+          "READMEは実機の閉ループ性能が自動試験だけでは確認できないとしている。",
+          "BetaPhaseControllerとBetaTurnFastControllerはConfig定数や呼び出し側との統合が必要。抜粋だけでは実運用での選択・有効化状況は確認できない。",
+          "遅延値はホスト壁時計時間であり、I/O時間やポーリング時間を純粋なCPU時間・プリエンプション時間とは解釈できない。",
+          "制御器の実機効果や再利用時の性能は、提示されたソース抜粋からは未検証。"
         ],
-        "maturity": "実験",
+        "maturity": "試作",
         "confidence": "medium",
         "evidence": [
           "README.md",
           "src/beta_phase_controller.h",
           "src/beta_turn_fast_controller.h",
-          "src/control_angle_reference.h",
           "src/control_latency.h",
           "src/control_latency.cpp",
-          "platformio.ini"
+          "src/control_angle_reference.h"
         ]
       }
     },
     "temesotejam/github-tavern": {
       "url": "https://github.com/temesotejam/github-tavern",
       "default_branch": "main",
-      "pushed_at": "2026-11-01T06:25:05Z",
+      "pushed_at": "2026-11-01T06:53:46Z",
       "available_paths": [
         ".github",
         ".github/agents",
@@ -338,89 +336,85 @@
       ],
       "recent_commits": [
         {
+          "sha": "6d9ffd26",
+          "message": "chore: refresh verified public pages"
+        },
+        {
           "sha": "7da7bdf8",
           "message": "chore: refresh tavern summaries"
         },
         {
           "sha": "3240a256",
           "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "30c6c5b0",
-          "message": "chore: refresh tavern summaries"
         }
       ],
       "archived": false,
-      "fingerprint": "48bc9b40f089605ce06b8b9796c3a1169b2cffad30203e02d53a206e21436647",
-      "analyzed_at": "2026-11-01T06:31:42.978Z",
+      "fingerprint": "ca760e00567abd39b72d4afe910b4731323b58b03d0944c680ef8817835fce8d",
+      "analyzed_at": "2026-11-01T07:13:28.392Z",
       "profile": {
-        "purpose": "公開GitHubリポジトリを検索・分類し、詳細や説明を閲覧する個人向け静的ポータル。",
-        "architecture": "ブラウザー上のJavaScriptがGitHub APIからリポジトリ情報を取得し、検索・分類・表示する。要約や公開ページ情報はJSONファイルから読み込む。READMEの記載では、別途ActionsでCopilot要約を生成・更新する構成。",
+        "purpose": "公開GitHubリポジトリを検索・分類・閲覧する、個人向けの静的ポータル。",
+        "architecture": "ブラウザー側のJavaScriptがGitHub APIからリポジトリ情報を取得し、分類・表示する。Copilot要約や公開ページ情報はJSONファイルから読み込む構成。READMEではGitHub Actionsによる要約更新も説明されているが、ワークフローや更新スクリプトの実装詳細は提示資料から確認できない。",
         "technologies": [
           "JavaScript",
           "HTML",
           "CSS",
           "GitHub REST API",
           "GitHub Pages",
-          "GitHub Actions",
-          "GitHub Copilot CLI"
+          "GitHub Actions（READMEの説明）"
         ],
         "algorithms": [
-          "名前・説明・言語・Topics・要約などを連結した文字列に対するキーワード分類（app.js）",
-          "READMEのMarkdownを整形し、ノイズ除去後に短い説明文を抽出するヒューリスティック（card-enricher.js）",
-          "同時実行数を6に制限したREADME取得キュー（card-enricher.js）",
-          "日本語の文体変換を置換規則で行う処理（spoken-overview-client.js）"
+          "キーワード規則を順に照合するリポジトリ分類",
+          "READMEのMarkdownを整形し、短い説明文を抽出する処理",
+          "最大6件の並行取得を行うキュー"
         ],
         "hardware": [],
         "interfaces": [
-          "GitHub REST APIからの公開リポジトリ情報取得",
-          "raw.githubusercontent.comからのREADME取得",
-          "data/summaries.jsonおよびdata/public-pages.jsonの読み込み",
-          "ブラウザー上の検索・カテゴリ選択・詳細表示",
-          "HTTP/HTTPSの公開ページリンク"
+          "ブラウザー上の検索・分類・詳細表示UI",
+          "GitHub REST API",
+          "raw.githubusercontent.com上のREADME",
+          "data/summaries.jsonおよびdata/public-pages.json"
         ],
         "reusable_components": [
           {
-            "name": "cleanMarkdown / shortPreview",
-            "purpose": "READMEからコードブロック、画像、リンクなどを除き、カード表示向けの短い説明を抽出する。",
+            "name": "READMEプレビュー生成（cleanMarkdown、shortPreview、readReadme）",
+            "purpose": "READMEからノイズ要素を除去し、短い説明文を生成してカードに表示する。",
             "evidence": [
               "card-enricher.js"
             ]
           },
           {
-            "name": "README取得キュー",
-            "purpose": "複数リポジトリのREADME取得をキャッシュし、同時実行数を6件に制限する。一般化する場合は所有者や取得対象ブランチを設定可能にする適応が必要。",
+            "name": "並行取得キュー（pump、enqueueCards）",
+            "purpose": "カード用README取得を重複排除し、同時実行数を6件に制限する。",
             "evidence": [
               "card-enricher.js"
             ]
           },
           {
-            "name": "validEntry",
-            "purpose": "公開ページのURLを解析し、HTTP/HTTPS以外のスキームを除外する。",
-            "evidence": [
-              "public-pages-client.js"
-            ]
-          },
-          {
-            "name": "spokenize",
-            "purpose": "日本語説明文を口語調に変換する純粋関数。Node.js環境からもテストできるようグローバルに公開している。",
+            "name": "日本語文体変換（spokenize）",
+            "purpose": "説明文の表現を口語調に変換する純粋関数。CIからも呼び出せるようグローバルに公開している。",
             "evidence": [
               "spoken-overview-client.js"
             ]
           },
           {
-            "name": "withTimeout",
-            "purpose": "AbortControllerを用いてfetchにタイムアウトを設定する。",
+            "name": "公開ページURL検証（validEntry）",
+            "purpose": "登録URLを解析し、HTTPまたはHTTPSの場合のみリンクとして扱う。",
+            "evidence": [
+              "public-pages-client.js"
+            ]
+          },
+          {
+            "name": "タイムアウト付きfetch（withTimeout）",
+            "purpose": "AbortControllerを用いて通信を時間制限付きで実行する。",
             "evidence": [
               "app.js"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋は一部に限られるため、app.jsの全検索・描画処理や更新スクリプト、ワークフローの実装詳細は確認できない。",
-          "READMEの自動要約生成に関する説明はあるが、scripts/update-summaries.mjsおよびワークフローの内容は提示されていない。",
-          "README取得処理はmain/masterと一般的なREADMEファイル名を試す実装で、すべてのリポジトリ構成を網羅するとは確認できない。",
-          "サイト側の対象は公開リポジトリとされており、認証付きの非公開リポジトリ対応は確認できない。"
+          "所有者名や対象リポジトリ名がクライアントコードに固定されている。",
+          "READMEでは公開リポジトリのみを対象とし、書き込み操作を行わないと説明されている。",
+          "提示されたソース抜粋は一部のみで、検索処理や更新ワークフローの詳細は確認できない。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
@@ -428,7 +422,6 @@
           "README.md",
           "app.js",
           "card-enricher.js",
-          "keeper-closing-client.js",
           "public-pages-client.js",
           "spoken-overview-client.js"
         ]

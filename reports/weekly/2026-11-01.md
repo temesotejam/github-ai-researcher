@@ -3,7 +3,7 @@
 > 調査対象はtemesotejam所有の公開リポジトリのみ。元リポジトリへの書き込みは行いません。
 
 - 公開リポジトリ数: 109
-- 今回更新したプロフィール: 1
+- 今回更新したプロフィール: 2
 - プロフィール生成エラー: 0
 - 横断分析に使ったプロフィール: 109（最大120件）
 
@@ -11,76 +11,92 @@
 
 ## 1. 全体像
 
-**対象範囲は、提示された技術インデックスの109リポジトリ全件と、バッチ1〜10の横断分析です。** 技術領域は、組み込み制御・ロボティクス、姿勢推定とセンサー計測、船舶航法、シミュレーション／強化学習、ブラウザー上の開発・解析ツールに大別できます。
+対象は**公開リポジトリ109件のプロフィール全体**です。技術的な重心は、①マイコン・ロボット・飛行制御、②センサー計測と状態推定、③水上航行、④シミュレーションと強化学習にあります。一方で、ブラウザー内の解析・開発ツール、GitHub Actionsを使うビルド／配布、ゲームや個人向けポータルも含まれます。したがって、単一の製品群というより、**実機実験、シミュレーション、計測・可視化、開発支援を往復する研究開発ポートフォリオ**と見るのが妥当です。
 
-特に目立つのは、AtomS3系のリアクションホイール実験、Pico系の飛行制御、ESP32-S3を用いた船舶・センサー連携です。設計上は、センサー取得と制御を分ける、遅延・鮮度・通信異常を記録する、安全条件を満たさない場合に停止する、といった傾向があります。さらに、Webブラウザーをファームウェア書き込み、入力可視化、実験結果の閲覧・比較に使うプロジェクト群が並行しています。
+繰り返し現れる設計上の関心は、入力・通信異常時の出力停止、センサー値の鮮度や欠落の記録、制御と計測の分離、再現可能なログやシミュレーションです。たとえばSBUSの安全状態を扱う `temesotejam/pico-copter-fc`（`firmware/pico_copter/control.cpp`、`firmware/pico_copter/sbus_parser.hpp`）や、センサー状態を診断する `temesotejam/type2dk-uwb-ranging`（README記載）が該当します。
 
-一方、全件が同じ深さで確認できているわけではありません。インデックスの確信度は中・低が中心で、READMEやプロフィールだけに基づく項目も多く含まれます。以下では、**実装の存在がパス付きで確認された内容**、**README記載**、**統合・研究の仮説**を区別します。
+ただし、確度は一様ではありません。プロフィールにはソース抜粋で裏付けられた実装と、README記載、計画、リポジトリ名・メタデータ由来の推定が混在しています。特に低確度のものは、記載された機能を実装済みとみなせません。以下では、根拠がREADME中心の場合はその旨を示します。
 
 ## 2. 再利用できる技術資産
 
-- **リアクションホイール系の制御・計測:** `BetaPhaseController`、角速度反転の複数サンプル確認、`smoothstep`による回復制御が、`temesotejam/atoms3r-zero-cross-fixed-100ms-test` と `temesotejam/atoms3r-free-foot-amplitude-control` の `src/beta_phase_controller.h`、`src/beta_turn_fast_controller.h` に示されています。`control_latency::Profile` は両者の `src/control_latency.h`、`src/control_latency.cpp` などで確認され、`temesotejam/atoms3r-free-foot-amplitude-control-04725-stable` にも関連実装が記載されています。移植時は閾値、制御周期、電流・位相の単位を照合する必要があります。
-- **飛行制御の安全状態とESC観測:** `temesotejam/pico-copter-fc` の `firmware/pico_copter/control.cpp` にSBUSフェイルセーフと再アームラッチ、`temesotejam/pico-copter-fc-esc-telemetry` の `firmware/pico_copter/flight_log_ring.hpp` に固定容量ログ、`firmware/pico_copter/dshot_bidir_decode.hpp` に双方向DShot復号が示されています。安全処理とログを同じ飛行記録で検証できる候補です。
-- **センサー処理の分離と実験データ化:** AtomS3系では `ImuManager` や取得監査の構成が繰り返され、例として `temesotejam/atoms3r-amplitude-control-development/src/imu_manager.cpp`、`src/imu_acquisition_audit.h` が挙げられます。映像と姿勢ログを比較する資産として、`temesotejam/video-rwlog-angle-analyzer` の `src/rwlog.js`、`src/analysis.js`、`src/mp4.js` があります。共通フォーマットや同期方法の一致は未確認です。
-- **航法・経路の評価候補:** `temesotejam/2026_8_6_2` はREADME記載で `include/waypoint_nav.hpp`、`src/waypoint_nav.cpp` の `boatnav::NavInput`／`navigator.update` とDrift Vector LOS・Dubins復帰を示します。これは、LOS誘導を説明する `temesotejam/2026_8_6` の通信・制御分割構成と比較できる候補です。実装と座標系の互換性は要確認です。
-- **ブラウザー内のセンサー・入力処理:** RealSenseの深度処理では `temesotejam/realsense-browser-slam/src/slam-worker.js`、センサー共有では `temesotejam/realsense-web-viewer/src/realsense-sensor-api.js` が示されています。DualSense関連では `temesotejam/dualsense-input-inspector/app.js` と `temesotejam/controller-web-demo/webhid-controls.js` が入力可視化・操作UIの候補です。相互のAPIは提示資料からは確認できません。
-- **学習・評価の反復可能性:** Cart-Pole／Acrobot／PendulumのRL実験群は、カリキュラム、ノイズ・遅延の導入、捕捉・安定化評価を説明しています。例として `temesotejam/rl-cartpole-ppo` の `src/environment.py`、`src/reporting.py` が挙げられますが、提供情報ではコード内容や実験結果の独立確認は限定的です。
+- **リアクションホイール実験の計測・制御部品**  
+  `temesotejam/atoms3r-lateral-energy-control` の `src/control_latency.h`、`src/control_latency.cpp` には固定容量の遅延記録があり、`temesotejam/atoms3r-zero-cross-fixed-100ms-test` と `temesotejam/atoms3r-free-foot-amplitude-control` には `BetaPhaseController`、`BetaTurnFastController`、`control_latency::Profile` が挙げられています。IMU取得監査は `temesotejam/atoms3r-camera-webui-oneshot-stable` の `src/imu_acquisition_audit.h` にあります。共通名だけでは同一実装とは断定できないため、統合前にAPI・状態遷移・記録項目の差分確認が必要です。
+
+- **モーター指令・フィードバックの部品**  
+  `temesotejam/pico-copter-fc` の `firmware/pico_copter/dshot_protocol.hpp` と `firmware/pico_copter/dshot_bidir_decode.hpp` は、DShot形式と双方向テレメトリ復号の候補です。AVRで4系統を扱う方式は `temesotejam/uno-r3-4esc-dshot300` の `makeDshotFrame`、`sendDshot300Bit`、`sendDshot300Frame` が根拠です。SBUSからUnoへ値を渡す構成は `temesotejam/2026_10_28` の `pico/sbus_uart_bridge.cpp` と `arduino/UnoR3_UART_DShot300/UnoR3_UART_DShot300.ino` に示されています。異なるMCU・タイミング要件があるため、そのまま相互移植できるとは限りません。
+
+- **実験結果を比較可能にするデータ取得・解析**  
+  `temesotejam/atoms3r-motor-inertia-test` の `tools/analyze_response.py` は、計測CSVの応答解析候補です。動画・角度・RWLOGを対応付ける研究ツールは `temesotejam/video-rwlog-angle-analyzer` の `src/rwlog.js`、`src/analysis.js` に記載されています。シミュレーション側では `temesotejam/reaction-wheel-rocker-baseline-sim` の `simulate.py` が時系列CSV出力候補として挙げられています。
+
+- **状態推定・センサーデータの取り扱い**  
+  6軸MEKFの実装候補は `temesotejam/atoms3r-6dof-mekf` の `src/mekf6.hpp`、`src/mekf6.cpp` です。IMU取得をタスクやキューと分ける構成は `temesotejam/atoms3r-amplitude-control-development` の `src/imu_manager.cpp` と `src/imu_acquisition_audit.h` に挙げられています。`temesotejam/ahrs` はREADMEで複数の推定器群を掲げていますが、今回の情報では個々の実装やAPIを確認できません。
+
+- **航法ロジックと安全管理の候補**  
+  `temesotejam/2026_8_6_2` では `include/waypoint_nav.hpp`、`src/waypoint_nav.cpp` がDrift Vector LOSやDubins復帰方式の候補箇所として示されています。これはプロフィール／README由来で、実機性能を示すものではありません。通信断・停止ラッチの考え方は、`temesotejam/cores3-android-dualsense-bridge`（README記載）にもあります。
+
+- **ブラウザー上で完結する処理・配布の仕組み**  
+  `temesotejam/realsense-browser-slam` は `src/main.js`、`src/slam-worker.js` に深度処理をWorkerへ分ける構成が示されています。`temesotejam/smart-annotator` の `ai.js` はブラウザー内のSAM2推論候補です。ゲームや静的ツールを含むポートフォリオでは、センサー可視化、データ解析、ビルド配布をブラウザーに置く設計が複数見られますが、それぞれ独立した用途・実装です。
 
 ## 3. プロジェクト横断の組み合わせ
 
+以下は**統合済みではなく、既存資産に基づく提案**です。
+
 | 移植元 → 移植先 | 接続方法と必要な改修 | 主なリスク |
 |---|---|---|
-| `pico-copter-fc` → `pico-copter-fc-esc-telemetry` | SBUSフェイルセーフ状態、DShot指令、ESC応答を共通のログ記録へ渡す。タイムスタンプ、イベント定義、リングバッファ容量を合わせる。 | 異なるファームウェア間で制御周期・データ形式が同じとは限らない。ログ追加で処理時間やメモリを圧迫し得る。 |
-| AtomS3のBeta制御器 → `atoms3r-amplitude-control-development` 等 | 制御器と遅延プロファイラを一緒に評価し、同じ入力条件で遅延・期限超過・ピーク振幅を記録する。閾値、角速度単位、電流指令、タスク境界を照合する。 | 同名コンポーネントでも版間の閾値や実行経路が一致する保証はない。実機安全をシミュレーションだけで判断できない。 |
-| `2026_8_6_2` → `2026_8_6` | 航法ロジックを `boatnav::NavInput` 相当の入力境界に適合させ、現在のLOS経路とシミュレーションで比較する。座標系、ゲート到達条件、外乱推定の入出力を明文化する。 | README記載が中心で、両者の実コード・状態表現の互換性は未確認。実機では測位誤差や通信遅延が加わる。 |
-| `2026_05_20_xiao_esp32s3_sense_gnss_bno08x_web_monitor` → `2026_05_21_flutter_gsi_gnss_offline_map_monitor` | ESP32側の `/api/status` とFlutter側の取得処理を、JSONスキーマ、位置有効判定、時刻形式で照合する。接続前にサンプル応答を固定してテストする。 | 両方のパスは示されていますが、スキーマ一致は未確認。通信断・古い位置情報の扱いも必要。 |
-| `dualsense-input-inspector` → `controller-web-demo` | USB／Bluetooth入力レポートの復号値を、操作UIの入力経路へ渡し、生バイト・正規化値・画面表示を同時に比較する。 | WebHID対応ブラウザーや接続方式に依存する。レポート形式の違いを誤ると操舵値の誤解釈につながる。 |
-| `spike-rt-web-project` → `spike-rt-hub-dumper` | 書き込み前後のバックアップ・ハッシュ・読み戻し検証を連結し、ファームウェア配布と復旧手順を一連の試験にする。 | DFUの書き込み範囲・対象機器判定を誤ると復旧不能になり得る。詳細はREADME記載が中心で、実装適合の確認が必要。 |
-
-いずれも**統合済みではなく、既存プロフィールに基づく提案**です。特にハードウェア制御へ移す場合は、机上のAPI適合だけでなく、停止条件・入力異常・電源投入時の状態を先に検証すべきです。
+| `reaction-wheel-rocker-baseline-sim` → `marker-angle-recorder` | `simulate.py` の時系列CSVと、動画・角度・RWLOGのセッション記録を共通スキーマで照合する。時刻原点、角度規約、サンプリング間隔、欠測表現を揃える。 | 両者の時間基準・角度定義が一致する証拠はない。対応付けだけでモデル妥当性が示されるわけではない。 |
+| `2026_8_6_2` の航法候補 → `2026_8_6` のボート構成 | `boat::NavInput`／`navigator.update` を接続候補として、位置・船首方位・対地速度を入力し、目標方位・復帰状態を制御側へ渡す。単位、座標系、停止条件、通信断時の扱いを合わせる。 | 前者はREADMEベースの機能記載で、両プロジェクトの実際のAPI互換性や実機挙動は未確認。 |
+| `pico-copter-fc` のDShot部品 → `2026_10_28` のPico–Uno経路 | SBUS入力の検査・フェイルセーフと、Uno側DShot生成を一連のテストベクトルで確認する。値域、停止値、CRC、タイムアウト時の出力停止を仕様化する。 | 実装対象が異なり、Pico側のDShot部品をUnoへそのまま移せるとは限らない。モーター出力はプロペラを外した段階的試験が前提。 |
+| `video-rwlog-angle-analyzer` → `reaction-wheel-rocker-baseline-sim` | 解析器が出す角度・時刻系列をシミュレーションCSVと比較できる形式に整える。同期イベントと座標系を共通化する。 | READMEやプロフィールで示される記録形式と、シミュレーションCSVの実際のスキーマは未照合。 |
+| `rl-cartpole-ppo` → `rl-cartpole-swingup-sac`／`rl-cartpole-swingup-td3` | 環境、seed、ノイズ・遅れ条件、捕捉後の評価指標を共通化して比較する。`rl-cartpole-ppo` の `src/environment.py`、`src/evaluation.py`、`src/reporting.py` が候補箇所。 | 各リポジトリの実装と成功閾値が同じとは確認できない。学習結果の比較には同条件での再実行が必要。 |
+| `dualsense-input-inspector` → `controller-web-demo` | 入力レポートの復号値をデモ側のジェスチャー・安全状態表示へ渡すアダプターを作る。入力範囲、接続方式、デッドゾーンを統一する。 | どちらもREADME等の記載が中心で、復号APIや接続可能なブラウザーの差は未確認。操作入力を実機出力に接続する提案ではない。 |
+| `spike-rt-web-project-selected` ↔ `spike-rt-web-project` | 単一アプリ選択と全アプリのカタログ方式を、ビルド成果物・メタデータ・書き込み手順の共通契約で比較する。前者には `.github/workflows/build-selected.yml` が挙げられている。 | README上の設計差は確認できるが、実装差・保守性・失敗時の挙動を示す比較データはない。 |
 
 ## 4. 過去と新しい実装の比較
 
-提示資料には、横断比較に使えるコミット履歴や一貫した日付がほぼありません。したがって、一般的な「旧版から新版への性能向上」や設計変更は断定できません。
+提示情報には、109件を通した**コミット履歴・変更差分・統一された時系列データがありません**。そのため、リポジトリ名やバージョン表記だけから「旧版から改善した」「新しい方式が優れる」とは結論できません。
 
-限定的に、リポジトリ自身が版・段階を説明している例はあります。
-
-- `temesotejam/2025_koudaisai_Robocon` はREADMEでPacketV1からPacketV2への移行を説明しています。ただし、旧版と新版の具体的なコード差分、再送・停止動作の改善は提示資料から確認できません。
-- `temesotejam/hydrofoil-boat-control-archive` は1日目・2日目の使用版を保存し、方位入力がIMU方位からGNSS移動方向へ変わった説明があります。これはREADME上の方式差であり、性能や優劣を示す比較データはありません。
-- AtomS3系には `V46aj`、`V46ak`、`V46al-R2` や stable／development の名称があります。`atoms3r-mekf-dynamic-validation` はREADME上でV46ajの固定3 ms遅延補償段階とされていますが、名称だけから時系列・変更内容・優位性を確定することはできません。
+比較の手掛かりになる記述はあります。たとえば `temesotejam/hydrofoil-boat-control-archive` は1日目・2日目の使用版を保存し、READMEでは1日目にBNO08Xの方位、2日目にGNSS位置変化から求める移動方向を用いるとされています。ただし、実際の差分や同一条件での性能比較は提示情報から確認できません。また、`temesotejam/atoms3r-amplitude-control-v46ak-stable` や `temesotejam/atoms3r-amplitude-control-v46al-r2-stable` の版名・README記載は存在しますが、版間のコード差分や測定結果がないため、比較は不能です。
 
 ## 5. 新しい研究・開発テーマ
 
-1. **制御入力と計測遅延の一体評価**  
-   AtomS3のBeta制御器と `control_latency::Profile` を同じ試験で使い、位相・ピーク・期限超過を条件別に記録する。最初の検証は、同じ入力ログを複数制御版で再生し、計測項目と出力形式が一致するか確認すること。
-2. **Pico飛行ログによるフェイルセーフの再現試験**  
-   SBUS異常、再アーム、ESC応答を一つの時系列で確認する。まず `pico-copter-fc` の安全状態遷移と telemetry側のログ項目を照合し、プロペラを外した条件で異常入力を注入する。
-3. **船舶LOS方式の共通シミュレーション比較**  
-   LOSとDrift Vector LOS／Dubins復帰を、同一座標系・同一初期条件で比較する。最初に状態・入力・到達判定を共通表にし、シミュレーション上の経路誤差と復帰挙動を記録する。実機優位性は別途検証が必要。
-4. **GNSS監視から地図までのスキーマ適合試験**  
-   ESP32 APIの応答とFlutter側が期待する項目を照合する。固定JSONサンプルで有効位置、無効位置、古いデータ、通信断の表示を先にテストする。
-5. **コントローラ入力の再現可能な適合試験**  
-   DualSenseの生入力、復号値、正規化値、UI表示を比較する。USBとBluetoothを分けた入力サンプルの保存・再生が最初の検証になる。
-6. **リアクションホイール実験とシミュレーションの突合**  
-   `reaction-wheel-rocker-baseline-sim` の接触モデルと `semicircle-decay-sim` 等の自由減衰比較を、実測ログで照合する。まず同一条件の角度・ゼロクロス速度データとモデルパラメータの対応を確認する。各モデル間の同一性は未確認。
-7. **RLベンチマークの共通評価基準化**  
-   Cart-Pole／Acrobot各実験の捕捉・安定化条件を明文化し、同じseed・評価条件で比較する。最初に成功判定、安定維持時間、ノイズ条件の定義を揃え、README記載の成果物が実際に再生成できるか確認する。
+1. **リアクションホイール実測とモデルの再現可能な照合**  
+   `reaction-wheel-rocker-baseline-sim` のCSV、`marker-angle-recorder` の動画・角度記録、`atoms3r-motor-inertia-test` の応答解析を接続する。最初の検証は、同一試験の時刻原点・角度符号・サンプリング間隔を明記したデータ一式を作り、シミュレーションとの残差を算出すること。
+
+2. **IMU取得品質と制御結果の関係を測る**  
+   `atoms3r-amplitude-control-development` の取得監査候補と、`atoms3r-camera-webui-oneshot-stable` の `ImuAcquisitionAudit` を比較する。取得間隔・欠落・遅延の指標を揃え、同じ制御試験で制御出力や振幅と突き合わせる。監査器の統合可否は実装差分を確認してから判断する。
+
+3. **水上航法シミュレーションから安全な実機検証へ段階化する**  
+   `2026_8_6_2` のLOS・Dubins復帰候補を、まずログ再生・シミュレーションで評価し、その後 `2026_8_6` の通信・制御分離構成へ接続する。最初に座標系、外乱、逸脱条件、通信断時の停止動作を固定したテストケースを作る。実機での航行性能は現時点で未知。
+
+4. **強化学習プロジェクトの共通評価ベンチマーク**  
+   CartPoleのPPO・SAC・TD3とAcrobotの実験を、捕捉成功、安定滞在時間、中央復帰などの共通指標で評価する。最初の検証は環境・seed・評価条件を固定し、プロフィールに示されたPPO側の評価箇所（`rl-cartpole-ppo/src/evaluation.py`）を基準に各実装の差を確認すること。
+
+5. **GNSS／IMU取得から航跡可視化までの観測パイプライン**  
+   `2026_05_20_xiao_esp32s3_sense_gnss_bno08x_web_monitor` の `include/GnssManager.h`、`include/ImuManager.h`、`include/WebMonitor.h` と、Flutter地図モニターを接続する案。最初に状態APIの実スキーマ、時刻、座標系、無効測位の表現を確認し、保存ログと表示結果の一致を試す。
+
+6. **コントローラー入力の共通診断・正規化層**  
+   `controller-input-diagnostics`、`dualsense-input-inspector`、`controller-web-demo` の入力値とイベントを比較し、デバイス差を吸収する層を検討する。まず同一端末・同一コントローラーでUSB／Bluetooth入力値、軸範囲、切断時の状態を記録する。各README記載の機能が実装されているかも要確認。
+
+7. **小型機向け推定器のオフライン比較と移植条件の整理**  
+   `ahrs` の推定器群と `atoms3r-6dof-mekf` のMEKFを、合成データまたは実測ログで比較する。最初にクォータニオン規約、座標系、サンプリング周期、必要な演算量を確認し、組み込み側に移す前にオフラインで同じ入力を与える。`ahrs` の実装/APIは今回の資料では確認できないため、比較着手前のソース確認が必要。
 
 ## 6. 優先順位付きロードマップ
 
-1. **低リスク・すぐ試せる:** GNSS APIとFlutterのJSONスキーマ照合。固定応答で契約テストを作り、実機接続前に不一致を見つける。
-2. **既存ログを活用:** AtomS3制御器と遅延プロファイラの項目・単位を整理し、同一入力条件で比較可能にする。
-3. **シミュレーション先行:** 船舶航法の入力・座標系・到達条件を共通化し、LOS方式を同一条件で比較する。
-4. **ベンチ試験:** DualSenseのUSB／Bluetooth復号とUI表示をサンプル入力で照合する。
-5. **安全制約付き組み込み試験:** Pico制御とESC telemetryの接続を検討し、プロペラを外した異常入力試験でログと停止動作を確認する。
-6. **研究比較:** リアクションホイールの実測ログと受動モデルを突合し、モデル仮定の影響を評価する。
-7. **再現実験:** RL群の評価指標・環境条件を統一し、再実行可能性を確認してからアルゴリズム比較へ進む。
+1. **計測データの形式を揃える**：リアクションホイールのCSV・動画・RWLOGを対象に、時刻・角度・単位・欠測の定義を明文化する。既存資産を使った小規模な照合から始められる。
+2. **実装差分を確認する**：同名コントローラー、IMU監査器、航法モジュールについてソースとテストを比較し、共通API化できる範囲を特定する。名称の一致だけで統合しない。
+3. **航法をログ再生・シミュレーションで検証する**：LOS／復帰ロジックを実機につなぐ前に、座標系・外乱・通信断のテストケースを作る。
+4. **強化学習の比較条件を固定する**：環境、seed、評価指標、ノイズ・遅れ条件を揃え、まずCartPole群で再実行可能な比較を行う。
+5. **入力・通信の安全境界を明文化する**：SBUS、UART、ゲームパッドなど経路ごとに、無効値・タイムアウト・再開条件を定義し、プロペラを外すなど安全な条件で検証する。
+6. **GNSS／IMU監視をログ再生で照合する**：実センサー接続より先に、取得ログからAPI・Web・地図表示までの整合性を確かめる。
+7. **ブラウザー実験ツールを比較・再利用する**：入力可視化、WebUSB書き込み、センサー処理の各系統について、共通化の利益が個別依存の複雑さを上回るかを検証する。
 
 ## 7. 分析の限界
 
-本レポートは提示されたインデックスとバッチ分析に限定され、109件すべてのソースコード、ビルド、実機動作を独立検証したものではありません。特に多くのRL、船舶航法、UWB、GNSS、SPIKE、RealSense関連項目はREADME記載中心で、プロフィールの確信度も低いものが目立ちます。パスの提示がない項目については、具体的な実装資産として扱っていません。
-
-次の確認では、統合候補の実際のAPI・データ形式・ライセンス、テストとビルド手順、制御周期・タイムスタンプ、異常時の出力停止条件をソースで照合する必要があります。実機性能や安全性は、提示資料からは判断できません。
+- 本レポートは提示された109件のプロフィールと10バッチの要約に基づき、全リポジトリのソースを独立に読み直したものではありません。パスを示した箇所も、詳細分析でソース根拠が挙げられたものとREADME由来のものが混在します。
+- README記載は、実装の存在・正確さ・現在の動作を保証しません。計画、実験目標、配布構成、実機で確認されていない挙動を区別して扱う必要があります。
+- リポジトリ名・バージョン番号・プロフィール上のアルゴリズム名だけでは、コードの同一性や性能差は判断できません。旧版・新版の比較にはコミット差分、テスト結果、同条件の測定ログが必要です。
+- 実機検証結果、制御性能、安全性、推定精度、学習済みモデルの再現性は、提示資料からは確定できません。特にモーター、飛行体、船舶の案は、出力停止・通信断・センサー異常を含めた段階的な検証が必要です。
+- 109件中には、目的やソースパスを特定できないものも含まれます。全件のプロフィールは俯瞰していますが、根拠の薄いリポジトリについて具体的な再利用案や実装評価を確定するには、README、ソース、テスト、コミット履歴の追加確認が必要です。
 
 
 
@@ -90,15 +106,14 @@
   - [README.md](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/README.md)
   - [src/beta_phase_controller.h](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/src/beta_phase_controller.h)
   - [src/beta_turn_fast_controller.h](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/src/beta_turn_fast_controller.h)
-  - [src/control_angle_reference.h](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/src/control_angle_reference.h)
   - [src/control_latency.h](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/src/control_latency.h)
   - [src/control_latency.cpp](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/src/control_latency.cpp)
-  - [platformio.ini](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/platformio.ini)
+  - [src/control_angle_reference.h](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/src/control_angle_reference.h)
+  - [src/config.h](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/src/config.h)
 - **temesotejam/github-tavern** — [repository](https://github.com/temesotejam/github-tavern)
   - [README.md](https://github.com/temesotejam/github-tavern/blob/main/README.md)
   - [app.js](https://github.com/temesotejam/github-tavern/blob/main/app.js)
   - [card-enricher.js](https://github.com/temesotejam/github-tavern/blob/main/card-enricher.js)
-  - [keeper-closing-client.js](https://github.com/temesotejam/github-tavern/blob/main/keeper-closing-client.js)
   - [public-pages-client.js](https://github.com/temesotejam/github-tavern/blob/main/public-pages-client.js)
   - [spoken-overview-client.js](https://github.com/temesotejam/github-tavern/blob/main/spoken-overview-client.js)
 - **temesotejam/2026_10_24** — [repository](https://github.com/temesotejam/2026_10_24)
