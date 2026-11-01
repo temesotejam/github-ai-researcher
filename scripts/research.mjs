@@ -124,7 +124,22 @@ async function main() {
     try{
       console.log("Profiling "+repo.full_name);
       const data=await inspect(repo);
-      const result=jsonResult(copilot(profilePrompt(data)));
+      const raw=jsonResult(copilot(profilePrompt(data)));
+      const result={
+        purpose:String(raw.purpose||"不明"),
+        architecture:String(raw.architecture||"不明"),
+        technologies:Array.isArray(raw.technologies)?raw.technologies.map(String).slice(0,10):[],
+        algorithms:Array.isArray(raw.algorithms)?raw.algorithms.map(String).slice(0,8):[],
+        hardware:Array.isArray(raw.hardware)?raw.hardware.map(String).slice(0,8):[],
+        interfaces:Array.isArray(raw.interfaces)?raw.interfaces.map(String).slice(0,8):[],
+        reusable_components:Array.isArray(raw.reusable_components)?raw.reusable_components.filter(c=>c&&typeof c==="object").slice(0,5).map(c=>({
+          name:String(c.name||""),purpose:String(c.purpose||""),evidence:Array.isArray(c.evidence)?c.evidence.map(String).slice(0,4):[]
+        })):[],
+        constraints:Array.isArray(raw.constraints)?raw.constraints.map(String).slice(0,8):[],
+        maturity:String(raw.maturity||"不明"),
+        confidence:["high","medium","low"].includes(raw.confidence)?raw.confidence:"low",
+        evidence:Array.isArray(raw.evidence)?raw.evidence.map(String).slice(0,10):[]
+      };
       profiles[repo.full_name]={
         url:repo.url,default_branch:repo.default_branch,pushed_at:repo.pushed_at,
         archived:repo.archived,fingerprint:fp(repo),analyzed_at:new Date().toISOString(),profile:result
