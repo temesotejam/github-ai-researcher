@@ -251,7 +251,7 @@ async function main() {
   }
   const head="# GitHub AI Researcher — "+date+"\n\n"+
     "> 調査対象は"+owner+"所有の公開リポジトリのみ。元リポジトリへの書き込みは行いません。\n\n"+
-    "- 公開リポジトリ数: "+repos.length+"\n- 今回更新したプロフィール: "+done+"\n- プロフィール生成エラー: "+errors.length+"\n- 横断分析に使ったプロフィール: "+compact.length+"（最大80件）\n\n";
+    "- 公開リポジトリ数: "+repos.length+"\n- 今回更新したプロフィール: "+done+"\n- プロフィール生成エラー: "+errors.length+"\n- 横断分析に使ったプロフィール: "+compact.length+"（最大120件）\n\n";
   const report=head+analysis+"\n\n"+(errors.length?"## プロフィール生成エラー\n\n"+errors.map(x=>"- "+x).join("\n")+"\n\n":"")+evidence.join("\n")+"\n";
   fs.writeFileSync("reports/weekly/"+date+".md",report);
   fs.writeFileSync("reports/latest.md",report);
