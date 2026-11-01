@@ -6,7 +6,7 @@ on:
       max_repos:
         description: Maximum number of repositories to profile in this run
         required: false
-        default: "8"
+        default: 8
         type: number
       force_profiles:
         description: Re-analyze repositories even when their source has not changed
