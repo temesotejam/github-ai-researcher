@@ -3,78 +3,15 @@
 > 調査対象はtemesotejam所有の公開リポジトリのみ。元リポジトリへの書き込みは行いません。
 
 - 公開リポジトリ数: 109
-- 今回更新したプロフィール: 8
+- 今回更新したプロフィール: 102
 - プロフィール生成エラー: 0
-- 横断分析に使ったプロフィール: 8（最大80件）
+- 横断分析に使ったプロフィール: 109（最大80件）
 
-# 公開リポジトリ資産の横断レポート
+## 横断分析を生成できませんでした
 
-> **対象範囲:** 公開リポジトリ総数は109ですが、今回確認できるプロフィールは8件です。以下はその8件に基づく分析であり、109件全体の網羅的な評価ではありません。  
-> **表記:** **実装確認**＝プロフィールにソース実装の証拠あり、**README記載**＝READMEの説明に基づく、**仮説**＝組み合わせ案・未検証の研究案。
+プロフィールは保存しましたが、Copilot CLIの統合分析に失敗しました。
 
-## 1. 技術的な全体像
-
-確認できた資産は、大きく3領域に分かれます。
-
-- **組み込み制御・計測:** AtomS3Rのリアクションホイール制御、RP2040クアッドコプター制御、Arduino UnoのESC駆動。制御器、センサー取得、遅延計測、ログ、DShot通信などが含まれます。
-- **ファームウェアの設定・配布ツール:** PicoのBluejay／BLHeli passthrough、Uno向けブラウザー書き込みツール、SPIKE-RTのブラウザー編集・ビルド・書き込み環境。Web Serial・WebUSB・DFUなど、対象ハードウェアごとに異なる接続方式が使われています。
-- **ブラウザーアプリ:** GitHubリポジトリ閲覧ポータルと、ニュースを題材にしたゲーム、Three.jsのボクセルゲーム。データ取得・検証・表示や、ユーザー操作・保存の実装があります。
-
-特に再利用価値が高いのは、**組み込み制御の計測・安全パターン**と、**ハードウェア別の通信・書き込み実装**です。一方、通信方式やMCUが異なるため、ファイルをそのまま移植できるとは限りません。
-
-## 2. 過去の実装から再利用できる技術
-
-| 技術 | 状態・再利用先 | 出典 |
-|---|---|---|
-| 制御処理の段階別レイテンシ計測、容量制限付き記録、JSON出力 | **実装確認。** 制御ループの遅延分析や、実験条件ごとの比較に利用できる。記録処理自体のオーバーヘッドは移植先で測定が必要。 | `atoms3r-lateral-energy-control`: `src/control_latency.h`, `src/control_latency.cpp` |
-| 反転確認・復帰進行に応じた入力制限 | **実装確認。** センサー由来の位相情報に基づく制御の参考になる。対象機構・制御周期に合わせた調整が必要。 | `atoms3r-lateral-energy-control`: `src/beta_phase_controller.h`, `src/beta_turn_fast_controller.h` |
-| フェイルセーフと再アームラッチ | **実装確認。** リンク異常時にモーター停止、状態解除、PIDリセットを行う例。別機体へ移す場合は停止・再始動状態の仕様を合わせる必要がある。 | `pico-copter-fc`: `firmware/pico_copter/control.cpp`, `firmware/pico_copter/sbus_parser.hpp` |
-| DShotフレーム生成と受信値検証 | **実装確認。** Uno側にフレーム送信、Pico側にプロトコル処理とeRPM復号がある。共通テストベクトルを作る候補だが、Uno実装は単方向。 | `uno-r3-4esc-dshot300`: `UnoR3_Potentiometer_4ESC_DShot300/UnoR3_Potentiometer_4ESC_DShot300.ino`; `pico-copter-fc`: `firmware/pico_copter/dshot_protocol.hpp`, `firmware/pico_copter/dshot_bidir_decode.hpp` |
-| ESC単線半二重通信 | **実装確認。** RP2040のPIO送受信切り替えやCRC処理は、同じハードウェア・通信要件を持つ実験の参考になる。DShotそのものとは別の通信機能。 | `pico-bluejay-configurator`: `firmware/pico_bluejay_passthrough/ESC_Serial.cpp`, `firmware/pico_bluejay_passthrough/onewire_receive.pio`, `firmware/pico_bluejay_passthrough/onewire_transmit.pio` |
-| 入力の平滑化、始動インターロック、ヒステリシス、指令変化量制限 | **実装確認。** ESC指令の安全な立ち上げ・停止制御の考え方を別の制御器で比較できる。閾値や単位はそのまま流用しない。 | `uno-r3-4esc-dshot300`: `UnoR3_Potentiometer_4ESC_DShot300/UnoR3_Potentiometer_4ESC_DShot300.ino` |
-| 外部データの検証と安全なDOM表示 | **実装確認。** URL制限、HTMLエスケープ、`textContent`利用など、ブラウザーUIに取り込めるパターン。 | `2026_10_24`: `app.js`; `github-tavern`: `public-pages-client.js`, `card-enricher.js` |
-
-## 3. 異なるプロジェクトを組み合わせる案
-
-| 移植元 → 移植先 | 接続方法 | 必要な改修 | 主なリスク |
-|---|---|---|---|
-| `atoms3r-lateral-energy-control` → `pico-copter-fc` | **仮説。** `control_latency::Profile`相当の処理段階・所要時間・予算超過を、Picoの制御ループで集計する。USB診断または既存ログへの出力を検討する。 | FreeRTOS／Arduino側とPico SDK側の時間取得・出力APIを合わせる。制御周期、容量、JSON出力タイミングを定義する。 | 計測処理が制御周期を圧迫する可能性。Atom側の記録形式とPico側ログ形式の互換性は未確認。 |
-| `pico-copter-fc` → `uno-r3-4esc-dshot300` | **仮説。** DShotフレームの生成・境界条件を両リポジトリで照合し、共通のテストベクトルを使う。 | AVR向けの制約とRP2040向けの型・ビット配置を整理し、ホスト上でのプロトコル単体テストを設ける。 | フレーム生成の一致は、実機波形やESC互換性を保証しない。Unoは単方向なのでPicoの双方向受信機能は移植対象にならない。 |
-| `uno-r3-4esc-dshot300` → `atoms3r-lateral-energy-control` | **仮説。** Uno側のヒステリシスや指令変化量制限を、Atom側のアクチュエータ指令経路の比較案として評価する。 | Atom側の指令単位、停止状態、現在のbeta制御との優先関係を明確にし、既存制御に対する追加制限として段階的に試す。 | 異なる機構・負荷のため、効果や安全性は推定できない。遅延や応答低下を招く可能性がある。 |
-| `uno-r3-4esc-dshot300` のWeb書き込み検証 → `pico-copter-fc` の配布 | **仮説。** 書き込みプロトコルを流用するのではなく、成果物の選択・事前検証・失敗表示・テスト設計の考え方を参考にする。 | PicoのUF2配布・書き込み方式に合わせて成果物確認手順を設計する。 | UnoのSTK500v1／Intel HEX書き込みはPicoのUF2とは別方式。`web/stk500.mjs`をそのまま使う案ではない。 |
-
-## 4. 古い実装と新しい実装の比較
-
-- **PicoのDShot既定値:** `pico-copter-fc`の最近のコミット記録には、DShot300・DShot150の片方向設定を切り替えた後、片方向DShot300を既定に戻した履歴があります。これは設定の変遷を示しますが、性能改善や実機での優位性までは示しません。さらにプロフィールでは、設定コードの既定値が片方向である一方、READMEには双方向を初期値とする記述があるとされており、説明とコードの整合確認が必要です。関連箇所: `firmware/pico_copter/dshot_config.hpp`、`README.md`。
-- **Unoの書き込みツール:** 最近のコミット記録には、ビルド済みHEXのWeb Serial書き込み・Pages公開に加え、チェックサム、書き込み、読み戻し、失敗時安全性のテスト追加が記録されています。ツールの検証範囲が広がった証拠ですが、テスト内容の詳細や実機での信頼性まではプロフィールだけでは確認できません。関連箇所: `web/app.mjs`、`web/stk500.mjs`、`web/tests/flash.test.mjs`。
-- **比較上の注意:** Unoの直接ポート操作による単方向DShotと、RP2040のPIO・双方向テレメトリー対応は、異なるMCU・構成の実装です。新旧の同一実装として扱える証拠はありません。
-
-## 5. 研究・開発テーマと最初の検証方法
-
-1. **計測負荷を含めた制御遅延の評価** — **仮説。** Atom側の遅延プロファイルをPico制御ループに適用し、計測なし／ありで処理時間分布と予算超過を比較する。最初は固定条件のソフトウェア計測で差を確認し、その後に実機で再評価する。
-2. **DShot実装間のプロトコル適合性試験** — **仮説。** UnoとPicoのフレーム生成に対し、同じ入力値から期待フレームを作るテストを追加する。チェックサム、停止値、上限値などの境界ケースから始める。信号品質は別途実機測定が必要。
-3. **ESC指令の安全状態遷移の比較** — **仮説。** Unoの始動インターロック・ヒステリシスとPicoのリンクフェイルセーフ・再アームラッチを状態遷移として整理し、切断・復帰・低指令などの入力列で期待状態をテストする。機体固有の安全要件は別に定義する。
-4. **実験ログの横断比較形式** — **仮説。** AtomのRWLOG／CSV解析とPicoの固定長飛行ログを比較し、タイムスタンプ、入力、状態、出力、エラーの共通項を抽出する。まず既存ログの列と意味を確認し、変換可能性を評価する。プロフィールだけでは両形式の完全な仕様は分からない。
-5. **ブラウザー上のファームウェア配布・検証体験の整理** — **仮説。** UnoのHEX検証・読み戻しテストと、SPIKE-RTのWebUSB／DFU配布構成を比較し、対象ボード別の事前条件・失敗表示・検証手順を明確化する。Unoの書き込み処理を別ボードへ流用するのではなく、検証設計を比較対象にする。
-
-## 6. 優先順位付きの次のアクション
-
-1. **PicoのDShot設定とREADMEの不一致を解消する。** 既定値・対応速度・実機確認済み条件を、`firmware/pico_copter/dshot_config.hpp`と`README.md`で照合する。
-2. **DShot共通テストベクトルを作る。** UnoとPico双方のフレーム境界条件をホスト上で比較し、プロトコル上の差とMCU固有部分を分離する。
-3. **遅延計測をPicoへ移植する前に、制御ループの既存計測手段を確認する。** Atomの`control_latency`の項目・記録方式を照合し、出力方法と計測負荷を決める。
-4. **ログ形式の仕様を確認する。** RWLOG、AtomのCSV解析、Picoの飛行ログについて、実際の列・単位・タイムスタンプを読み、共通項があるか判断する。
-5. **残り101リポジトリを含むプロフィールを追加して横断分析を更新する。** 今回の資産群に見える組み込み・Web・ゲーム領域が、全体のどの程度を占めるかは未確認。
-
-## 7. 分からなかったこと
-
-- 109件中、今回プロフィールが提示された8件以外の内容・技術・関連性。
-- 各リポジトリのソース全文、テスト結果、CI実行結果。プロフィールに「実装確認」とある箇所も、ここでは記載された証拠の範囲に限ります。
-- Atomのエネルギー制御係数の妥当性、閉ループ性能、実機での再現性。READMEでは暫定値・追加検証が必要とされています。
-- PicoやUnoのESC通信・モーター制御について、記載された構成を超える実機互換性や波形品質。
-- ログの完全なスキーマ、異なるリポジトリ間の共通データ形式、Webツールの全ワークフロー実装。
-- ゲーム2件の一部機能の詳細な実装・性能、およびプロフィールに記載されたREADME上の説明を超える動作確認。
-
-
+spawnSync copilot E2BIG
 
 ## 根拠ファイル一覧
 
@@ -83,12 +20,11 @@
   - [src/beta_phase_controller.h](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/src/beta_phase_controller.h)
   - [src/beta_turn_fast_controller.h](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/src/beta_turn_fast_controller.h)
   - [src/control_angle_reference.h](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/src/control_angle_reference.h)
-  - [src/control_latency.h](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/src/control_latency.h)
   - [src/control_latency.cpp](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/src/control_latency.cpp)
-  - [src/lateral_energy_control.h](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/src/lateral_energy_control.h)
-  - [src/imu_manager.h](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/src/imu_manager.h)
-  - [site/wheel-work.html](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/site/wheel-work.html)
+  - [src/control_latency.h](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/src/control_latency.h)
+  - [docs/rwlog_format.md](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/docs/rwlog_format.md)
   - [site/wheel-work.js](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/site/wheel-work.js)
+  - [platformio.ini](https://github.com/temesotejam/atoms3r-lateral-energy-control/blob/main/platformio.ini)
 - **temesotejam/github-tavern** — [repository](https://github.com/temesotejam/github-tavern)
   - [README.md](https://github.com/temesotejam/github-tavern/blob/main/README.md)
   - [app.js](https://github.com/temesotejam/github-tavern/blob/main/app.js)
@@ -153,3 +89,211 @@
   - [web/stk500.mjs](https://github.com/temesotejam/uno-r3-4esc-dshot300/blob/main/web/stk500.mjs)
   - [web/tests/flash.test.mjs](https://github.com/temesotejam/uno-r3-4esc-dshot300/blob/main/web/tests/flash.test.mjs)
   - [.github/workflows/build-arduino.yml](https://github.com/temesotejam/uno-r3-4esc-dshot300/blob/main/.github/workflows/build-arduino.yml)
+- **temesotejam/2026_10_28** — [repository](https://github.com/temesotejam/2026_10_28)
+  - [README.md](https://github.com/temesotejam/2026_10_28/blob/main/README.md)
+  - [pico/sbus_uart_bridge.cpp](https://github.com/temesotejam/2026_10_28/blob/main/pico/sbus_uart_bridge.cpp)
+  - [arduino/UnoR3_UART_DShot300/UnoR3_UART_DShot300.ino](https://github.com/temesotejam/2026_10_28/blob/main/arduino/UnoR3_UART_DShot300/UnoR3_UART_DShot300.ino)
+  - [tests/check_protocol.py](https://github.com/temesotejam/2026_10_28/blob/main/tests/check_protocol.py)
+  - [CMakeLists.txt](https://github.com/temesotejam/2026_10_28/blob/main/CMakeLists.txt)
+  - [.github/workflows/build.yml](https://github.com/temesotejam/2026_10_28/blob/main/.github/workflows/build.yml)
+  - [.github/workflows/build_uno.yml](https://github.com/temesotejam/2026_10_28/blob/main/.github/workflows/build_uno.yml)
+- **temesotejam/pico-copter-fc-esc-telemetry** — [repository](https://github.com/temesotejam/pico-copter-fc-esc-telemetry)
+  - [README.md](https://github.com/temesotejam/pico-copter-fc-esc-telemetry/blob/main/README.md)
+  - [firmware/pico_copter/control.cpp](https://github.com/temesotejam/pico-copter-fc-esc-telemetry/blob/main/firmware/pico_copter/control.cpp)
+  - [firmware/pico_copter/control.hpp](https://github.com/temesotejam/pico-copter-fc-esc-telemetry/blob/main/firmware/pico_copter/control.hpp)
+  - [firmware/pico_copter/dshot_bidir_decode.hpp](https://github.com/temesotejam/pico-copter-fc-esc-telemetry/blob/main/firmware/pico_copter/dshot_bidir_decode.hpp)
+  - [firmware/pico_copter/dshot_config.hpp](https://github.com/temesotejam/pico-copter-fc-esc-telemetry/blob/main/firmware/pico_copter/dshot_config.hpp)
+  - [firmware/pico_copter/dshot_protocol.hpp](https://github.com/temesotejam/pico-copter-fc-esc-telemetry/blob/main/firmware/pico_copter/dshot_protocol.hpp)
+  - [firmware/pico_copter/sbus_parser.hpp](https://github.com/temesotejam/pico-copter-fc-esc-telemetry/blob/main/firmware/pico_copter/sbus_parser.hpp)
+  - [firmware/pico_copter/flight_log_ring.hpp](https://github.com/temesotejam/pico-copter-fc-esc-telemetry/blob/main/firmware/pico_copter/flight_log_ring.hpp)
+  - [firmware/pico_copter/log_capture_gate.hpp](https://github.com/temesotejam/pico-copter-fc-esc-telemetry/blob/main/firmware/pico_copter/log_capture_gate.hpp)
+  - [firmware/pico_copter/motor_mix_scaling.hpp](https://github.com/temesotejam/pico-copter-fc-esc-telemetry/blob/main/firmware/pico_copter/motor_mix_scaling.hpp)
+- **temesotejam/rw-walker-3d-dynamics** — [repository](https://github.com/temesotejam/rw-walker-3d-dynamics)
+  - [README.md](https://github.com/temesotejam/rw-walker-3d-dynamics/blob/main/README.md)
+- **temesotejam/2026_10_22** — [repository](https://github.com/temesotejam/2026_10_22)
+  - [README.md](https://github.com/temesotejam/2026_10_22/blob/main/README.md)
+  - [game.js](https://github.com/temesotejam/2026_10_22/blob/main/game.js)
+  - [index.html](https://github.com/temesotejam/2026_10_22/blob/main/index.html)
+  - [styles.css](https://github.com/temesotejam/2026_10_22/blob/main/styles.css)
+  - [.github/workflows/deploy-pages.yml](https://github.com/temesotejam/2026_10_22/blob/main/.github/workflows/deploy-pages.yml)
+- **temesotejam/hydrofoil-boat-control-archive** — [repository](https://github.com/temesotejam/hydrofoil-boat-control-archive)
+  - [README.md](https://github.com/temesotejam/hydrofoil-boat-control-archive/blob/main/README.md)
+  - [day1/control/include/app_config.h](https://github.com/temesotejam/hydrofoil-boat-control-archive/blob/main/day1/control/include/app_config.h)
+  - [day1/control/include/bno_reader.h](https://github.com/temesotejam/hydrofoil-boat-control-archive/blob/main/day1/control/include/bno_reader.h)
+  - [day1/control/include/control_state.h](https://github.com/temesotejam/hydrofoil-boat-control-archive/blob/main/day1/control/include/control_state.h)
+  - [day1/control/include/data_types.h](https://github.com/temesotejam/hydrofoil-boat-control-archive/blob/main/day1/control/include/data_types.h)
+  - [day1/control/platformio.ini](https://github.com/temesotejam/hydrofoil-boat-control-archive/blob/main/day1/control/platformio.ini)
+  - [day1/communication/platformio.ini](https://github.com/temesotejam/hydrofoil-boat-control-archive/blob/main/day1/communication/platformio.ini)
+  - [day2/control/include/app_config.h](https://github.com/temesotejam/hydrofoil-boat-control-archive/blob/main/day2/control/include/app_config.h)
+  - [scripts/host_tests.py](https://github.com/temesotejam/hydrofoil-boat-control-archive/blob/main/scripts/host_tests.py)
+- **temesotejam/atoms3r-motor-inertia-test** — [repository](https://github.com/temesotejam/atoms3r-motor-inertia-test)
+  - [README.md](https://github.com/temesotejam/atoms3r-motor-inertia-test/blob/main/README.md)
+  - [src/main.cpp](https://github.com/temesotejam/atoms3r-motor-inertia-test/blob/main/src/main.cpp)
+  - [src/protocol.h](https://github.com/temesotejam/atoms3r-motor-inertia-test/blob/main/src/protocol.h)
+  - [src/web_page.h](https://github.com/temesotejam/atoms3r-motor-inertia-test/blob/main/src/web_page.h)
+  - [platformio.ini](https://github.com/temesotejam/atoms3r-motor-inertia-test/blob/main/platformio.ini)
+  - [tools/analyze_response.py](https://github.com/temesotejam/atoms3r-motor-inertia-test/blob/main/tools/analyze_response.py)
+  - [tools/analyze_position_response.py](https://github.com/temesotejam/atoms3r-motor-inertia-test/blob/main/tools/analyze_position_response.py)
+  - [tests/test_analysis.py](https://github.com/temesotejam/atoms3r-motor-inertia-test/blob/main/tests/test_analysis.py)
+  - [tests/test_protocol.cpp](https://github.com/temesotejam/atoms3r-motor-inertia-test/blob/main/tests/test_protocol.cpp)
+  - [docs/position_response_20261016.md](https://github.com/temesotejam/atoms3r-motor-inertia-test/blob/main/docs/position_response_20261016.md)
+  - [tools/embed_web.py](https://github.com/temesotejam/atoms3r-motor-inertia-test/blob/main/tools/embed_web.py)
+  - [tools/verify_publication.py](https://github.com/temesotejam/atoms3r-motor-inertia-test/blob/main/tools/verify_publication.py)
+  - [tools/package_release.py](https://github.com/temesotejam/atoms3r-motor-inertia-test/blob/main/tools/package_release.py)
+  - [.github/workflows/build-pages.yml](https://github.com/temesotejam/atoms3r-motor-inertia-test/blob/main/.github/workflows/build-pages.yml)
+- **temesotejam/atoms3r-zero-cross-fixed-100ms-test** — [repository](https://github.com/temesotejam/atoms3r-zero-cross-fixed-100ms-test)
+  - [src/beta_phase_controller.h](https://github.com/temesotejam/atoms3r-zero-cross-fixed-100ms-test/blob/main/src/beta_phase_controller.h)
+  - [src/beta_turn_fast_controller.h](https://github.com/temesotejam/atoms3r-zero-cross-fixed-100ms-test/blob/main/src/beta_turn_fast_controller.h)
+  - [src/control_latency.h](https://github.com/temesotejam/atoms3r-zero-cross-fixed-100ms-test/blob/main/src/control_latency.h)
+  - [src/control_latency.cpp](https://github.com/temesotejam/atoms3r-zero-cross-fixed-100ms-test/blob/main/src/control_latency.cpp)
+  - [src/control_math_cache.h](https://github.com/temesotejam/atoms3r-zero-cross-fixed-100ms-test/blob/main/src/control_math_cache.h)
+  - [src/main.cpp](https://github.com/temesotejam/atoms3r-zero-cross-fixed-100ms-test/blob/main/src/main.cpp)
+  - [src/experiment_runner.cpp](https://github.com/temesotejam/atoms3r-zero-cross-fixed-100ms-test/blob/main/src/experiment_runner.cpp)
+  - [src/imu_manager.cpp](https://github.com/temesotejam/atoms3r-zero-cross-fixed-100ms-test/blob/main/src/imu_manager.cpp)
+  - [src/white_marker_tracker.cpp](https://github.com/temesotejam/atoms3r-zero-cross-fixed-100ms-test/blob/main/src/white_marker_tracker.cpp)
+  - [src/roller485_manager.cpp](https://github.com/temesotejam/atoms3r-zero-cross-fixed-100ms-test/blob/main/src/roller485_manager.cpp)
+- **temesotejam/smart-annotator** — [repository](https://github.com/temesotejam/smart-annotator)
+  - [README.md](https://github.com/temesotejam/smart-annotator/blob/main/README.md)
+  - [ai.js](https://github.com/temesotejam/smart-annotator/blob/main/ai.js)
+  - [app.js](https://github.com/temesotejam/smart-annotator/blob/main/app.js)
+- **temesotejam/robot-core-arena** — [repository](https://github.com/temesotejam/robot-core-arena)
+  - [README.md](https://github.com/temesotejam/robot-core-arena/blob/main/README.md)
+  - [src/main.js](https://github.com/temesotejam/robot-core-arena/blob/main/src/main.js)
+  - [src/bindings.js](https://github.com/temesotejam/robot-core-arena/blob/main/src/bindings.js)
+  - [src/combat.js](https://github.com/temesotejam/robot-core-arena/blob/main/src/combat.js)
+  - [src/customize.js](https://github.com/temesotejam/robot-core-arena/blob/main/src/customize.js)
+  - [src/data.js](https://github.com/temesotejam/robot-core-arena/blob/main/src/data.js)
+- **temesotejam/youtube-video-fetcher** — [repository](https://github.com/temesotejam/youtube-video-fetcher)
+  - [README.md](https://github.com/temesotejam/youtube-video-fetcher/blob/main/README.md)
+  - [cloudflare-fetch/src/fetch.js](https://github.com/temesotejam/youtube-video-fetcher/blob/main/cloudflare-fetch/src/fetch.js)
+  - [scripts/fetch_request.py](https://github.com/temesotejam/youtube-video-fetcher/blob/main/scripts/fetch_request.py)
+  - [scripts/fetch_transcript.py](https://github.com/temesotejam/youtube-video-fetcher/blob/main/scripts/fetch_transcript.py)
+  - [scripts/fetch_video.py](https://github.com/temesotejam/youtube-video-fetcher/blob/main/scripts/fetch_video.py)
+  - [scripts/run_audio_transcription_request.py](https://github.com/temesotejam/youtube-video-fetcher/blob/main/scripts/run_audio_transcription_request.py)
+- **temesotejam/atoms3r-free-foot-amplitude-control** — [repository](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control)
+  - [src/beta_phase_controller.h](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control/blob/main/src/beta_phase_controller.h)
+  - [src/beta_turn_fast_controller.h](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control/blob/main/src/beta_turn_fast_controller.h)
+  - [src/control_latency.h](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control/blob/main/src/control_latency.h)
+  - [src/control_latency.cpp](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control/blob/main/src/control_latency.cpp)
+  - [src/control_math_cache.h](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control/blob/main/src/control_math_cache.h)
+- **temesotejam/atoms3r-free-foot-amplitude-control-04725-stable** — [repository](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control-04725-stable)
+  - [README.md](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control-04725-stable/blob/main/README.md)
+  - [src/control_latency.h](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control-04725-stable/blob/main/src/control_latency.h)
+  - [src/control_latency.cpp](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control-04725-stable/blob/main/src/control_latency.cpp)
+  - [src/control_math_cache.h](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control-04725-stable/blob/main/src/control_math_cache.h)
+  - [src/beta_turn_fast_controller.h](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control-04725-stable/blob/main/src/beta_turn_fast_controller.h)
+  - [src/beta_phase_controller.h](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control-04725-stable/blob/main/src/beta_phase_controller.h)
+  - [src/mekf6.cpp](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control-04725-stable/blob/main/src/mekf6.cpp)
+  - [src/mekf6.hpp](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control-04725-stable/blob/main/src/mekf6.hpp)
+  - [src/imu_i2c_transport.cpp](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control-04725-stable/blob/main/src/imu_i2c_transport.cpp)
+  - [src/web_ui.cpp](https://github.com/temesotejam/atoms3r-free-foot-amplitude-control-04725-stable/blob/main/src/web_ui.cpp)
+- **temesotejam/realsense-browser-slam** — [repository](https://github.com/temesotejam/realsense-browser-slam)
+  - [README.md](https://github.com/temesotejam/realsense-browser-slam/blob/main/README.md)
+  - [src/main.js](https://github.com/temesotejam/realsense-browser-slam/blob/main/src/main.js)
+  - [src/depth-source.js](https://github.com/temesotejam/realsense-browser-slam/blob/main/src/depth-source.js)
+  - [src/slam-worker.js](https://github.com/temesotejam/realsense-browser-slam/blob/main/src/slam-worker.js)
+  - [src/render.js](https://github.com/temesotejam/realsense-browser-slam/blob/main/src/render.js)
+- **temesotejam/research-break-arcade** — [repository](https://github.com/temesotejam/research-break-arcade)
+  - [README.md](https://github.com/temesotejam/research-break-arcade/blob/main/README.md)
+  - [drift.js](https://github.com/temesotejam/research-break-arcade/blob/main/drift.js)
+  - [factions-v10.js](https://github.com/temesotejam/research-break-arcade/blob/main/factions-v10.js)
+  - [factions-v11.js](https://github.com/temesotejam/research-break-arcade/blob/main/factions-v11.js)
+  - [factions-v12.js](https://github.com/temesotejam/research-break-arcade/blob/main/factions-v12.js)
+  - [factions-v13.js](https://github.com/temesotejam/research-break-arcade/blob/main/factions-v13.js)
+  - [.github/workflows/pages.yml](https://github.com/temesotejam/research-break-arcade/blob/main/.github/workflows/pages.yml)
+  - [rover.html](https://github.com/temesotejam/research-break-arcade/blob/main/rover.html)
+  - [rover.js](https://github.com/temesotejam/research-break-arcade/blob/main/rover.js)
+- **temesotejam/realsense-web-viewer** — [repository](https://github.com/temesotejam/realsense-web-viewer)
+  - [README.md](https://github.com/temesotejam/realsense-web-viewer/blob/main/README.md)
+  - [src/realsense-sensor-api.js](https://github.com/temesotejam/realsense-web-viewer/blob/main/src/realsense-sensor-api.js)
+  - [src/sensor-api-test.js](https://github.com/temesotejam/realsense-web-viewer/blob/main/src/sensor-api-test.js)
+  - [src/browser-depth.js](https://github.com/temesotejam/realsense-web-viewer/blob/main/src/browser-depth.js)
+  - [src/browser-pointcloud.js](https://github.com/temesotejam/realsense-web-viewer/blob/main/src/browser-pointcloud.js)
+  - [src/t265-webusb.js](https://github.com/temesotejam/realsense-web-viewer/blob/main/src/t265-webusb.js)
+  - [relay/cloudflare-worker/src/index.js](https://github.com/temesotejam/realsense-web-viewer/blob/main/relay/cloudflare-worker/src/index.js)
+  - [src/realsense-sensor-client.js](https://github.com/temesotejam/realsense-web-viewer/blob/main/src/realsense-sensor-client.js)
+- **temesotejam/atoms3r-camera-webui-oneshot-stable** — [repository](https://github.com/temesotejam/atoms3r-camera-webui-oneshot-stable)
+  - [README.md](https://github.com/temesotejam/atoms3r-camera-webui-oneshot-stable/blob/main/README.md)
+  - [src/beta_phase_controller.h](https://github.com/temesotejam/atoms3r-camera-webui-oneshot-stable/blob/main/src/beta_phase_controller.h)
+  - [src/beta_turn_fast_controller.h](https://github.com/temesotejam/atoms3r-camera-webui-oneshot-stable/blob/main/src/beta_turn_fast_controller.h)
+  - [src/imu_acquisition_audit.h](https://github.com/temesotejam/atoms3r-camera-webui-oneshot-stable/blob/main/src/imu_acquisition_audit.h)
+  - [src/imu_manager.cpp](https://github.com/temesotejam/atoms3r-camera-webui-oneshot-stable/blob/main/src/imu_manager.cpp)
+  - [src/imu_manager.h](https://github.com/temesotejam/atoms3r-camera-webui-oneshot-stable/blob/main/src/imu_manager.h)
+  - [platformio.ini](https://github.com/temesotejam/atoms3r-camera-webui-oneshot-stable/blob/main/platformio.ini)
+  - [src/mekf6.cpp](https://github.com/temesotejam/atoms3r-camera-webui-oneshot-stable/blob/main/src/mekf6.cpp)
+  - [src/web_ui.cpp](https://github.com/temesotejam/atoms3r-camera-webui-oneshot-stable/blob/main/src/web_ui.cpp)
+  - [src/config.h](https://github.com/temesotejam/atoms3r-camera-webui-oneshot-stable/blob/main/src/config.h)
+- **temesotejam/atoms3r-foot-angle-tracker** — [repository](https://github.com/temesotejam/atoms3r-foot-angle-tracker)
+  - [README.md](https://github.com/temesotejam/atoms3r-foot-angle-tracker/blob/main/README.md)
+  - [src/main.cpp](https://github.com/temesotejam/atoms3r-foot-angle-tracker/blob/main/src/main.cpp)
+  - [src/camera_driver.cpp](https://github.com/temesotejam/atoms3r-foot-angle-tracker/blob/main/src/camera_driver.cpp)
+  - [src/camera_driver.h](https://github.com/temesotejam/atoms3r-foot-angle-tracker/blob/main/src/camera_driver.h)
+  - [include/app_config.h](https://github.com/temesotejam/atoms3r-foot-angle-tracker/blob/main/include/app_config.h)
+  - [include/vision_types.h](https://github.com/temesotejam/atoms3r-foot-angle-tracker/blob/main/include/vision_types.h)
+  - [src/foot_angle_estimator.cpp](https://github.com/temesotejam/atoms3r-foot-angle-tracker/blob/main/src/foot_angle_estimator.cpp)
+  - [src/white_marker_tracker.cpp](https://github.com/temesotejam/atoms3r-foot-angle-tracker/blob/main/src/white_marker_tracker.cpp)
+  - [platformio.ini](https://github.com/temesotejam/atoms3r-foot-angle-tracker/blob/main/platformio.ini)
+  - [web/index.html](https://github.com/temesotejam/atoms3r-foot-angle-tracker/blob/main/web/index.html)
+  - [calibration/foot_angle_v1.json](https://github.com/temesotejam/atoms3r-foot-angle-tracker/blob/main/calibration/foot_angle_v1.json)
+  - [docs/foot-angle-calibration-v1.md](https://github.com/temesotejam/atoms3r-foot-angle-tracker/blob/main/docs/foot-angle-calibration-v1.md)
+  - [src/white_marker_tracker.h](https://github.com/temesotejam/atoms3r-foot-angle-tracker/blob/main/src/white_marker_tracker.h)
+- **temesotejam/atoms3r-amplitude-control-v46al-r2-stable** — [repository](https://github.com/temesotejam/atoms3r-amplitude-control-v46al-r2-stable)
+  - [README.md](https://github.com/temesotejam/atoms3r-amplitude-control-v46al-r2-stable/blob/main/README.md)
+  - [src/imu_manager.cpp](https://github.com/temesotejam/atoms3r-amplitude-control-v46al-r2-stable/blob/main/src/imu_manager.cpp)
+  - [src/imu_manager.h](https://github.com/temesotejam/atoms3r-amplitude-control-v46al-r2-stable/blob/main/src/imu_manager.h)
+  - [src/imu_acquisition_audit.h](https://github.com/temesotejam/atoms3r-amplitude-control-v46al-r2-stable/blob/main/src/imu_acquisition_audit.h)
+  - [src/beta_phase_controller.h](https://github.com/temesotejam/atoms3r-amplitude-control-v46al-r2-stable/blob/main/src/beta_phase_controller.h)
+  - [src/beta_turn_fast_controller.h](https://github.com/temesotejam/atoms3r-amplitude-control-v46al-r2-stable/blob/main/src/beta_turn_fast_controller.h)
+- **temesotejam/atoms3r-amplitude-control-development** — [repository](https://github.com/temesotejam/atoms3r-amplitude-control-development)
+  - [README.md](https://github.com/temesotejam/atoms3r-amplitude-control-development/blob/main/README.md)
+  - [src/imu_manager.h](https://github.com/temesotejam/atoms3r-amplitude-control-development/blob/main/src/imu_manager.h)
+  - [src/imu_manager.cpp](https://github.com/temesotejam/atoms3r-amplitude-control-development/blob/main/src/imu_manager.cpp)
+  - [src/imu_acquisition_audit.h](https://github.com/temesotejam/atoms3r-amplitude-control-development/blob/main/src/imu_acquisition_audit.h)
+  - [src/beta_phase_controller.h](https://github.com/temesotejam/atoms3r-amplitude-control-development/blob/main/src/beta_phase_controller.h)
+  - [src/beta_turn_fast_controller.h](https://github.com/temesotejam/atoms3r-amplitude-control-development/blob/main/src/beta_turn_fast_controller.h)
+  - [src/previous_peak_control_correction.h](https://github.com/temesotejam/atoms3r-amplitude-control-development/blob/main/src/previous_peak_control_correction.h)
+  - [docs/V46AL_R2_PREVIOUS_PEAK_ACTIVE_CONTROL.md](https://github.com/temesotejam/atoms3r-amplitude-control-development/blob/main/docs/V46AL_R2_PREVIOUS_PEAK_ACTIVE_CONTROL.md)
+  - [src/bmi270_timing_reader.h](https://github.com/temesotejam/atoms3r-amplitude-control-development/blob/main/src/bmi270_timing_reader.h)
+- **temesotejam/atoms3r-visual-pose-tracker** — [repository](https://github.com/temesotejam/atoms3r-visual-pose-tracker)
+  - [README.md](https://github.com/temesotejam/atoms3r-visual-pose-tracker/blob/main/README.md)
+  - [src/main.cpp](https://github.com/temesotejam/atoms3r-visual-pose-tracker/blob/main/src/main.cpp)
+  - [src/camera_driver.cpp](https://github.com/temesotejam/atoms3r-visual-pose-tracker/blob/main/src/camera_driver.cpp)
+  - [include/app_config.h](https://github.com/temesotejam/atoms3r-visual-pose-tracker/blob/main/include/app_config.h)
+  - [include/aruco_dictionary.h](https://github.com/temesotejam/atoms3r-visual-pose-tracker/blob/main/include/aruco_dictionary.h)
+  - [include/vision_types.h](https://github.com/temesotejam/atoms3r-visual-pose-tracker/blob/main/include/vision_types.h)
+  - [src/white_marker_tracker.h](https://github.com/temesotejam/atoms3r-visual-pose-tracker/blob/main/src/white_marker_tracker.h)
+  - [src/white_marker_tracker.cpp](https://github.com/temesotejam/atoms3r-visual-pose-tracker/blob/main/src/white_marker_tracker.cpp)
+  - [src/camera_driver.h](https://github.com/temesotejam/atoms3r-visual-pose-tracker/blob/main/src/camera_driver.h)
+- **temesotejam/atoms3r-amplitude-control-v46ak-stable** — [repository](https://github.com/temesotejam/atoms3r-amplitude-control-v46ak-stable)
+  - [README.md](https://github.com/temesotejam/atoms3r-amplitude-control-v46ak-stable/blob/main/README.md)
+  - [src/imu_acquisition_audit.h](https://github.com/temesotejam/atoms3r-amplitude-control-v46ak-stable/blob/main/src/imu_acquisition_audit.h)
+  - [src/imu_manager.cpp](https://github.com/temesotejam/atoms3r-amplitude-control-v46ak-stable/blob/main/src/imu_manager.cpp)
+  - [src/imu_manager.h](https://github.com/temesotejam/atoms3r-amplitude-control-v46ak-stable/blob/main/src/imu_manager.h)
+  - [src/beta_phase_controller.h](https://github.com/temesotejam/atoms3r-amplitude-control-v46ak-stable/blob/main/src/beta_phase_controller.h)
+  - [src/beta_turn_fast_controller.h](https://github.com/temesotejam/atoms3r-amplitude-control-v46ak-stable/blob/main/src/beta_turn_fast_controller.h)
+  - [src/mekf6.cpp](https://github.com/temesotejam/atoms3r-amplitude-control-v46ak-stable/blob/main/src/mekf6.cpp)
+  - [src/mekf6.hpp](https://github.com/temesotejam/atoms3r-amplitude-control-v46ak-stable/blob/main/src/mekf6.hpp)
+  - [src/experiment_runner.cpp](https://github.com/temesotejam/atoms3r-amplitude-control-v46ak-stable/blob/main/src/experiment_runner.cpp)
+  - [src/psram_logger.cpp](https://github.com/temesotejam/atoms3r-amplitude-control-v46ak-stable/blob/main/src/psram_logger.cpp)
+  - [tools/convert_rwlog_to_csv.py](https://github.com/temesotejam/atoms3r-amplitude-control-v46ak-stable/blob/main/tools/convert_rwlog_to_csv.py)
+  - [docs/rwlog_format.md](https://github.com/temesotejam/atoms3r-amplitude-control-v46ak-stable/blob/main/docs/rwlog_format.md)
+- **temesotejam/atoms3r-mekf-dynamic-validation** — [repository](https://github.com/temesotejam/atoms3r-mekf-dynamic-validation)
+  - [README.md](https://github.com/temesotejam/atoms3r-mekf-dynamic-validation/blob/main/README.md)
+  - [src/imu_acquisition_audit.h](https://github.com/temesotejam/atoms3r-mekf-dynamic-validation/blob/main/src/imu_acquisition_audit.h)
+  - [src/imu_manager.cpp](https://github.com/temesotejam/atoms3r-mekf-dynamic-validation/blob/main/src/imu_manager.cpp)
+  - [src/imu_manager.h](https://github.com/temesotejam/atoms3r-mekf-dynamic-validation/blob/main/src/imu_manager.h)
+  - [src/beta_phase_controller.h](https://github.com/temesotejam/atoms3r-mekf-dynamic-validation/blob/main/src/beta_phase_controller.h)
+  - [src/beta_turn_fast_controller.h](https://github.com/temesotejam/atoms3r-mekf-dynamic-validation/blob/main/src/beta_turn_fast_controller.h)
+  - [src/bmi270_timing_reader.h](https://github.com/temesotejam/atoms3r-mekf-dynamic-validation/blob/main/src/bmi270_timing_reader.h)
+- **temesotejam/reaction-wheel-v58-experiment-firmware** — [repository](https://github.com/temesotejam/reaction-wheel-v58-experiment-firmware)
+  - [README.md](https://github.com/temesotejam/reaction-wheel-v58-experiment-firmware/blob/main/README.md)
+  - [firmware/src/beta_phase_controller.h](https://github.com/temesotejam/reaction-wheel-v58-experiment-firmware/blob/main/firmware/src/beta_phase_controller.h)
+  - [firmware/src/beta_turn_fast_controller.h](https://github.com/temesotejam/reaction-wheel-v58-experiment-firmware/blob/main/firmware/src/beta_turn_fast_controller.h)
+  - [firmware/src/imu_manager.h](https://github.com/temesotejam/reaction-wheel-v58-experiment-firmware/blob/main/firmware/src/imu_manager.h)
+  - [firmware/src/imu_manager.cpp](https://github.com/temesotejam/reaction-wheel-v58-experiment-firmware/blob/main/firmware/src/imu_manager.cpp)
+  - [firmware/src/main.cpp](https://github.com/temesotejam/reaction-wheel-v58-experiment-firmware/blob/main/firmware/src/main.cpp)
+  - [firmware/README.md](https://github.com/temesotejam/reaction-wheel-v58-experiment-firmware/blob/main/firmware/README.md)
+  - [firmware/tools/analyze_v58.py](https://github.com/temesotejam/reaction-wheel-v58-experiment-firmware/blob/main/firmware/tools/analyze_v58.py)
+  - [firmware/tools/convert_rwlog_to_csv.py](https://github.com/temesotejam/reaction-wheel-v58-experiment-firmware/blob/main/firmware/tools/convert_rwlog_to_csv.py)
+  - [firmware/tools/analyze_v57.py](https://github.com/temesotejam/reaction-wheel-v58-experiment-firmware/blob/main/firmware/tools/analyze_v57.py)
+  - [firmware/tools/analyze_v57b.py](https://github.com/temesotejam/reaction-wheel-v58-experiment-firmware/blob/main/firmware/tools/analyze_v57b.py)
