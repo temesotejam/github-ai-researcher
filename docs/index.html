@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#10151d">
+  <meta name="description" content="公開GitHubリポジトリの技術資産を横断分析するAI研究員のダッシュボード">
+  <title>GitHub AI Researcher</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="GitHub AI Researcher home">
+        <span class="brand-mark">R</span>
+        <span class="brand-copy"><strong>AI RESEARCHER</strong><small>PERSONAL ENGINEERING ARCHIVE</small></span>
+      </a>
+      <div class="topbar-right">
+        <span class="live-indicator"><i></i> PUBLIC REPOSITORIES</span>
+        <a class="top-link" href="https://github.com/temesotejam/github-ai-researcher/actions" target="_blank" rel="noreferrer">ACTIONS ↗</a>
+        <a class="top-link" href="https://github.com/temesotejam/github-ai-researcher" target="_blank" rel="noreferrer">SOURCE ↗</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-line"></span> YOUR CODEBASE, RECONSIDERED</p>
+          <h1>過去の実装から、<br><em>次の発見</em>をつくる。</h1>
+          <p class="hero-description">公開リポジトリを横断して、再利用できる技術、プロジェクト間の接点、新しい研究テーマを見つけるための個人用研究ポータル。</p>
+          <div class="hero-meta">
+            <span id="updatedAt">データを読み込み中…</span>
+            <span class="meta-divider">/</span>
+            <span>OWNER: TEMESOTEJAM</span>
+            <span class="meta-divider">/</span>
+            <span>PUBLIC ONLY</span>
+          </div>
+        </div>
+        <div class="hero-orbit" aria-hidden="true">
+          <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="orbit orbit-c"></div>
+          <div class="orbit-core"><span>AI</span><small>R&amp;D</small></div>
+          <span class="orbit-node node-a">CODE</span><span class="orbit-node node-b">IDEAS</span><span class="orbit-node node-c">SYSTEMS</span>
+        </div>
+      </section>
+
+      <section class="metrics" id="metrics" aria-label="Research metrics">
+        <article class="metric-card"><span class="metric-label">PUBLIC REPOSITORIES</span><strong id="metricTotal">—</strong><small>公開リポジトリ総数</small></article>
+        <article class="metric-card"><span class="metric-label">ANALYZED</span><strong id="metricAnalyzed">—</strong><small>AIプロフィール作成済み</small></article>
+        <article class="metric-card"><span class="metric-label">REMAINING</span><strong id="metricRemaining">—</strong><small>これから調査する候補</small></article>
+        <article class="metric-card"><span class="metric-label">LAST REPORT</span><strong id="metricDate">—</strong><small>最新の横断分析</small></article>
+      </section>
+
+      <section class="toolbar panel">
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input id="searchInput" type="search" placeholder="リポジトリ、技術、アルゴリズム、実装名を検索…" autocomplete="off">
+          <kbd>SEARCH</kbd>
+        </div>
+        <div class="filter-row">
+          <label>言語<select id="languageFilter"><option value="all">すべて</option></select></label>
+          <label>確信度<select id="confidenceFilter"><option value="all">すべて</option><option value="high">高</option><option value="medium">中</option><option value="low">低</option></select></label>
+          <label>成熟度<select id="maturityFilter"><option value="all">すべて</option></select></label>
+          <button class="reset-button" id="resetFilters" type="button">条件をリセット ↺</button>
+        </div>
+      </section>
+
+      <nav class="tabs" aria-label="Dashboard sections">
+        <button class="tab is-active" type="button" data-tab="overview"><span>01</span> OVERVIEW</button>
+        <button class="tab" type="button" data-tab="repositories"><span>02</span> REPOSITORIES <b id="tabRepoCount">0</b></button>
+        <button class="tab" type="button" data-tab="components"><span>03</span> REUSABLE ASSETS</button>
+        <button class="tab" type="button" data-tab="report"><span>04</span> RESEARCH REPORT</button>
+      </nav>
+
+      <section class="tab-panel is-visible" id="panel-overview">
+        <div class="section-heading"><div><p class="eyebrow">RESEARCH SNAPSHOT</p><h2>今回の調査状況</h2></div><span class="section-note">プロフィールのあるリポジトリを表示</span></div>
+        <div class="overview-grid">
+          <article class="panel coverage-panel">
+            <div class="panel-heading"><div><span class="panel-kicker">COVERAGE</span><h3>分析の進捗</h3></div><span class="panel-icon">◉</span></div>
+            <div class="coverage-number"><strong id="coveragePercent">—</strong><span>PROFILED</span></div>
+            <div class="progress-track"><span id="coverageBar"></span></div>
+            <div class="coverage-foot"><span id="coverageAnalyzed">— 件を分析</span><span id="coverageRemaining">— 件が未分析</span></div>
+            <p class="subtle-copy">初回は一部のリポジトリを優先して分析しています。Actionsから追加の解析を実行できます。</p>
+            <a class="inline-link" href="https://github.com/temesotejam/github-ai-researcher/actions/workflows/research.yml" target="_blank" rel="noreferrer">追加の解析を実行する ↗</a>
+          </article>
+          <article class="panel language-panel">
+            <div class="panel-heading"><div><span class="panel-kicker">LANGUAGE MAP</span><h3>技術スタックの分布</h3></div><span class="panel-icon">⌘</span></div>
+            <div id="languageBars" class="bar-list"><p class="empty-note">読み込み中…</p></div>
+          </article>
+        </div>
+        <div class="section-heading compact-heading"><div><p class="eyebrow">RECENT DISCOVERIES</p><h2>最近の分析</h2></div><button class="text-button" type="button" data-open-tab="repositories">すべて見る →</button></div>
+        <div class="recent-grid" id="recentRepos"><div class="empty-note">分析データを読み込み中…</div></div>
+        <div class="section-heading compact-heading"><div><p class="eyebrow">CROSS-PROJECT SIGNALS</p><h2>複数プロジェクトに現れる技術</h2></div><button class="text-button" type="button" data-open-tab="components">技術資産を見る →</button></div>
+        <div class="signal-grid" id="signalGrid"><div class="empty-note">読み込み中…</div></div>
+      </section>
+
+      <section class="tab-panel" id="panel-repositories">
+        <div class="section-heading"><div><p class="eyebrow">REPOSITORY INDEX</p><h2>リポジトリ分析一覧</h2><p class="section-description">AIが読み取った目的、構成、技術、再利用候補を確認できます。</p></div><span class="result-count" id="resultCount">0 RESULTS</span></div>
+        <div class="repo-layout">
+          <div class="repo-list" id="repoList"><div class="empty-note">読み込み中…</div></div>
+          <aside class="detail-panel panel" id="detailPanel"><div class="detail-empty"><span>↖</span><h3>リポジトリを選択</h3><p>一覧から選ぶと、技術構成と根拠ファイルをここに表示します。</p></div></aside>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="panel-components">
+        <div class="section-heading"><div><p class="eyebrow">REUSABLE ASSETS</p><h2>再利用できる技術資産</h2><p class="section-description">各リポジトリの分析から抽出されたコンポーネントと、共通して現れる技術です。</p></div></div>
+        <div class="asset-summary" id="assetSummary"></div>
+        <div class="asset-layout"><div><div class="subsection-heading"><h3>再利用コンポーネント</h3><span id="componentCount">0 ASSETS</span></div><div class="component-grid" id="componentGrid"></div></div><div><div class="subsection-heading"><h3>共有技術</h3><span>EXACT TAG MATCH</span></div><div class="shared-tech-list" id="sharedTechList"></div></div></div>
+        <p class="footnote">※ 同じ技術名が複数のリポジトリにあることは、実装が同一・互換であることを意味しません。統合前に根拠ファイルを確認してください。</p>
+      </section>
+
+      <section class="tab-panel" id="panel-report">
+        <div class="section-heading"><div><p class="eyebrow">AI SYNTHESIS</p><h2>横断分析レポート</h2><p class="section-description">プロジェクトをまたいだ再利用案、比較、研究テーマを確認します。</p></div><a class="button-link" href="https://github.com/temesotejam/github-ai-researcher/blob/main/reports/latest.md" target="_blank" rel="noreferrer">GitHubで開く ↗</a></div>
+        <article class="report-panel panel"><div class="report-topline"><span>LATEST RESEARCH / MARKDOWN</span><span id="reportDate">—</span></div><div class="markdown-body" id="reportContent"><p class="empty-note">レポートを読み込み中…</p></div></article>
+      </section>
+
+      <section class="compare-dock" id="compareDock" hidden>
+        <div><strong id="compareCount">0</strong><span> / 3 比較対象</span><small>リポジトリを選んで比較</small></div>
+        <div class="compare-selected" id="compareSelected"></div>
+        <button class="compare-button" id="compareButton" type="button" disabled>選択した項目を比較 →</button>
+        <button class="dock-close" id="clearCompare" type="button" aria-label="比較選択を解除">×</button>
+      </section>
+
+      <section class="compare-section panel" id="compareSection" hidden>
+        <div class="panel-heading"><div><span class="panel-kicker">SIDE-BY-SIDE</span><h3>リポジトリ比較</h3></div><button class="text-button" id="closeCompare" type="button">閉じる ×</button></div>
+        <div id="compareTable" class="compare-table-wrap"></div>
+      </section>
+    </main>
+
+    <footer class="footer"><span>GITHUB AI RESEARCHER</span><span>BUILT FOR DISCOVERY · POWERED BY GITHUB ACTIONS</span><a href="https://github.com/temesotejam/github-ai-researcher" target="_blank" rel="noreferrer">VIEW SOURCE ↗</a></footer>
+  </div>
+</body>
+</html>
