@@ -148,6 +148,173 @@ function finalPrompt(indexRows,batchReports,total) {
     batchReports.map((x,i)=>"## Batch "+(i+1)+"\n"+x).join("\n\n")
   ].join("\n\n");
 }
+
+const GRAPH_THEME_RULES = [
+  ["embedded", "組み込み・ファームウェア", /(pico|raspberry|esp32|m5stack|arduino|stm32|firmware|組み込み|マイコン|spike-rt|dshot|sbus|blheli|microcontroller)/i],
+  ["robotics", "ロボティクス・制御", /(robot|walker|walking|ロボット|歩行|reaction.?wheel|リアクションホイール|倒立振子|姿勢制御|acrobot|cart.?pole|pendulum|pid|motor control|モータ制御)/i],
+  ["simulation", "シミュレーション・数値モデル", /(simulat|dynamics|physics|数値モデル|シミュレーション|modeling|benchmark|wheel-terrain|inertial-perception)/i],
+  ["vision", "画像処理・コンピュータビジョン", /(camera|vision|image|画像|opencv|realsense|depth|slam|marker|追跡|annotation|アノテーション|sam2)/i],
+  ["navigation", "航法・位置推定", /(gnss|gps|navigation|waypoint|航法|boat|hydrofoil|船舶|uwb|position|位置推定|ins)/i],
+  ["webtools", "Web・開発ツール", /(web|browser|dashboard|viewer|monitor|toolkit|visualiz|可視化|webui|github pages|html|javascript|typescript|usb|dfu)/i],
+  ["data", "データ解析・計測", /(log|analy|telemetry|csv|json|record|recorder|データ|計測|同期|sensor|センサ)/i],
+  ["ml", "AI・機械学習", /(machine learning|reinforcement|強化学習|rl[-_]|ppo|sac|td3|sam2|copilot|llm|artificial intelligence)/i],
+  ["games", "ゲーム・インタラクティブ", /(game|minecraft|tavern|pixel|gamepad|dualsense|ゲーム|interactive)/i],
+  ["education", "教育・教材", /(spike|education|assignment|課題|教材|授業|lesson)/i],
+  ["electronics", "電子回路・モーター", /(esc|motor|dshot|pwm|brushless|bldc|モータ|モーター|electronics|電気回路|電源)/i]
+];
+
+function buildKnowledgeGraph(repositories, profileMap) {
+  const normalize = value => String(value).normalize("NFKC").trim().toLowerCase().replace(/\s+/g, " ");
+  const makeId = (type, label) => type + ":" + encodeURIComponent(normalize(label));
+  const cleanValues = values => [...new Map((Array.isArray(values) ? values : [])
+    .map(value => String(value).trim())
+    .filter(value => value && value.length < 70 && !/^(unknown|none|n\/a|不明|なし|未確認)$/i.test(value))
+    .map(value => [normalize(value), value])).values()];
+  const occurrences = { technology: new Map(), hardware: new Map() };
+
+  for (const repo of repositories) {
+    const profile = (profileMap[repo.full_name] || {}).profile || {};
+    for (const [type, values] of [["technology", cleanValues(profile.technologies)], ["hardware", cleanValues(profile.hardware)]]) {
+      for (const value of values) {
+        const key = normalize(value);
+        occurrences[type].set(key, (occurrences[type].get(key) || 0) + 1);
+      }
+    }
+  }
+
+  const nodes = new Map();
+  const edges = new Map();
+  const features = new Map();
+
+  function addNode(type, label, extra = {}) {
+    const id = makeId(type, label);
+    if (!nodes.has(id)) nodes.set(id, { id, type, label: String(label).trim(), ...extra });
+    else Object.assign(nodes.get(id), extra);
+    return id;
+  }
+  function addEdge(source, target, type, extra = {}) {
+    if (source === target) return;
+    const id = [source, target, type].sort().join("|");
+    if (!edges.has(id)) edges.set(id, { id, source, target, type, ...extra });
+  }
+
+  const accountId = addNode("account", "temesotejam", {
+    description: "GitHubアカウントの公開リポジトリ全体",
+    url: "https://github.com/temesotejam"
+  });
+
+  for (const repo of repositories) {
+    const entry = profileMap[repo.full_name] || {};
+    const profile = entry.profile || {};
+    const repoId = addNode("repository", repo.name, {
+      repo: repo.full_name,
+      url: repo.url,
+      description: repo.description || "",
+      purpose: profile.purpose || "",
+      language: repo.language || "",
+      confidence: profile.confidence || "low",
+      archived: Boolean(repo.archived),
+      pushed_at: repo.pushed_at || null
+    });
+    addEdge(accountId, repoId, "owns", { hidden_by_default: true });
+
+    const technologies = cleanValues(profile.technologies)
+      .filter(value => (occurrences.technology.get(normalize(value)) || 0) >= 2);
+    const hardware = cleanValues(profile.hardware)
+      .filter(value => (occurrences.hardware.get(normalize(value)) || 0) >= 2);
+    const text = [
+      repo.full_name, repo.description || "", profile.purpose || "", profile.architecture || "",
+      ...cleanValues(profile.technologies), ...cleanValues(profile.hardware)
+    ].join(" ");
+    const themes = GRAPH_THEME_RULES
+      .filter(([, , pattern]) => pattern.test(text))
+      .map(([, label]) => label);
+    if (!themes.length) themes.push("その他・未分類");
+
+    const repoFeatures = { repoId, technologies, hardware, themes: themes.slice(0, 3) };
+    features.set(repo.full_name, repoFeatures);
+
+    for (const [type, values, edgeType] of [
+      ["technology", technologies, "uses"],
+      ["hardware", hardware, "uses_hardware"],
+      ["theme", repoFeatures.themes, "belongs_to"],
+      ["language", repo.language ? [repo.language] : [], "written_in"]
+    ]) {
+      for (const label of values) {
+        const nodeId = addNode(type, label, { repoCount: 0 });
+        const node = nodes.get(nodeId);
+        node.repoCount = (node.repoCount || 0) + 1;
+        addEdge(repoId, nodeId, edgeType);
+      }
+    }
+  }
+
+  const names = [...features.keys()];
+  const candidates = [];
+  for (let i = 0; i < names.length; i += 1) {
+    for (let j = i + 1; j < names.length; j += 1) {
+      const a = features.get(names[i]);
+      const b = features.get(names[j]);
+      const sharedTechnologies = a.technologies.filter(value =>
+        b.technologies.some(other => normalize(value) === normalize(other)));
+      const sharedHardware = a.hardware.filter(value =>
+        b.hardware.some(other => normalize(value) === normalize(other)));
+      const sharedThemes = a.themes.filter(value => b.themes.includes(value));
+      const coreCount = sharedTechnologies.length + sharedHardware.length;
+      const weight = sharedTechnologies.length * 2 + sharedHardware.length * 2 + sharedThemes.length * 0.6;
+      if (coreCount >= 1 && (coreCount >= 2 || sharedThemes.length >= 1)) {
+        candidates.push({
+          source: a.repoId, target: b.repoId, score: weight,
+          shared: { technology: sharedTechnologies, hardware: sharedHardware, theme: sharedThemes }
+        });
+      }
+    }
+  }
+
+  const neighbors = new Map();
+  for (const candidate of candidates) {
+    for (const endpoint of [candidate.source, candidate.target]) {
+      if (!neighbors.has(endpoint)) neighbors.set(endpoint, []);
+      neighbors.get(endpoint).push(candidate);
+    }
+  }
+  const selectedPairs = new Map();
+  for (const list of neighbors.values()) {
+    list.sort((a, b) => b.score - a.score).slice(0, 4).forEach(candidate => {
+      const key = [candidate.source, candidate.target].sort().join("|");
+      const previous = selectedPairs.get(key);
+      if (!previous || previous.score < candidate.score) selectedPairs.set(key, candidate);
+    });
+  }
+  for (const candidate of selectedPairs.values()) {
+    addEdge(candidate.source, candidate.target, "related_to", {
+      weight: Number(candidate.score.toFixed(2)),
+      shared: candidate.shared
+    });
+  }
+
+  const degree = new Map();
+  for (const edge of edges.values()) {
+    degree.set(edge.source, (degree.get(edge.source) || 0) + 1);
+    degree.set(edge.target, (degree.get(edge.target) || 0) + 1);
+  }
+  for (const node of nodes.values()) node.degree = degree.get(node.id) || 0;
+
+  return {
+    schema_version: 1,
+    generated_at: new Date().toISOString(),
+    owner,
+    stats: {
+      repository_count: features.size,
+      node_count: nodes.size,
+      edge_count: edges.size,
+      related_repository_pairs: selectedPairs.size
+    },
+    nodes: [...nodes.values()],
+    edges: [...edges.values()]
+  };
+}
+
 async function main() {
   fs.mkdirSync("data",{recursive:true});
   fs.mkdirSync("reports/weekly",{recursive:true});
@@ -245,6 +412,8 @@ async function main() {
   }
   const index={generated_at:new Date().toISOString(),owner,visibility_filter:"public only",repository_count:repos.length,repositories:repos};
   fs.writeFileSync("data/repository-index.json",JSON.stringify(index,null,2)+"\n");
+  const graph = buildKnowledgeGraph(repos, profiles);
+  fs.writeFileSync("data/graph.json", JSON.stringify(graph, null, 2) + "\n");
   fs.writeFileSync("data/profiles.json",JSON.stringify({schema_version:1,generated_at:new Date().toISOString(),owner,repository_count:repos.length,profiles},null,2)+"\n");
   const evidence=["## 根拠ファイル一覧",""];
   for(const [name,e] of Object.entries(profiles)){
