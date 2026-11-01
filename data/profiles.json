@@ -1,7 +1,1584 @@
 {
   "schema_version": 1,
-  "generated_at": null,
+  "generated_at": "2026-11-01T05:33:12.102Z",
   "owner": "temesotejam",
-  "repository_count": 0,
-  "profiles": {}
+  "repository_count": 109,
+  "profiles": {
+    "temesotejam/atoms3r-lateral-energy-control": {
+      "url": "https://github.com/temesotejam/atoms3r-lateral-energy-control",
+      "default_branch": "main",
+      "pushed_at": "2026-11-01T05:19:38Z",
+      "available_paths": [
+        ".github",
+        ".github/workflows",
+        ".github/workflows/build.yml",
+        ".github/workflows/pages.yml",
+        ".gitignore",
+        "FINAL_PROGRAM_AUDIT_V46.md",
+        "README.md",
+        "THIRD_PARTY_BMM150_LICENSE.txt",
+        "WORKSPACE_CHANGE_LOG.md",
+        "docs",
+        "docs/ABSOLUTE_ENERGY_REFERENCE.md",
+        "docs/ADAPTIVE_LATERAL_CG.md",
+        "docs/AMPLITUDE_MODEL_04731.md",
+        "docs/ATTITUDE_ESTIMATION_V46AI_JA.md",
+        "docs/CAMERA_STACK_PANIC_0472.md",
+        "docs/CONTROL_CACHE_PREVIEW_04717.md",
+        "docs/CONTROL_LATENCY_04719.md",
+        "docs/CORE_ISOLATION_04724.md",
+        "docs/DEFERRED_ATTITUDE_TIMING_04711.md",
+        "docs/DIRECT_Q_INVERSE_04718.md",
+        "docs/ESTOP_BACKLOG_0478.md",
+        "docs/ESTOP_WORK_REDUCTION_0479.md",
+        "docs/FILTER_TIMING_04712.md",
+        "docs/FINAL_SNAPSHOT_20260920_JA.md",
+        "docs/FIRST_V46_DYNAMIC_VALIDATION.md",
+        "docs/FOOT_BALANCE_ADAPTIVE.md",
+        "docs/FOOT_CALIBRATION_0477.md",
+        "docs/FORE_AFT_STOP_04722.md",
+        "docs/FREEFOOT_RUNTIME_V2.md",
+        "docs/FREEFOOT_SUCCESS_TIMING_04710.md",
+        "docs/HTTP_PAUSE_04723.md",
+        "docs/INDEPENDENT_ENERGY_FEEDBACK.md",
+        "docs/INSTABILITY_REVIEW.md",
+        "docs/IRAM_AND_MARKER_GUARD_04716.md",
+        "docs/LATERAL_CG_ENERGY.md",
+        "docs/LED_SYNC_PATTERN_V2_LOGGED_ANCHORS.md",
+        "docs/LOG_ENCODER_REGRESSION_04714.md",
+        "docs/LOG_ENCODER_TIMING_04713.md",
+        "docs/MAGNETOMETER_04727.md",
+        "docs/MARKER_IDENTITY_0474.md",
+        "docs/MARKER_TRACKING_0473.md",
+        "docs/MEKF_DYNAMIC_COMPARE_V46.md",
+        "docs/MOTION_ACQUISITION_04725.md",
+        "docs/NEGATIVE_ENERGY_ASSIST.md",
+        "docs/NEGATIVE_ONE_PEAK_ENERGY_INVERSE.md",
+        "docs/NORMAL_UPDATE_04720.md",
+        "docs/OFFLINE_RUN_04721.md",
+        "docs/PHASE_1N_RUN_ONESHOT_VALIDATION.md",
+        "docs/POOLED_NEGATIVE_WORK_CONTROL.md",
+        "docs/POSE_COMPARISON_0476.md",
+        "docs/RANGE_MEKF_DIAGNOSTICS_0475.md",
+        "docs/RECOVERED_RUN_STACK_TIMING_04715.md",
+        "docs/ROBOT_COORDINATE_AUDIT_20260924_JA.md",
+        "docs/SMOOTH_ENERGY_BOUNDARY.md",
+        "docs/STEERING_04728.md",
+        "docs/STEERING_RESPONSE_04729.md",
+        "docs/TARGET12_ENERGY_GUARD.md",
+        "docs/TARGET12_SHARED_ENERGY.md",
+        "docs/TARGET12_STATE_WORK.md",
+        "docs/TARGET_ANGLE_PRESETS.md",
+        "docs/USB_DIAGNOSTICS.md",
+        "docs/V46AA_CONTROL_UPRIGHT_ZERO.md",
+        "docs/V46AB_NO_CONTROL_PREDICTION.md",
+        "docs/V46AC_LIGHT_DELAY_COMPENSATION.md",
+        "docs/V46AD_DELAY_COMPENSATION_SWEEP.md",
+        "docs/V46AE_MEKF_AMPLITUDE.md",
+        "docs/V46AF_PEAK_SIDE_FIX.md",
+        "docs/V46AG_RATE_BASELINE.md",
+        "docs/V46AH_FULL_RATE_BASELINE.md",
+        "docs/V46AI_RATE_ONLY_BASELINE.md",
+        "docs/V46AJ_FIXED_3MS.md",
+        "docs/V46AK_PRE_INPUT_STATE_OBSERVATION.md",
+        "docs/V46AL_R1_PREVIOUS_PEAK_ACTIVE_CONTROL.md",
+        "docs/V46AL_R2_PREVIOUS_PEAK_ACTIVE_CONTROL.md",
+        "docs/V46AL_ROOT_CAUSE_AUDIT_20260921.md",
+        "docs/V46N_ACQUISITION_RELEASE.md",
+        "docs/V46O_STARTUP_FIX.md",
+        "docs/V46Q_LIGHTWEIGHT_ACQUISITION.md",
+        "docs/V46S_SOLVER_AUDIT.md",
+        "docs/V46T_CURRENT_OBSERVATION_FIX.md",
+        "docs/V46U_TIMING.md",
+        "docs/V46V_DEADLINE_TIGHTENING.md",
+        "docs/V46W_IMU_POLL_2500US.md",
+        "docs/V46X_IMU_POLL_500US.md",
+        "docs/V46Y_ATTITUDE_VIDEO_AUDIT.md",
+        "docs/V46Y_IMU_SPEC_FROZEN.md",
+        "docs/V46Z_EVENT_RELATIVE_ZERO.md",
+        "docs/WALKING_ENERGY_LOSS.md",
+        "docs/WHEEL_WORK_ONE_PEAK_CONTROL.md",
+        "docs/broad_negative_19runs_validation.json",
+        "docs/data",
+        "docs/data/04717_five_run_baseline.json",
+        "docs/data/04718_same_state_replay.json",
+        "docs/data/timing_results_through_04725.json",
+        "docs/energy_angle_bridge_20261015.md",
+        "docs/energy_model_validation_20261014.md",
+        "docs/extended_negative_work_batch_20261023.md",
+        "docs/foot_calibration_20261030.md",
+        "docs/full_charge_negative_source.json",
+        "docs/full_charge_negative_validation.json",
+        "docs/lateral_energy_refit_20261014.md",
+        "docs/lateral_energy_seed.json",
+        "docs/negative_brake_comparison_20261014.md",
+        "docs/negative_work_batch_20261021.md",
+        "docs/negative_work_probe_20261016.md",
+        "docs/one_peak_energy_refit_20261021.md",
+        "docs/peak_error_adaptation_20261014.md",
+        "docs/pooled_negative_31runs_sources.json",
+        "docs/pooled_negative_31runs_validation.json",
+        "docs/positive_current_batch_20261023.md",
+        "docs/positive_energy_feedback_replay.json",
+        "docs/positive_work_8runs_sources.json",
+        "docs/positive_work_8runs_validation.json",
+        "docs/prospective_one_peak_validation_20261021.md",
+        "docs/randomized_negative_work_batch_20261021.md",
+        "docs/rwlog_format.md",
+        "docs/upright_reference_20261014.md",
+        "docs/wheel_position_work_20261016.md",
+        "docs/wheel_work_20261016.md",
+        "platformio.ini",
+        "site",
+        "site/index.html",
+        "site/manifest-freefoot-runtime-v2.json",
+        "site/manifest-phase1d.json",
+        "site/manifest-phase1e.json",
+        "site/manifest-phase1f.json",
+        "site/manifest-phase1g.json",
+        "site/manifest-phase1h.json",
+        "site/manifest-phase1i.json",
+        "site/manifest-phase1j.json",
+        "site/manifest-phase1k.json",
+        "site/manifest-phase1l.json",
+        "site/manifest-phase1m.json",
+        "site/manifest-phase1n-rwlog-v4.json",
+        "site/manifest-phase1n-rwlog-v5-compact.json",
+        "site/manifest-phase1n-rwlog-v6-paced.json",
+        "site/manifest-phase1n.json",
+        "site/manifest-webui-recovery-v6.json",
+        "site/manifest.json",
+        "site/one-peak-energy.js",
+        "site/serial-monitor.js",
+        "site/styles.css",
+        "site/wheel-work.html",
+        "site/wheel-work.js",
+        "src",
+        "src/adaptive_lateral_cg.h",
+        "src/autonomous_brake_limit.h",
+        "src/autonomous_input_current.h",
+        "src/autonomous_input_percent.h",
+        "src/autonomous_target.h",
+        "src/beta_phase_controller.h",
+        "src/beta_turn_fast_controller.h",
+        "src/bmi270_timing_reader.h",
+        "src/bounded_web_server.cpp",
+        "src/bounded_web_server.h",
+        "src/camera_coexistence.cpp",
+        "src/camera_coexistence.h",
+        "src/camera_lifecycle.h",
+        "src/camera_serial_debug.cpp",
+        "src/camera_serial_debug.h",
+        "src/camera_task_priority_patch.cpp",
+        "src/camera_task_priority_patch.h",
+        "src/compact_json_table.h",
+        "src/config.h",
+        "src/control_angle_reference.h",
+        "src/control_latency.cpp",
+        "src/control_latency.h",
+        "src/control_math_cache.h",
+        "src/control_work_profile.cpp",
+        "src/control_work_profile.h",
+        "src/diagnostic_journal.h",
+        "src/direct_q_solver.h",
+        "src/experiment_runner.cpp",
+        "src/experiment_runner.h",
+        "src/experiment_status.h",
+        "src/export_protocol.h",
+        "src/foot_angle_estimator.cpp",
+        "src/foot_angle_estimator.h",
+        "src/foot_balance_adaptive.h",
+        "src/foot_calibration_diagnostics.h",
+        "src/foot_calibration_table.h",
+        "src/foot_observer.cpp",
+        "src/foot_observer.h",
+        "src/foot_range_diagnostics.h",
+        "src/foot_tracking_config.h",
+        "src/foot_zero.h",
+        "src/gyro_steering.h",
+        "src/immutable_export.cpp",
+        "src/immutable_export.h",
+        "src/imu_acquisition_audit.h",
+        "src/imu_i2c_transport.cpp",
+        "src/imu_i2c_transport.h",
+        "src/imu_manager.cpp",
+        "src/imu_manager.h",
+        "src/imu_poll_profile.h",
+        "src/imu_poll_timer.h",
+        "src/imu_startup_boundary.h",
+        "src/lateral_cg_energy.h",
+        "src/lateral_cg_store.cpp",
+        "src/lateral_energy_control.h"
+      ],
+      "recent_commits": [
+        {
+          "sha": "d78a1fce",
+          "message": "Adapt walking assistance using measured arrival wheel speed"
+        },
+        {
+          "sha": "f48d7cc2",
+          "message": "Coordinate walking assistance and wheel-speed guard"
+        },
+        {
+          "sha": "42b7009e",
+          "message": "Reduce walking wheel speed bias with bounded pulse adjustment"
+        }
+      ],
+      "archived": false,
+      "fingerprint": "56e0320d8d5f950aa9e5267a3f3d6131ca7ea05e1c4c3ae3926e4bd0d85ae0a6",
+      "analyzed_at": "2026-11-01T05:30:30.368Z",
+      "profile": {
+        "purpose": "AtomS3Rとリアクションホイールを使った左右揺動の制御・実機測定用ファームウェア。実験ログの記録・解析と、制御方式の比較も目的としている。",
+        "architecture": "C++の組み込みファームウェアに、制御・姿勢推定・センサー取得・Webサーバー・ログ出力のモジュールがある。site/にはログ解析用のJavaScriptとWeb画面がある。抜粋で動作を確認できるのは、ベータ制御器と制御遅延計測。",
+        "technologies": [
+          "C++",
+          "Arduino API",
+          "FreeRTOS",
+          "PlatformIO",
+          "JavaScript",
+          "HTML/CSS",
+          "MEKF（READMEに記載）",
+          "RWLOG（READMEに記載）"
+        ],
+        "algorithms": [
+          "BetaPhaseController: 入力後の角速度符号反転と位相角から復帰相を検出し、return progressに応じて指数関数的にbeta上限を上げる。",
+          "BetaTurnFastController: 複数サンプルの反転確認、またはタイムアウトで復帰を開始し、smoothstepでbetaを復帰させる。",
+          "制御遅延計測: センサー取得から制御完了までの経過時間、I/O・キューの時間、予算超過を固定容量の統計・記録に集約する。",
+          "README記載のエネルギー制御: 次ピークの位置エネルギーを予測し、目標との差から符号付き入力を決める。係数と逆入力応答は暫定とされている。"
+        ],
+        "hardware": [
+          "M5Stack AtomS3R",
+          "Unit Roller485",
+          "リアクションホイール",
+          "足カメラ（任意記録としてREADMEに記載）",
+          "BMI270関連の取得モジュールが存在する（使用構成の詳細は不明）"
+        ],
+        "interfaces": [
+          "本体Web画面による測定・制御設定（README記載）",
+          "RWLOGによる実験データ記録とCSV解析（README記載）",
+          "site/wheel-work.htmlおよびsite/wheel-work.jsによるログ解析",
+          "制御遅延プロファイルのJSON出力"
+        ],
+        "reusable_components": [
+          {
+            "name": "BetaPhaseController",
+            "purpose": "入力後の運動位相を局所的なジャイロ積分で追跡し、反転後のbeta上限を位相進行に応じて調整する。",
+            "evidence": [
+              "src/beta_phase_controller.h"
+            ]
+          },
+          {
+            "name": "BetaTurnFastController",
+            "purpose": "入力後の反転を複数サンプルで確認し、smoothstepによる時間制限付きbeta復帰を行う。反転未確認時のフォールバックも備える。",
+            "evidence": [
+              "src/beta_turn_fast_controller.h"
+            ]
+          },
+          {
+            "name": "control_latency::Profile",
+            "purpose": "処理段階ごとの遅延・I/O重複時間・キュー時間を集計し、予算超過を容量制限付きで記録してJSON化する。",
+            "evidence": [
+              "src/control_latency.h",
+              "src/control_latency.cpp"
+            ]
+          },
+          {
+            "name": "control_angle_reference::origin",
+            "purpose": "work modeでは推定器の重力基準角を原点とし、それ以外では保存姿勢を原点とする。",
+            "evidence": [
+              "src/control_angle_reference.h"
+            ]
+          }
+        ],
+        "constraints": [
+          "閉ループ性能は自動試験だけでは確認できないとREADMEに記載されており、実機での検証が必要。",
+          "README記載のエネルギー係数は限られた実機記録に基づく暫定値で、逆入力の効果も無入力時の挙動から独立して同定できていない。",
+          "抜粋のない制御・姿勢推定・ログ各モジュールの内部実装や相互接続の詳細は、この資料だけでは確認できない。"
+        ],
+        "maturity": "実験",
+        "confidence": "medium",
+        "evidence": [
+          "README.md",
+          "src/beta_phase_controller.h",
+          "src/beta_turn_fast_controller.h",
+          "src/control_angle_reference.h",
+          "src/control_latency.h",
+          "src/control_latency.cpp",
+          "src/lateral_energy_control.h",
+          "src/imu_manager.h",
+          "site/wheel-work.html",
+          "site/wheel-work.js"
+        ]
+      }
+    },
+    "temesotejam/github-tavern": {
+      "url": "https://github.com/temesotejam/github-tavern",
+      "default_branch": "main",
+      "pushed_at": "2026-10-31T21:43:54Z",
+      "available_paths": [
+        ".github",
+        ".github/agents",
+        ".github/agents/tavern-keeper.agent.md",
+        ".github/workflows",
+        ".github/workflows/copilot-summaries.yml",
+        ".github/workflows/js-syntax-check.yml",
+        ".github/workflows/public-pages.yml",
+        ".nojekyll",
+        "README.md",
+        "__nonexistent__",
+        "app.js",
+        "card-enricher.js",
+        "data",
+        "data/public-pages.json",
+        "data/summaries.json",
+        "index.html",
+        "keeper-closing-client.js",
+        "public-pages-client.js",
+        "scripts",
+        "scripts/update-public-pages.mjs",
+        "scripts/update-summaries.mjs",
+        "self-terminal.css",
+        "spoken-overview-client.js",
+        "styles.css"
+      ],
+      "recent_commits": [
+        {
+          "sha": "3240a256",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
+          "sha": "30c6c5b0",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
+          "sha": "a3016ba8",
+          "message": "chore: refresh tavern summaries"
+        }
+      ],
+      "archived": false,
+      "fingerprint": "b82730af446dc2ef6a842db6fd7061fc459d0a94e6186844c74ba509a90255dd",
+      "analyzed_at": "2026-11-01T05:30:47.357Z",
+      "profile": {
+        "purpose": "公開GitHubリポジトリを検索・分類し、詳細や説明を閲覧する静的な個人向けポータル。",
+        "architecture": "index.htmlとCSSを基盤に、app.jsがGitHub APIからの取得、検索・分類・詳細表示を担う構成とREADMEに記載されている。説明や公開ページ情報はJSONデータとして保持し、専用クライアントが詳細画面へ反映する。自動更新用スクリプトとGitHub Actionsのワークフローも配置されているが、ワークフロー本体の実装は提示資料から確認できない。",
+        "technologies": [
+          "JavaScript",
+          "HTML",
+          "CSS",
+          "GitHub REST API",
+          "GitHub Pages",
+          "GitHub Actions"
+        ],
+        "algorithms": [
+          "キーワード規則に基づくリポジトリ分類（学習・AI、制御、センサ、画像、Webなど）",
+          "カードのREADME取得を最大6件並行で処理するキュー",
+          "正規表現によるMarkdownの除去・短縮プレビュー生成",
+          "正規表現による日本語説明文の口語調変換"
+        ],
+        "hardware": [],
+        "interfaces": [
+          "GitHub REST APIおよびraw.githubusercontent.comからのHTTP取得",
+          "summaries.jsonとpublic-pages.jsonのJSONデータ",
+          "DOMのMutationObserverを使った画面更新",
+          "GitHub Pagesの静的Web UI"
+        ],
+        "reusable_components": [
+          {
+            "name": "categoryOf",
+            "purpose": "リポジトリ名・説明・言語・Topics・要約にキーワード規則を適用してカテゴリを決定する。",
+            "evidence": [
+              "app.js"
+            ]
+          },
+          {
+            "name": "cleanMarkdown / shortPreview",
+            "purpose": "READMEのMarkdown装飾や画像・リンクなどを除き、カード表示向けの短い説明文を生成する。",
+            "evidence": [
+              "card-enricher.js"
+            ]
+          },
+          {
+            "name": "README取得キュー",
+            "purpose": "キャッシュと重複登録防止を備え、README取得を最大6件並行で処理してカードを更新する。",
+            "evidence": [
+              "card-enricher.js"
+            ]
+          },
+          {
+            "name": "validEntry",
+            "purpose": "公開ページ情報のURLを解析し、HTTPまたはHTTPSの場合だけリンク表示に利用する。",
+            "evidence": [
+              "public-pages-client.js"
+            ]
+          },
+          {
+            "name": "spokenize",
+            "purpose": "説明文を規則ベースで口語調に変換する純粋関数。グローバルへ公開し、ブラウザーなしでのCI実行にも利用できる設計。",
+            "evidence": [
+              "spoken-overview-client.js"
+            ]
+          }
+        ],
+        "constraints": [
+          "READMEでは公開リポジトリのみを対象とし、サイトからリポジトリへの書き込み操作を行わない方針が記載されている。",
+          "分類は単語リストによる規則ベースであり、複数カテゴリに該当する場合の優先順位は規則配列の順序に依存する。",
+          "READMEプレビュー取得はmain/masterとREADMEの一般的な大文字小文字表記を試す実装で、他のブランチ名や配置への対応は確認できない。",
+          "ワークフローと更新スクリプトの内容、JSONデータの実例、テスト結果は提示されていないため、自動解析・更新の実動作は確認できない。",
+          "ハードウェア関連の実装は確認できない。"
+        ],
+        "maturity": "ツール",
+        "confidence": "medium",
+        "evidence": [
+          "README.md",
+          "app.js",
+          "card-enricher.js",
+          "public-pages-client.js",
+          "spoken-overview-client.js",
+          "keeper-closing-client.js",
+          "scripts/update-public-pages.mjs",
+          "scripts/update-summaries.mjs",
+          ".github/workflows/copilot-summaries.yml",
+          ".github/workflows/js-syntax-check.yml"
+        ]
+      }
+    },
+    "temesotejam/2026_10_24": {
+      "url": "https://github.com/temesotejam/2026_10_24",
+      "default_branch": "main",
+      "pushed_at": "2026-10-31T21:30:02Z",
+      "available_paths": [
+        ".github",
+        ".github/workflows",
+        ".github/workflows/news.yml",
+        ".github/workflows/pages.yml",
+        "README.md",
+        "app.js",
+        "data",
+        "data/news.json",
+        "index.html",
+        "scripts",
+        "scripts/fetch-news.mjs",
+        "styles.css"
+      ],
+      "recent_commits": [
+        {
+          "sha": "31878327",
+          "message": "Update automatic news feed"
+        },
+        {
+          "sha": "bff1f80d",
+          "message": "Update automatic news feed"
+        },
+        {
+          "sha": "7a766814",
+          "message": "Update automatic news feed"
+        }
+      ],
+      "archived": false,
+      "fingerprint": "ba26067b9c8b53ee9c1d3e6ddc8bb9d9c20e66c871fef79b1a45e1a196b29015",
+      "analyzed_at": "2026-11-01T05:31:03.289Z",
+      "profile": {
+        "purpose": "ニュース見出しを題材に、現象を仲間にしながら探索する一人用ブラウザーゲーム。",
+        "architecture": "app.js がゲーム状態とニュース選択・表示を扱い、index.html と styles.css が画面を構成する。scripts/fetch-news.mjs と GitHub Actions のワークフローがニュースデータを取得し、data/news.json をゲーム側で読み込む構成とREADMEに記載されている。取得スクリプトとワークフローの実装詳細は未確認。",
+        "technologies": [
+          "JavaScript",
+          "HTML Canvas",
+          "ブラウザー Fetch API",
+          "localStorage",
+          "GitHub Actions",
+          "RSS（READMEに記載）"
+        ],
+        "algorithms": [
+          "ニュース見出しをカテゴリー・危険語・配信元で絞り込み、表示件数を制限する処理。",
+          "HTTP/HTTPS以外のURLを除外する検証。",
+          "日付を整数化し、ニュース件数で剰余を取って初期ニュースを選ぶ方式。",
+          "ゲームの乱数選択に Math.random を使う処理。"
+        ],
+        "hardware": [],
+        "interfaces": [
+          "ブラウザー上のCanvasゲーム画面",
+          "data/news.json のJSONデータ",
+          "RSSニュース取得（READMEに記載）",
+          "GitHub Pagesでの公開（READMEに記載）"
+        ],
+        "reusable_components": [
+          {
+            "name": "safeHttpUrl(value)",
+            "purpose": "URLを解析し、HTTP/HTTPSだけを許可する。ニュースリンクや保存済みデータの入力検証に再利用できる。",
+            "evidence": [
+              "app.js"
+            ]
+          },
+          {
+            "name": "esc(v)",
+            "purpose": "HTMLで特別な意味を持つ文字をエスケープする。動的文字列をHTMLへ出力する場面に再利用できる。",
+            "evidence": [
+              "app.js"
+            ]
+          },
+          {
+            "name": "loadAutomaticNews()",
+            "purpose": "JSONニュースを取得し、カテゴリー・見出し・配信元を検査してゲーム用データへ整形する。記事本文を確認済みとは扱わない設定も付与する。",
+            "evidence": [
+              "app.js",
+              "data/news.json"
+            ]
+          },
+          {
+            "name": "renderAutomaticNews()",
+            "purpose": "ニュースをDOM要素として表示し、テキストをtextContentで設定して選択イベントを関連付ける。",
+            "evidence": [
+              "app.js"
+            ]
+          },
+          {
+            "name": "savedSeed()",
+            "purpose": "localStorageから保存データを読み込み、JSON解析とリンク検証を行う。保存データを外部入力として扱う例として再利用できる。",
+            "evidence": [
+              "app.js"
+            ]
+          }
+        ],
+        "constraints": [
+          "確認できるapp.jsの抜粋は一部のみで、迷宮生成・戦闘・ターン進行の具体的な実装詳細は確認できない。",
+          "ニュースの安全語句除外は見出しの部分一致に基づくため、記事内容の正確性や安全性を保証する仕組みとは確認できない。",
+          "ニュース取得処理は失敗時に空配列へ切り替わる。READMEにはActions側で取得失敗時に直前データを維持するとあるが、実装は未確認。",
+          "RSS配信元、収集件数や品質、テスト状況は提示情報だけでは確認できない。",
+          "READMEは元作品の設計を研究対象としていると述べるが、具体的な対応関係は提示されたコード抜粋から検証できない。"
+        ],
+        "maturity": "試作",
+        "confidence": "medium",
+        "evidence": [
+          "README.md",
+          "app.js",
+          "index.html",
+          "styles.css",
+          "scripts/fetch-news.mjs",
+          ".github/workflows/news.yml",
+          ".github/workflows/pages.yml",
+          "data/news.json"
+        ]
+      }
+    },
+    "temesotejam/2026_10_24_2": {
+      "url": "https://github.com/temesotejam/2026_10_24_2",
+      "default_branch": "main",
+      "pushed_at": "2026-10-31T14:59:56Z",
+      "available_paths": [
+        ".github",
+        ".github/workflows",
+        ".github/workflows/ci.yml",
+        ".github/workflows/soak-report.yml",
+        ".github/workflows/soak.yml",
+        ".gitignore",
+        ".nvmrc",
+        ".prettierrc.json",
+        "LICENSE",
+        "README.md",
+        "docs",
+        "docs/AI-COMBAT-PLAYTEST.md",
+        "docs/BASELINE.md",
+        "docs/BOT-REFERENCES.md",
+        "docs/CLASSIC-COMPARISON.md",
+        "docs/COOPERATION.md",
+        "docs/COOPERATIVE_VILLAGE.md",
+        "docs/M1-CONTROLS.md",
+        "docs/MOB-ITERATIONS.md",
+        "docs/MOBS.md",
+        "docs/MODERN-HUNTING-DRIVER.md",
+        "docs/PLAN-AUDIT.md",
+        "docs/PLAN.md",
+        "docs/PLAYTHROUGH.md",
+        "docs/QA-ITERATIONS.md",
+        "docs/STATUS.md",
+        "docs/SURVIVAL-AUDIT.md",
+        "docs/SURVIVAL-LIVING.md",
+        "docs/THIRD-PERSON.md",
+        "docs/UPSTREAM.md",
+        "docs/classic-comparison-results.json",
+        "docs/qa",
+        "docs/qa/combat-playtest.json",
+        "docs/qa/portal-regressions.json",
+        "docs/qa/progression-after.json",
+        "docs/qa/progression-before.json",
+        "docs/qa/release-verification.json",
+        "docs/qa/seed-11032.json",
+        "docs/qa/seed-11033.json",
+        "docs/qa/spawn-reload.json",
+        "docs/screenshot-cpu.png",
+        "docs/screenshot-mobile.png",
+        "docs/screenshot.png",
+        "docs/screenshots",
+        "docs/screenshots/block-interaction.webp",
+        "docs/screenshots/classic-polish-after.png",
+        "docs/screenshots/classic-polish-before.png",
+        "docs/screenshots/gameplay.png",
+        "docs/screenshots/mob-models-night.png",
+        "docs/screenshots/mob-models-young.png",
+        "docs/screenshots/mob-models.png",
+        "docs/screenshots/qa",
+        "docs/screenshots/qa/chosen-exit-fixture.png",
+        "docs/screenshots/qa/natural-flint.png",
+        "docs/screenshots/qa/new-village-chest.png",
+        "docs/screenshots/qa/open-spawn.png",
+        "docs/screenshots/survival-crafting.png",
+        "docs/screenshots/survival-diamond.png",
+        "docs/screenshots/world-exploration.webp",
+        "docs/validation-results.json",
+        "docs/verification.md",
+        "downloads",
+        "downloads/edited-survival",
+        "downloads/edited-survival/README.md",
+        "downloads/edited-survival/edit-proof.json",
+        "downloads/edited-survival/preview.gif",
+        "downloads/edited-survival/survival-edited-01.mp4",
+        "downloads/edited-survival/survival-edited-01.srt",
+        "downloads/edited-survival/survival-edited-02.mp4",
+        "downloads/edited-survival/survival-edited-02.srt",
+        "downloads/edited-survival/survival-edited-03.mp4",
+        "downloads/edited-survival/survival-edited-03.srt",
+        "downloads/edited-survival/survival-edited-04.mp4",
+        "downloads/edited-survival/survival-edited-04.srt",
+        "downloads/survival-30min",
+        "downloads/survival-30min/README.md",
+        "downloads/survival-30min/edit-proof.json",
+        "downloads/survival-30min/player-check.json",
+        "downloads/survival-30min/preview.gif",
+        "downloads/survival-30min/survival-edited-01.mp4",
+        "downloads/survival-30min/survival-edited-01.srt",
+        "downloads/survival-30min/survival-edited-02.mp4",
+        "downloads/survival-30min/survival-edited-02.srt",
+        "downloads/survival-30min/survival-edited-03.mp4",
+        "downloads/survival-30min/survival-edited-03.srt",
+        "downloads/survival-30min/survival-edited-04.mp4",
+        "downloads/survival-30min/survival-edited-04.srt",
+        "downloads/survival-30min/survival-edited-05.mp4",
+        "downloads/survival-30min/survival-edited-05.srt",
+        "downloads/survival-30min/survival-edited-06.mp4",
+        "downloads/survival-30min/survival-edited-06.srt",
+        "downloads/survival-30min/survival-edited-07.mp4",
+        "downloads/survival-30min/survival-edited-07.srt",
+        "downloads/survival-30min/survival-edited-08.mp4",
+        "downloads/survival-30min/survival-edited-08.srt",
+        "downloads/survival-30min/survival-edited-09.mp4",
+        "downloads/survival-30min/survival-edited-09.srt",
+        "downloads/survival-30min/survival-edited-10.mp4",
+        "downloads/survival-30min/survival-edited-10.srt",
+        "downloads/survival-generation3-720p",
+        "downloads/survival-generation3-720p/README.md",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-01.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-01.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-02.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-02.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-03.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-03.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-04.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-04.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-05.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-05.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-06.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-06.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-07.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-07.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-08.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-08.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-09.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-09.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-10.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-10.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-11.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-11.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-12.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-12.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-13.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-13.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-14.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-14.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-15.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-15.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-16.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-16.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-17.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-17.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-18.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-18.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-19.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-19.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-20.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-20.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-21.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-21.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-22.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-22.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-23.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-23.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-24.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-24.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-25.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-25.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-26.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-26.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-27.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-27.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-28.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-28.srt",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-29.mp4",
+        "downloads/survival-generation3-720p/survival-generation3-720p-part-29.srt",
+        "eslint.config.js",
+        "index.html",
+        "package-lock.json",
+        "package.json",
+        "public",
+        "public/favicon.svg",
+        "public/icons.svg",
+        "public/watch",
+        "public/watch/edited-proof.json",
+        "public/watch/edited.html",
+        "public/watch/generation3-final-battle-proof.json",
+        "public/watch/generation3-proof.json",
+        "public/watch/index.html",
+        "public/watch/narrated-proof.json",
+        "public/watch/poster-generation3.jpg",
+        "public/watch/poster-narrated.jpg",
+        "public/watch/poster-steady-camera.jpg",
+        "public/watch/poster-third-person.jpg",
+        "public/watch/poster.jpg",
+        "public/watch/quality-battle-proof.json",
+        "public/watch/quality-full-proof.json",
+        "public/watch/quality.html",
+        "public/watch/steady-camera-proof.json",
+        "public/watch/survival-30min-proof.json",
+        "public/watch/survival-30min.html",
+        "public/watch/survival-edited-finale.mp4",
+        "public/watch/survival-generation3-battle-720p.mp4",
+        "public/watch/survival-generation3-battle-720p.srt",
+        "public/watch/survival-generation3-final-battle.mp4",
+        "public/watch/survival-generation3-final-battle.srt",
+        "public/watch/survival-generation3-part-1.mp4",
+        "public/watch/survival-generation3-part-1.srt",
+        "public/watch/survival-generation3-part-2.mp4",
+        "public/watch/survival-generation3-part-2.srt",
+        "public/watch/survival-generation3-part-3.mp4",
+        "public/watch/survival-generation3-part-3.srt",
+        "public/watch/survival-generation3.mp4",
+        "public/watch/survival-generation3.srt",
+        "public/watch/survival-narrated.mp4",
+        "public/watch/survival-narrated.srt",
+        "public/watch/survival-steady-camera.mp4",
+        "src/entities/mob-model.ts",
+        "src/main.ts",
+        "src/player/controller.test.ts",
+        "src/player/controller.ts",
+        "src/ui/touch-controls.test.ts"
+      ],
+      "recent_commits": [
+        {
+          "sha": "7d169641",
+          "message": "Add synchronized cooperative spectator views"
+        },
+        {
+          "sha": "b520c2f6",
+          "message": "Support cooperative village building"
+        },
+        {
+          "sha": "96b87617",
+          "message": "Run cooperative resource work in parallel"
+        }
+      ],
+      "archived": false,
+      "fingerprint": "0fa4fc9fbc7ce389b6cae7e1d6dede70a6c1a046194f4ae3556e8a8658244c73",
+      "analyzed_at": "2026-11-01T05:31:20.154Z",
+      "profile": {
+        "purpose": "Three.js を使った、PC ブラウザー向けのシングルプレイ・ボクセルサバイバルゲーム。2体の自動プログラムによる協調実験モードも備える。",
+        "architecture": "src/main.ts がワールド、描画、プレイヤー操作、サバイバル、協調機能、保存、UIを組み合わせる構成。個別機能は src/player、src/world、src/render、src/survival、src/cooperation などに分割されていることが import から確認できる。詳細な呼び出し関係は提示された抜粋だけでは不明。",
+        "technologies": [
+          "TypeScript",
+          "Three.js",
+          "Vite",
+          "WebGL",
+          "IndexedDB",
+          "Vitest",
+          "GitHub Pages"
+        ],
+        "algorithms": [
+          "固定ステップ時計を用いたプレイヤー更新（src/player/controller.ts）",
+          "ジョイスティックのデッドゾーン、方向保持付き振幅クランプ、入力比例スケーリング（src/ui/touch-controls.test.ts で検証）",
+          "生物の部位形状を結合し、個体ごとの描画呼び出しを減らす方式（src/entities/mob-model.ts）",
+          "松明・日光の周辺領域での伝播計算、および近傍変更を起点に処理を制限する簡易流体方式（README.md）"
+        ],
+        "hardware": [],
+        "interfaces": [
+          "ブラウザーのキーボード・マウス操作と、タッチ端末向け操作",
+          "URL クエリによる Seed、ゲームモード、協調モード、視点の指定（README.md）",
+          "IndexedDB によるワールド保存と JSON バックアップの入出力（README.md）",
+          "GitHub Pages による静的配信（README.md）"
+        ],
+        "reusable_components": [
+          {
+            "name": "mobGeometry(species)",
+            "purpose": "種別ごとのボクセル風生物モデルを組み立て、複数の形状を結合して返す。生物モデルの生成・描画コスト削減に転用できる。",
+            "evidence": [
+              "src/entities/mob-model.ts"
+            ]
+          },
+          {
+            "name": "PlayerController",
+            "purpose": "キーボード入力と視点操作を管理し、ポインターロックが得られない場合にドラッグ視点へ切り替える。物理更新には FixedStepClock と stepPhysics を利用する。",
+            "evidence": [
+              "src/player/controller.ts",
+              "src/player/controller.test.ts"
+            ]
+          },
+          {
+            "name": "joystickVector",
+            "purpose": "タッチスティックの位置を移動入力に変換する。テストではデッドゾーン、単位円内への制限、斜め入力、ダッシュ判定が確認されている。",
+            "evidence": [
+              "src/ui/touch-controls.test.ts"
+            ]
+          },
+          {
+            "name": "Seed・モード別のセーブとバックアップ",
+            "purpose": "ワールド状態を IndexedDB に保存し、JSON バックアップの書き出し・読み込みを提供する。複数ワールドを分離して扱う設計の参考になる。",
+            "evidence": [
+              "README.md",
+              "src/main.ts"
+            ]
+          }
+        ],
+        "constraints": [
+          "Minecraft と同一仕様ではなく、流体シミュレーションは簡易方式と説明されている（README.md）。",
+          "CPU 代替描画ではモデル・照明が簡略化され、三人称視点は無効（README.md）。",
+          "低スペック・標準 PC での目標フレームレートや実機での操作感は未評価と記載されている（README.md）。",
+          "提示されたソース抜粋は一部のみで、各機能の実装全体や性能測定値は確認できない。"
+        ],
+        "maturity": "試作",
+        "confidence": "medium",
+        "evidence": [
+          "README.md",
+          "src/main.ts",
+          "src/entities/mob-model.ts",
+          "src/player/controller.ts",
+          "src/player/controller.test.ts",
+          "src/ui/touch-controls.test.ts"
+        ]
+      }
+    },
+    "temesotejam/pico-copter-fc": {
+      "url": "https://github.com/temesotejam/pico-copter-fc",
+      "default_branch": "main",
+      "pushed_at": "2026-10-30T04:06:44Z",
+      "available_paths": [
+        ".github",
+        ".github/workflows",
+        ".github/workflows/build-and-deploy.yml",
+        ".gitignore",
+        "README.md",
+        "firmware",
+        "firmware/pico_copter",
+        "firmware/pico_copter/CMakeLists.txt",
+        "firmware/pico_copter/DSHOT300_BASELINE.md",
+        "firmware/pico_copter/DSHOT_UPSTREAM_LICENSE.txt",
+        "firmware/pico_copter/README.md",
+        "firmware/pico_copter/control.cpp",
+        "firmware/pico_copter/control.hpp",
+        "firmware/pico_copter/debug_usb.cpp",
+        "firmware/pico_copter/debug_usb.hpp",
+        "firmware/pico_copter/dshot_bidir_decode.hpp",
+        "firmware/pico_copter/dshot_config.hpp",
+        "firmware/pico_copter/dshot_oneway.pio",
+        "firmware/pico_copter/dshot_protocol.hpp",
+        "firmware/pico_copter/dshot_tx.pio",
+        "firmware/pico_copter/ekf.cpp",
+        "firmware/pico_copter/ekf.hpp",
+        "firmware/pico_copter/flight_log_ring.hpp",
+        "firmware/pico_copter/log_capture_gate.hpp",
+        "firmware/pico_copter/lsm9ds1_reg.c",
+        "firmware/pico_copter/lsm9ds1_reg.h",
+        "firmware/pico_copter/motor_mix_scaling.hpp",
+        "firmware/pico_copter/pico_copter.cpp",
+        "firmware/pico_copter/pico_copter.hpp",
+        "firmware/pico_copter/pwm.cpp",
+        "firmware/pico_copter/pwm.hpp",
+        "firmware/pico_copter/radio.cpp",
+        "firmware/pico_copter/radio.hpp",
+        "firmware/pico_copter/sbus_parser.hpp",
+        "firmware/pico_copter/sensor.cpp",
+        "firmware/pico_copter/sensor.hpp",
+        "firmware/pico_copter/tests",
+        "firmware/pico_copter/tests/test_ch5_capture.cpp",
+        "firmware/pico_copter/tests/test_dshot.cpp",
+        "firmware/pico_copter/tests/test_dshot_bidir.cpp",
+        "firmware/pico_copter/tests/test_flight_log_ring.cpp",
+        "firmware/pico_copter/tests/test_motor_mix_scaling.cpp",
+        "firmware/pico_copter/tests/test_sbus.cpp",
+        "web",
+        "web/app.js",
+        "web/index.html",
+        "web/style.css"
+      ],
+      "recent_commits": [
+        {
+          "sha": "596ab4e3",
+          "message": "Restore verified RP2040 one-way DShot300 as main default"
+        },
+        {
+          "sha": "2c5a358e",
+          "message": "Set default to one-way DShot150 for Pico builds"
+        },
+        {
+          "sha": "e8afef26",
+          "message": "Publish portable standalone flight-control source ZIP alongside UF2"
+        }
+      ],
+      "archived": false,
+      "fingerprint": "22bec8a0a4f5917620817ba78f79c317b6dd64a27bf20cf4910c0bd3aa01af47",
+      "analyzed_at": "2026-11-01T05:31:38.255Z",
+      "profile": {
+        "purpose": "Raspberry Pi Pico／Pico 2向けのクアッドコプター飛行制御ファームウェアとUF2配布構成。SBUS入力、センサー推定、モーター制御、ログ記録を含む。",
+        "architecture": "firmware/pico_copterに独立ビルド可能なファームウェアを集約し、制御・推定・センサー・無線・DShot・USB診断を分割。control.cppの400 Hz制御ループがRC状態を確認し、制御と安全状態を処理する。Web配布とGitHub Actionsはファームウェアから分離されている（後者はREADMEの説明）。",
+        "technologies": [
+          "C／C++（README記載のC++17）",
+          "Raspberry Pi Pico SDK",
+          "Eigen",
+          "RP2040 PIO",
+          "USB CDC",
+          "SBUS",
+          "DShot"
+        ],
+        "algorithms": [
+          "PID制御（PIDクラスとupdate/filter/resetインターフェースを確認。具体的な更新式は提示資料から不明）",
+          "拡張カルマンフィルター（EKF）の状態行列と制御ループからの利用を確認。詳細な推定式は未確認",
+          "SBUS受信状態に基づくフェイルセーフと再アームラッチ",
+          "DShot双方向テレメトリのGCR復号・CRC検証・eRPM換算",
+          "CH5操作で開始・停止する固定長リングバッファ記録"
+        ],
+        "hardware": [
+          "Raspberry Pi Pico／RP2040",
+          "Raspberry Pi Pico 2（対象として記載、双方向受信の実機検証は未確認）",
+          "LSM9DS1センサー（ドライバーのファイル名から確認）",
+          "DShot対応ESCとモーター",
+          "SBUS受信機",
+          "サーボ"
+        ],
+        "interfaces": [
+          "SBUS受信フレーム",
+          "DShot 150／300／600／1200の送信設定と、双方向時のESCテレメトリ",
+          "USB CDC診断出力",
+          "CMakeによるPico UF2ビルド",
+          "CH5で制御するRAMログ出力"
+        ],
+        "reusable_components": [
+          {
+            "name": "dshot::decode_erpm",
+            "purpose": "受信語をGCR復号し、チェックサム検証後にeRPMまたはエラー種別を返す。動的メモリ確保を使わない。",
+            "evidence": [
+              "firmware/pico_copter/dshot_bidir_decode.hpp"
+            ]
+          },
+          {
+            "name": "dshot::frame／bidirectional_frame／throttle_from_legacy_duty",
+            "purpose": "通常・双方向DShotフレームの生成と、旧duty値からDShotスロットル値への変換を提供する。",
+            "evidence": [
+              "firmware/pico_copter/dshot_protocol.hpp"
+            ]
+          },
+          {
+            "name": "PIDクラス",
+            "purpose": "パラメーター設定、更新、フィルター、積分リセットを持つ制御用インターフェース。実装詳細は未確認。",
+            "evidence": [
+              "firmware/pico_copter/control.hpp"
+            ]
+          },
+          {
+            "name": "control.cppのRC安全処理",
+            "purpose": "制御判断前にradio_updateと再アームラッチを評価し、リンク異常時にモーター停止・状態解除・PIDリセットを行う。",
+            "evidence": [
+              "firmware/pico_copter/control.cpp",
+              "firmware/pico_copter/sbus_parser.hpp"
+            ]
+          },
+          {
+            "name": "FlightLogRing／Ch5CaptureGate",
+            "purpose": "CH5で記録を制御し、固定容量の飛行ログを保持する方式。容量・行形式の詳細はREADME記載。",
+            "evidence": [
+              "firmware/pico_copter/control.cpp",
+              "firmware/pico_copter/flight_log_ring.hpp",
+              "firmware/pico_copter/log_capture_gate.hpp"
+            ]
+          }
+        ],
+        "constraints": [
+          "提示された設定コードではDSHOT_BIDIRECTIONALの既定値は0（片方向）。README本文には双方向を初期値とする記述があり、説明とコードが一致しない。",
+          "提示資料ではSBUSパーサー、リングバッファ、EKF、PIO送受信の全実装や全テスト内容を確認できず、詳細な挙動の独立検証はできない。",
+          "README記載の実機確認は限定的で、複数モーター同時のeRPM、Pico 2での双方向受信、複数速度の実機動作などは未確認とされている。",
+          "停止指令はDShot 0であり、モーター電源の物理遮断ではない（README記載）。"
+        ],
+        "maturity": "実験",
+        "confidence": "medium",
+        "evidence": [
+          "README.md",
+          "firmware/pico_copter/control.cpp",
+          "firmware/pico_copter/control.hpp",
+          "firmware/pico_copter/dshot_bidir_decode.hpp",
+          "firmware/pico_copter/dshot_config.hpp",
+          "firmware/pico_copter/dshot_protocol.hpp",
+          "firmware/pico_copter/flight_log_ring.hpp",
+          "firmware/pico_copter/log_capture_gate.hpp",
+          "firmware/pico_copter/sbus_parser.hpp"
+        ]
+      }
+    },
+    "temesotejam/pico-bluejay-configurator": {
+      "url": "https://github.com/temesotejam/pico-bluejay-configurator",
+      "default_branch": "main",
+      "pushed_at": "2026-10-30T03:21:57Z",
+      "available_paths": [
+        ".github",
+        ".github/workflows",
+        ".github/workflows/build-pico.yml",
+        "LICENSE",
+        "NOTICE.md",
+        "README.md",
+        "firmware",
+        "firmware/pico_bluejay_passthrough",
+        "firmware/pico_bluejay_passthrough/4Way.cpp",
+        "firmware/pico_bluejay_passthrough/4Way.h",
+        "firmware/pico_bluejay_passthrough/ESC_Serial.cpp",
+        "firmware/pico_bluejay_passthrough/ESC_Serial.h",
+        "firmware/pico_bluejay_passthrough/Global.cpp",
+        "firmware/pico_bluejay_passthrough/Global.h",
+        "firmware/pico_bluejay_passthrough/MSP.cpp",
+        "firmware/pico_bluejay_passthrough/MSP.h",
+        "firmware/pico_bluejay_passthrough/elapsedMillis.h",
+        "firmware/pico_bluejay_passthrough/esc_passthrough.cpp",
+        "firmware/pico_bluejay_passthrough/esc_passthrough.h",
+        "firmware/pico_bluejay_passthrough/onewire_receive.pio",
+        "firmware/pico_bluejay_passthrough/onewire_receive.pio.h",
+        "firmware/pico_bluejay_passthrough/onewire_transmit.pio",
+        "firmware/pico_bluejay_passthrough/onewire_transmit.pio.h",
+        "firmware/pico_bluejay_passthrough/pico_bluejay_passthrough.ino"
+      ],
+      "recent_commits": [
+        {
+          "sha": "abc8de35",
+          "message": "docs: add direct Pico UF2 download from repository README"
+        },
+        {
+          "sha": "71861c0f",
+          "message": "ci: publish stable Pico UF2 as latest GitHub Release asset"
+        },
+        {
+          "sha": "3679a7cd",
+          "message": "fix: keep Pico passthrough alive across ESC Configurator reconnects"
+        }
+      ],
+      "archived": false,
+      "fingerprint": "83ae45fd9a553dd00043e4a97a903b28963d4d54cdef00ff9e34b96b35620908",
+      "analyzed_at": "2026-11-01T05:31:53.745Z",
+      "profile": {
+        "purpose": "Raspberry Pi Pico（RP2040）をUSB接続のBLHeli 4-way passthroughインターフェースとして使い、Bluejay／BLHeli_S ESCの認識や設定通信を行う実験用ファームウェアです。飛行制御やDShot出力は行わないとREADMEに記載されています。",
+        "architecture": "Arduino-Pico上のファームウェアで、4Way.cppが4-wayコマンドを処理し、ESC_Serial.cppがPIOを使ったESCとの単線通信を担います。Global.cppには共有状態があります。MSP処理と起動処理のファイルはツリーにありますが、実装内容は提示された抜粋から確認できません。",
+        "technologies": [
+          "C++",
+          "Arduino-Pico／RP2040",
+          "PIO",
+          "USB CDC",
+          "MSP v1",
+          "BLHeli 4-way passthrough"
+        ],
+        "algorithms": [
+          "4-way入力のCRC-XMODEM検査",
+          "ESC通信データに対する多項式0xA001のビット単位CRC処理",
+          "SiLabs bootloader応答の署名・成功コード検証"
+        ],
+        "hardware": [
+          "Raspberry Pi Pico（RP2040）",
+          "Bluejay／BLHeli_S対応ESC（READMEではSiLabs EFM8系を対象として記載）"
+        ],
+        "interfaces": [
+          "USB CDCからのMSP v1／4-wayコマンド",
+          "GPIOを介したESCとの単線半二重通信",
+          "README記載のESC信号GPIO割り当て: 15、14、3、2",
+          "UF2ファームウェア"
+        ],
+        "reusable_components": [
+          {
+            "name": "Check_4Way",
+            "purpose": "4-wayパケットのCRCを検査し、デバイス初期化・リセット・読み出しなどのコマンドを処理します。ESC初期化応答では署名と成功コードを確認してからSiLabsデバイスとして応答します。",
+            "evidence": [
+              "firmware/pico_bluejay_passthrough/4Way.cpp",
+              "firmware/pico_bluejay_passthrough/4Way.h"
+            ]
+          },
+          {
+            "name": "SendESC／GetESC",
+            "purpose": "ESC向けデータ送信、CRC付加、タイムアウト付き受信をまとめた通信処理です。",
+            "evidence": [
+              "firmware/pico_bluejay_passthrough/ESC_Serial.cpp",
+              "firmware/pico_bluejay_passthrough/ESC_Serial.h"
+            ]
+          },
+          {
+            "name": "PIO送受信切替とGPIO切替",
+            "purpose": "PIOプログラムを送信・受信間で切り替え、選択中ESCのGPIOへ通信先を変更します。別のRP2040単線半二重通信で再利用できる可能性があります。",
+            "evidence": [
+              "firmware/pico_bluejay_passthrough/ESC_Serial.cpp",
+              "firmware/pico_bluejay_passthrough/onewire_receive.pio",
+              "firmware/pico_bluejay_passthrough/onewire_transmit.pio"
+            ]
+          },
+          {
+            "name": "ByteCrc",
+            "purpose": "1バイトずつCRCを更新する処理です。対象プロトコルへの適用にはCRCの初期値・反転・送信順の照合が必要です。",
+            "evidence": [
+              "firmware/pico_bluejay_passthrough/ESC_Serial.cpp"
+            ]
+          }
+        ],
+        "constraints": [
+          "READMEではPico 2／RP2350は未対応とされています。",
+          "設定書き込み・復元の安全性、全ESC機種との互換性は未検証とREADMEに記載されています。",
+          "提示された抜粋だけではMSP処理、PIO命令の詳細、バッファ境界や通信全体の動作を評価できません。"
+        ],
+        "maturity": "実験",
+        "confidence": "medium",
+        "evidence": [
+          "README.md",
+          "firmware/pico_bluejay_passthrough/4Way.cpp",
+          "firmware/pico_bluejay_passthrough/4Way.h",
+          "firmware/pico_bluejay_passthrough/ESC_Serial.cpp",
+          "firmware/pico_bluejay_passthrough/ESC_Serial.h",
+          "firmware/pico_bluejay_passthrough/Global.cpp"
+        ]
+      }
+    },
+    "temesotejam/spike-rt-web-toolkit": {
+      "url": "https://github.com/temesotejam/spike-rt-web-toolkit",
+      "default_branch": "main",
+      "pushed_at": "2026-10-29T04:57:50Z",
+      "available_paths": [
+        ".github",
+        ".github/scripts",
+        ".github/scripts/create-assignment.py",
+        ".github/scripts/import-zipped-apps.py",
+        ".github/scripts/incremental-firmware.py",
+        ".github/scripts/test-create-assignment.py",
+        ".github/workflows",
+        ".github/workflows/build-and-deploy.yml",
+        ".github/workflows/create-assignment.yml",
+        ".github/workflows/extract-pd-practice.yml",
+        ".gitignore",
+        "LICENSE",
+        "README.md",
+        "THIRD_PARTY_NOTICES.md",
+        "apps",
+        "apps/assignments",
+        "apps/assignments/CS_S3",
+        "apps/assignments/CS_S3/CS_S3.c",
+        "apps/assignments/CS_S3/CS_S3.cdl",
+        "apps/assignments/CS_S3/CS_S3.cfg",
+        "apps/assignments/CS_S3/CS_S3.h",
+        "apps/assignments/CS_S3/project.json",
+        "apps/assignments/DC_S2",
+        "apps/assignments/DC_S2/DC_S2.c",
+        "apps/assignments/DC_S2/DC_S2.cdl",
+        "apps/assignments/DC_S2/DC_S2.cfg",
+        "apps/assignments/DC_S2/DC_S2.h",
+        "apps/assignments/DC_S2/project.json",
+        "apps/assignments/LCD_S3",
+        "apps/assignments/LCD_S3/LCD_S3.c",
+        "apps/assignments/LCD_S3/LCD_S3.cdl",
+        "apps/assignments/LCD_S3/LCD_S3.cfg",
+        "apps/assignments/LCD_S3/LCD_S3.h",
+        "apps/assignments/LCD_S3/project.json",
+        "apps/assignments/M_S6",
+        "apps/assignments/M_S6/M_S6.c",
+        "apps/assignments/M_S6/M_S6.cdl",
+        "apps/assignments/M_S6/M_S6.cfg",
+        "apps/assignments/M_S6/M_S6.h",
+        "apps/assignments/M_S6/project.json",
+        "apps/assignments/README.md",
+        "apps/assignments/SOUND_S3",
+        "apps/assignments/SOUND_S3/SOUND_S3.c",
+        "apps/assignments/SOUND_S3/SOUND_S3.cdl",
+        "apps/assignments/SOUND_S3/SOUND_S3.cfg",
+        "apps/assignments/SOUND_S3/SOUND_S3.h",
+        "apps/assignments/SOUND_S3/project.json",
+        "apps/assignments/TS_S4",
+        "apps/assignments/TS_S4/TS_S4.c",
+        "apps/assignments/TS_S4/TS_S4.cdl",
+        "apps/assignments/TS_S4/TS_S4.cfg",
+        "apps/assignments/TS_S4/TS_S4.h",
+        "apps/assignments/TS_S4/project.json",
+        "apps/assignments/TS_S4_2",
+        "apps/assignments/TS_S4_2/TS_S4_2.c",
+        "apps/assignments/TS_S4_2/TS_S4_2.cdl",
+        "apps/assignments/TS_S4_2/TS_S4_2.cfg",
+        "apps/assignments/TS_S4_2/TS_S4_2.h",
+        "apps/assignments/TS_S4_2/project.json",
+        "apps/button",
+        "apps/button/button.c",
+        "apps/button/button.cdl",
+        "apps/button/button.cfg",
+        "apps/button/button.h",
+        "apps/button/project.json",
+        "apps/dodge_game",
+        "apps/dodge_game/dodge_game.c",
+        "apps/dodge_game/dodge_game.cdl",
+        "apps/dodge_game/dodge_game.cfg",
+        "apps/dodge_game/dodge_game.h",
+        "apps/dodge_game/project.json",
+        "apps/led",
+        "apps/led/led.c",
+        "apps/led/led.cdl",
+        "apps/led/led.cfg",
+        "apps/led/led.h",
+        "apps/led/project.json",
+        "apps/led_countdown",
+        "apps/led_countdown/led_countdown.c",
+        "apps/led_countdown/led_countdown.cdl",
+        "apps/led_countdown/led_countdown.cfg",
+        "apps/led_countdown/led_countdown.h",
+        "apps/led_countdown/project.json",
+        "apps/led_fast",
+        "apps/led_fast/led_fast.c",
+        "apps/led_fast/led_fast.cdl",
+        "apps/led_fast/led_fast.cfg",
+        "apps/led_fast/led_fast.h",
+        "apps/led_fast/project.json",
+        "apps/motor",
+        "apps/motor/motor.c",
+        "apps/motor/motor.cdl",
+        "apps/motor/motor.cfg",
+        "apps/motor/motor.h",
+        "apps/motor/project.json",
+        "apps/motor_angle",
+        "apps/motor_angle/motor_angle.c",
+        "apps/motor_angle/motor_angle.cdl",
+        "apps/motor_angle/motor_angle.cfg",
+        "apps/motor_angle/motor_angle.h",
+        "apps/motor_angle/project.json",
+        "apps/myapp",
+        "apps/myapp/myapp.c",
+        "apps/myapp/myapp.cdl",
+        "apps/myapp/myapp.cfg",
+        "apps/myapp/myapp.h",
+        "apps/myapp/project.json",
+        "apps/pd_CS_S1",
+        "apps/pd_CS_S1/CS_S1.h",
+        "apps/pd_CS_S1/pd_CS_S1.c",
+        "apps/pd_CS_S1/pd_CS_S1.cdl",
+        "apps/pd_CS_S1/pd_CS_S1.cfg",
+        "apps/pd_CS_S1/pd_CS_S1.h",
+        "apps/pd_CS_S1/project.json",
+        "apps/pd_CS_S2",
+        "apps/pd_CS_S2/CS_S2.h",
+        "apps/pd_CS_S2/pd_CS_S2.c",
+        "apps/pd_CS_S2/pd_CS_S2.cdl",
+        "apps/pd_CS_S2/pd_CS_S2.cfg",
+        "apps/pd_CS_S2/pd_CS_S2.h",
+        "apps/pd_CS_S2/project.json",
+        "apps/pd_DC_S1",
+        "apps/pd_DC_S1/DC_S1.h",
+        "apps/pd_DC_S1/pd_DC_S1.c",
+        "apps/pd_DC_S1/pd_DC_S1.cdl",
+        "apps/pd_DC_S1/pd_DC_S1.cfg",
+        "apps/pd_DC_S1/pd_DC_S1.h",
+        "apps/pd_DC_S1/project.json",
+        "apps/pd_IMU_S1",
+        "apps/pd_IMU_S1/IMU_S1.h",
+        "apps/pd_IMU_S1/pd_IMU_S1.c",
+        "apps/pd_IMU_S1/pd_IMU_S1.cdl",
+        "apps/pd_IMU_S1/pd_IMU_S1.cfg",
+        "apps/pd_IMU_S1/pd_IMU_S1.h",
+        "apps/pd_IMU_S1/project.json",
+        "apps/pd_LCD_S1",
+        "apps/pd_LCD_S1/LCD_S1.h",
+        "apps/pd_LCD_S1/pd_LCD_S1.c",
+        "apps/pd_LCD_S1/pd_LCD_S1.cdl",
+        "apps/pd_LCD_S1/pd_LCD_S1.cfg",
+        "apps/pd_LCD_S1/pd_LCD_S1.h",
+        "apps/pd_LCD_S1/project.json",
+        "apps/pd_LCD_S2",
+        "apps/pd_LCD_S2/LCD_S2.h",
+        "apps/pd_LCD_S2/pd_LCD_S2.c",
+        "apps/pd_LCD_S2/pd_LCD_S2.cdl",
+        "apps/pd_LCD_S2/pd_LCD_S2.cfg",
+        "apps/pd_LCD_S2/pd_LCD_S2.h",
+        "apps/pd_LCD_S2/project.json",
+        "apps/pd_M_S1",
+        "apps/pd_M_S1/M_S1.h",
+        "apps/pd_M_S1/pd_M_S1.c",
+        "apps/pd_M_S1/pd_M_S1.cdl",
+        "apps/pd_M_S1/pd_M_S1.cfg",
+        "apps/pd_M_S1/pd_M_S1.h",
+        "apps/pd_M_S1/project.json",
+        "apps/pd_M_S2",
+        "apps/pd_M_S2/M_S2.h",
+        "apps/pd_M_S2/pd_M_S2.c",
+        "apps/pd_M_S2/pd_M_S2.cdl",
+        "apps/pd_M_S2/pd_M_S2.cfg",
+        "apps/pd_M_S2/pd_M_S2.h",
+        "apps/pd_M_S2/project.json",
+        "apps/pd_M_S3",
+        "apps/pd_M_S3/M_S3.h",
+        "apps/pd_M_S3/pd_M_S3.c",
+        "apps/pd_M_S3/pd_M_S3.cdl",
+        "apps/pd_M_S3/pd_M_S3.cfg",
+        "apps/pd_M_S3/pd_M_S3.h",
+        "apps/pd_M_S3/project.json",
+        "apps/pd_M_S4",
+        "apps/pd_M_S4/M_S4.h",
+        "apps/pd_M_S4/pd_M_S4.c",
+        "apps/pd_M_S4/pd_M_S4.cdl",
+        "apps/pd_M_S4/pd_M_S4.cfg",
+        "apps/pd_M_S4/pd_M_S4.h",
+        "apps/pd_M_S4/project.json",
+        "apps/pd_M_S5",
+        "apps/pd_M_S5/M_S5.h",
+        "apps/pd_M_S5/pd_M_S5.c",
+        "apps/pd_M_S5/pd_M_S5.cdl",
+        "apps/pd_M_S5/pd_M_S5.cfg",
+        "apps/pd_M_S5/pd_M_S5.h",
+        "apps/pd_M_S5/project.json",
+        "apps/pd_PID",
+        "apps/pd_PID/PID.h",
+        "apps/pd_PID/pd_PID.c",
+        "apps/pd_PID/pd_PID.cdl",
+        "apps/pd_PID/pd_PID.cfg",
+        "apps/pd_PID/pd_PID.h",
+        "apps/pd_PID/project.json",
+        "apps/pd_SOUND_S1",
+        "apps/pd_SOUND_S1/SOUND_S1.h",
+        "apps/pd_SOUND_S1/pd_SOUND_S1.c",
+        "apps/pd_SOUND_S1/pd_SOUND_S1.cdl",
+        "apps/pd_SOUND_S1/pd_SOUND_S1.cfg",
+        "apps/pd_SOUND_S1/pd_SOUND_S1.h",
+        "apps/pd_SOUND_S1/project.json",
+        "apps/pd_SOUND_S2",
+        "apps/pd_SOUND_S2/SOUND_S2.h"
+      ],
+      "recent_commits": [
+        {
+          "sha": "d13d178f",
+          "message": "feat: DC_S2のLCDに色名を表示しながら距離測定を継続"
+        },
+        {
+          "sha": "8ccca7e1",
+          "message": "docs: DC_S2で文字表示の待ち時間を避ける構成を説明"
+        },
+        {
+          "sha": "79ea996e",
+          "message": "docs: TS_S4の単一タスクによる演奏と押下確認の仕組みを説明"
+        }
+      ],
+      "archived": false,
+      "fingerprint": "15dd45c5a14a91ce3aecdd362d013b0b8d3a492081897f0af5c616a30c587d8b",
+      "analyzed_at": "2026-11-01T05:32:13.945Z",
+      "profile": {
+        "purpose": "SPIKE-RTアプリをブラウザーで編集・ビルド・Hubへ書き込み、USBシリアルログを確認するためのツールキット。複数のサンプル・課題アプリも収録する。",
+        "architecture": "READMEによれば、apps/内のアプリをGitHub Actionsでビルドし、GitHub Pagesから選択・配布する構成。WebUSBとDFUで書き込み、Web Serialでログを表示する。ワークフローやWeb側の実装内容は提示された抜粋からは確認できない。",
+        "technologies": [
+          "C",
+          "SPIKE-RT v0.2.0",
+          "GitHub Actions",
+          "GitHub Pages",
+          "WebUSB",
+          "Web Serial",
+          "DFU/DfuSe",
+          "TECS設定（CDL）"
+        ],
+        "algorithms": [
+          "IMU角速度の初期値を1000回サンプリングして平均し、オフセットとして補正する",
+          "補正後の角速度をΔt=0.001秒として積分し、角度を更新する",
+          "PIDという名前のサンプルは、ソース上でPIDを実装していないと明記されている"
+        ],
+        "hardware": [
+          "LEGO SPIKE Prime Hub",
+          "Hub内蔵IMU",
+          "Hubボタン・LED",
+          "モーター（README記載）"
+        ],
+        "interfaces": [
+          "SPIKE-RTタスク関数",
+          "USBシリアルログ",
+          "WebUSBによるDFU書き込み",
+          "Web Serialによる115200 bps接続",
+          "アプリ単位のC・ヘッダー・CFG・CDL・任意のproject.json"
+        ],
+        "reusable_components": [
+          {
+            "name": "IMUオフセット校正 imu_setup",
+            "purpose": "IMUを初期化し、3軸の角速度を1000回取得して平均オフセットを算出する。別のSPIKE-RTアプリへ移す場合は、IMU APIとタスク遅延の依存を合わせる必要がある。",
+            "evidence": [
+              "apps/pd_IMU_S1/pd_IMU_S1.c"
+            ]
+          },
+          {
+            "name": "周期的な角速度積分 gyro_monitor",
+            "purpose": "角速度からオフセットを差し引き、3軸の角度値を更新する例。周期設定との時間刻みの整合性は別途検証が必要。",
+            "evidence": [
+              "apps/pd_IMU_S1/pd_IMU_S1.c",
+              "apps/pd_IMU_S1/pd_IMU_S1.h"
+            ]
+          },
+          {
+            "name": "最小アプリ構成と自動設定",
+            "purpose": "READMEでは、apps/<app>/<app>.cを起点にアプリを追加し、未指定のヘッダーや設定を標準構成で補う方法を説明している。既存のビルド環境へ転用するには生成・ビルド規則の確認が必要。",
+            "evidence": [
+              "README.md",
+              "apps/myapp/myapp.c",
+              "apps/myapp/project.json"
+            ]
+          },
+          {
+            "name": "課題アプリの作成・ビルド自動化",
+            "purpose": "課題作成や差分ビルドに関係するスクリプトとActionsワークフローがある。具体的な入力検証・キャッシュ処理の実装は提示情報だけでは確認できない。",
+            "evidence": [
+              ".github/scripts/create-assignment.py",
+              ".github/scripts/incremental-firmware.py",
+              ".github/workflows/create-assignment.yml",
+              ".github/workflows/build-and-deploy.yml"
+            ]
+          }
+        ],
+        "constraints": [
+          "提示された情報はREADME、ファイル一覧、一部ソース抜粋に限られ、Web画面・DFU処理・ビルド処理の実装詳細は未確認。",
+          "pd_PIDというサンプル名に反してPID制御は実装されていない。",
+          "IMUサンプルの周期ハンドラ設定や実機での数値精度は、提示情報からは検証できない。"
+        ],
+        "maturity": "ツール",
+        "confidence": "medium",
+        "evidence": [
+          "README.md",
+          "apps/pd_IMU_S1/pd_IMU_S1.c",
+          "apps/pd_IMU_S1/pd_IMU_S1.h",
+          "apps/pd_PID/pd_PID.c",
+          ".github/workflows/build-and-deploy.yml"
+        ]
+      }
+    },
+    "temesotejam/uno-r3-4esc-dshot300": {
+      "url": "https://github.com/temesotejam/uno-r3-4esc-dshot300",
+      "default_branch": "main",
+      "pushed_at": "2026-10-29T04:10:32Z",
+      "available_paths": [
+        ".github",
+        ".github/workflows",
+        ".github/workflows/build-arduino.yml",
+        "LICENSE",
+        "README.md",
+        "UnoR3_Potentiometer_4ESC_DShot300",
+        "UnoR3_Potentiometer_4ESC_DShot300/README.txt",
+        "UnoR3_Potentiometer_4ESC_DShot300/UnoR3_Potentiometer_4ESC_DShot300.ino",
+        "web",
+        "web/app.mjs",
+        "web/index.html",
+        "web/stk500.mjs",
+        "web/tests",
+        "web/tests/flash.test.mjs"
+      ],
+      "recent_commits": [
+        {
+          "sha": "e4a5495b",
+          "message": "Document browser firmware uploader and GitHub Pages setup"
+        },
+        {
+          "sha": "04c76f78",
+          "message": "Build Uno firmware and deploy self-contained Web Serial flasher to GitHub Pages"
+        },
+        {
+          "sha": "d91ca9dd",
+          "message": "Test Intel HEX checksums, Uno STK500 upload, readback and failure safety"
+        }
+      ],
+      "archived": false,
+      "fingerprint": "de4d925065b0e3d53b87b054e3ed67100d2663c61a1049f8e046b4709efa707f",
+      "analyzed_at": "2026-11-01T05:32:29.337Z",
+      "profile": {
+        "purpose": "Arduino Uno R3で可変抵抗からの入力を読み取り、4基のESCへ同一のDShot300指令を送るファームウェアと、ブラウザーからUnoへ書き込むWebツールを提供するリポジトリ。",
+        "architecture": "ファームウェアはADC入力を処理し、DShotフレームを生成してPORTB経由で4出力へ同時送信する。Web側はビルド済みHEXをWeb Serial経由でUnoへ書き込み、読み戻し検証する構成と説明されている。ビルドとPages公開にはGitHub Actionsを使用する。",
+        "technologies": [
+          "Arduino C++",
+          "ATmega328P / AVR",
+          "JavaScript",
+          "Web Serial API",
+          "STK500v1",
+          "Intel HEX",
+          "GitHub Actions"
+        ],
+        "algorithms": [
+          "DShotフレームのチェックサム生成",
+          "PORTB直接書き込みによる4系統同時のDShot300波形生成",
+          "ポテンショメーター入力の指数平滑化",
+          "停止・始動しきい値のヒステリシス",
+          "始動前の停止状態確認",
+          "スロットル指令の変化量制限"
+        ],
+        "hardware": [
+          "Arduino Uno R3（ATmega328P、16 MHz）",
+          "4基のESC",
+          "可変抵抗（A0入力）",
+          "ESC用の別電源"
+        ],
+        "interfaces": [
+          "D8〜D11（PB0〜PB3）からの単方向DShot300出力",
+          "A0のアナログ入力",
+          "Web SerialによるブラウザーからのUSB書き込み",
+          "STK500v1、115200bpsのブートローダー通信",
+          "115200bpsのシリアル状態表示"
+        ],
+        "reusable_components": [
+          {
+            "name": "makeDshotFrame",
+            "purpose": "スロットル値を上限2047に制限し、テレメトリー要求なしのDShotフレームとチェックサムを生成する。",
+            "evidence": [
+              "UnoR3_Potentiometer_4ESC_DShot300/UnoR3_Potentiometer_4ESC_DShot300.ino"
+            ]
+          },
+          {
+            "name": "sendDshot300Bit / sendDshot300Frame",
+            "purpose": "ビットごとのタイミングをAVRサイクル遅延とPORTB書き込みで作り、同じ16ビットフレームを4出力へ同時送信する。移植時はMCUのクロックとポート構成への適合が必要。",
+            "evidence": [
+              "UnoR3_Potentiometer_4ESC_DShot300/UnoR3_Potentiometer_4ESC_DShot300.ino"
+            ]
+          },
+          {
+            "name": "updateFromPot / adcToDshot",
+            "purpose": "入力平滑化、始動インターロック、停止判定、ヒステリシス、指令値変換とスルーレート制限をまとめた制御方式。",
+            "evidence": [
+              "UnoR3_Potentiometer_4ESC_DShot300/UnoR3_Potentiometer_4ESC_DShot300.ino"
+            ]
+          },
+          {
+            "name": "ブラウザー書き込み・検証フロー",
+            "purpose": "Web SerialとSTK500v1を使ったファームウェア書き込み機能。Intel HEX検証や書き込み後の読み戻し確認のテストが存在する。",
+            "evidence": [
+              "web/app.mjs",
+              "web/stk500.mjs",
+              "web/tests/flash.test.mjs",
+              "README.md"
+            ]
+          }
+        ],
+        "constraints": [
+          "ファームウェアはATmega328P、16 MHzをコンパイル時に要求する。",
+          "PORTB全体を書き換えるため、D12/D13を他用途に使用できない。",
+          "DShotは単方向で、eRPMテレメトリー受信はない。",
+          "READMEでは実機動作を報告しているが、提示されたソース抜粋だけでは波形品質や複数ESCとの互換性を独立に確認できない。ビルド成功も実機信号の保証ではない。",
+          "Web書き込みはWeb Serial対応ブラウザーと既存のUnoブートローダーが必要とされる。"
+        ],
+        "maturity": "試作",
+        "confidence": "medium",
+        "evidence": [
+          "README.md",
+          "UnoR3_Potentiometer_4ESC_DShot300/UnoR3_Potentiometer_4ESC_DShot300.ino",
+          "web/app.mjs",
+          "web/stk500.mjs",
+          "web/tests/flash.test.mjs",
+          ".github/workflows/build-arduino.yml"
+        ]
+      }
+    }
+  }
 }
