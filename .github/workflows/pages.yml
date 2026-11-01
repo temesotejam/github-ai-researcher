@@ -46,7 +46,7 @@ jobs:
           rm -rf public
           mkdir -p public/data public/reports
           cp -R docs/. public/
-          cp data/profiles.json data/repository-index.json public/data/
+          cp data/profiles.json data/repository-index.json data/graph.json public/data/
           cp reports/latest.md public/reports/latest.md
           if [ -d reports/weekly ]; then
             cp -R reports/weekly public/reports/weekly
