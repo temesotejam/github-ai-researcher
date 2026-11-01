@@ -37,7 +37,7 @@ GitHub Pagesで、分析結果を検索・閲覧できる専用画面を公開�
 
 分析結果が更新されると、AI Research完了後にGitHub Pagesも自動で再デプロイします。
 
-初回のみ、Settings → Pages で GitHub Actions を公開元に設定してください（Pages workflowにも自動有効化処理を入れています）。
+Pagesの有効化とGitHub Actions公開元の設定は、Pages workflowが自動で試みます。もし初回デプロイが失敗した場合は、Settings → Pages → Build and deployment → Source を GitHub Actions に設定してください。
 
 ## 実行方法
 
