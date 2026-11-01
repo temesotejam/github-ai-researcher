@@ -190,3 +190,142 @@ function renderSignals() {
     '<article class="signal-card"><strong>'+esc(name)+'</strong><span>'+repos.size+' repositories · 同じ技術タグを確認</span></article>'
   ).join(""):'<p class="empty-note">複数リポジトリに共通する技術タグはまだありません。</p>';
 }
+
+function renderRepoList(){
+  if(!state.filtered.length){els.repoList.innerHTML='<div class="empty-note">条件に一致するリポジトリがありません。</div>';return;}
+  els.repoList.innerHTML=state.filtered.map(r=>{
+    const p=r.profile, active=state.selectedId===r.id, checked=state.compareIds.has(r.id);
+    const tags=p.technologies.slice(0,5).map(t=>'<span class="tag">'+esc(t)+'</span>').join("");
+    return '<article class="repo-card'+(active?' is-selected':'')+'"><div class="repo-card-head">'+
+      '<button class="repo-name-button" data-select-repo="'+esc(r.id)+'" type="button">'+esc(r.name)+'</button>'+
+      '<span class="confidence confidence-'+p.confidence+'">'+esc(p.confidence.toUpperCase())+'</span></div>'+
+      '<p class="repo-purpose">'+esc(p.purpose||"目的情報なし")+'</p><div class="repo-meta">'+
+      '<span class="small-pill">'+esc(r.language||"Unknown")+'</span><span class="small-pill">'+esc(p.maturity)+'</span>'+
+      (r.archived?'<span class="small-pill">ARCHIVED</span>':"")+'</div><div class="tag-list">'+(tags||'<span class="tag">技術情報なし</span>')+'</div>'+
+      '<div class="repo-card-actions"><label><input type="checkbox" data-compare-repo="'+esc(r.id)+'" '+(checked?'checked':"")+
+      (!checked&&state.compareIds.size>=3?' disabled':"")+'> 比較に追加</label>'+
+      '<button class="text-button" data-select-repo="'+esc(r.id)+'" type="button">'+(active?'選択中':'詳細を見る →')+'</button></div></article>';
+  }).join("");
+}
+function tagsSection(title,items){
+  return items.length?'<section class="detail-section"><h4>'+esc(title)+'</h4><div class="tag-list">'+items.map(x=>'<span class="tag">'+esc(x)+'</span>').join("")+'</div></section>':"";
+}
+function renderDetail(){
+  const r=state.filtered.find(x=>x.id===state.selectedId)||state.repos.find(x=>x.id===state.selectedId);
+  if(!r){els.detail.innerHTML='<div class="detail-empty"><span>↖</span><h3>リポジトリを選択</h3><p>一覧から選ぶと詳細が表示されます。</p></div>';return;}
+  const p=r.profile, paths=new Set(r.availablePaths);
+  const evidence=[...new Set([...p.evidence,...p.reusable.flatMap(c=>c.evidence)])].filter(x=>paths.has(x)).slice(0,12);
+  const links=evidence.map(x=>{const u=blobUrl(r,x);return u?'<a class="evidence-link" href="'+esc(u)+'" target="_blank" rel="noreferrer">'+esc(x)+' ↗</a>':"";}).join("")||"<p>根拠ファイルは記録されていません。</p>";
+  const comps=p.reusable.map(c=>'<li><strong>'+esc(c.name)+'</strong> — '+esc(c.purpose)+
+    c.evidence.filter(x=>paths.has(x)).map(x=>{const u=blobUrl(r,x);return u?'<a class="evidence-link" href="'+esc(u)+'" target="_blank" rel="noreferrer">'+esc(x)+'</a>':"";}).join("")+'</li>').join("")||"<li>抽出された再利用候補はありません。</li>";
+  els.detail.innerHTML='<div class="panel-heading"><div><span class="panel-kicker">REPOSITORY PROFILE</span><h3 class="detail-title">'+esc(r.fullName)+'</h3></div>'+
+    '<span class="confidence confidence-'+p.confidence+'">'+p.confidence.toUpperCase()+'</span></div><p class="detail-purpose">'+esc(p.purpose)+'</p>'+
+    '<div class="repo-meta"><span class="small-pill">'+esc(r.language||"Unknown")+'</span><span class="small-pill">'+esc(p.maturity)+'</span><span class="small-pill">更新 '+dateText(r.pushedAt)+'</span></div>'+
+    (p.architecture?'<section class="detail-section"><h4>ARCHITECTURE</h4><p>'+esc(p.architecture)+'</p></section>':"")+
+    tagsSection("TECHNOLOGIES",p.technologies)+tagsSection("ALGORITHMS",p.algorithms)+tagsSection("HARDWARE",p.hardware)+tagsSection("INTERFACES",p.interfaces)+
+    '<section class="detail-section"><h4>REUSABLE COMPONENTS</h4><ul>'+comps+'</ul></section>'+
+    (p.constraints.length?'<section class="detail-section"><h4>CONSTRAINTS / UNKNOWN</h4><ul>'+p.constraints.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></section>':"")+
+    '<section class="detail-section"><h4>EVIDENCE FILES</h4>'+links+'</section><div class="detail-actions">'+
+    '<a class="button-link" href="'+esc(r.url)+'" target="_blank" rel="noreferrer">Repository ↗</a>'+
+    '<button class="button-link" id="detailCompare" type="button">'+(state.compareIds.has(r.id)?"比較から外す":"比較に追加 +")+'</button></div>';
+  $("detailCompare").addEventListener("click",()=>toggleCompare(r.id,!state.compareIds.has(r.id)));
+}
+function toggleCompare(id,add){
+  if(add&&state.compareIds.size<3)state.compareIds.add(id);
+  if(!add)state.compareIds.delete(id);
+  renderRepoList();renderDetail();renderCompareDock();
+}
+function renderCompareDock(){
+  const chosen=[...state.compareIds].map(id=>state.repos.find(r=>r.id===id)).filter(Boolean);
+  els.compareDock.hidden=!chosen.length;els.compareCount.textContent=chosen.length;
+  els.compareSelected.innerHTML=chosen.map(r=>'<span class="compare-chip">'+esc(r.name)+'</span>').join("");
+  els.compareButton.disabled=chosen.length<2;
+  if(state.tab==="repositories")renderRepoList();
+}
+function renderComparison(){
+  const chosen=[...state.compareIds].map(id=>state.repos.find(r=>r.id===id)).filter(Boolean);
+  if(chosen.length<2)return;
+  const fields=[
+    ["目的",r=>r.profile.purpose],["構成",r=>r.profile.architecture],["技術",r=>r.profile.technologies.join(" / ")],
+    ["アルゴリズム",r=>r.profile.algorithms.join(" / ")],["ハードウェア",r=>r.profile.hardware.join(" / ")],
+    ["インターフェース",r=>r.profile.interfaces.join(" / ")],
+    ["再利用候補",r=>r.profile.reusable.map(c=>c.name+": "+c.purpose).join(" / ")],
+    ["制約・未確認",r=>r.profile.constraints.join(" / ")],["確信度",r=>r.profile.confidence]
+  ];
+  els.compareTable.innerHTML='<table class="compare-table"><thead><tr><th>比較項目</th>'+chosen.map(r=>'<th>'+esc(r.name)+'</th>').join("")+
+    '</tr></thead><tbody>'+fields.map(([label,get])=>'<tr><th>'+esc(label)+'</th>'+chosen.map(r=>'<td>'+esc(get(r)||"—")+'</td>').join("")+'</tr>').join("")+
+    '</tbody></table>';
+  els.compareSection.hidden=false;els.compareSection.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function renderAssets(){
+  const comps=[],tech=new Map();
+  state.filtered.forEach(r=>{
+    r.profile.reusable.forEach(c=>comps.push({name:c.name,purpose:c.purpose,repo:r}));
+    r.profile.technologies.forEach(t=>{if(!tech.has(t))tech.set(t,new Map());tech.get(t).set(r.id,r);});
+  });
+  const grouped=new Map();
+  comps.forEach(c=>{if(!grouped.has(c.name))grouped.set(c.name,{name:c.name,purpose:c.purpose,sources:[]});grouped.get(c.name).sources.push(c.repo);});
+  const assets=[...grouped.values()].sort((a,b)=>b.sources.length-a.sources.length);
+  const shared=[...tech.entries()].filter(x=>x[1].size>1).sort((a,b)=>b[1].size-a[1].size);
+  $("assetSummary").innerHTML='<div class="asset-stat"><strong>'+assets.length+'</strong><span>コンポーネント名</span></div>'+
+    '<div class="asset-stat"><strong>'+comps.length+'</strong><span>再利用候補の記録数</span></div>'+
+    '<div class="asset-stat"><strong>'+shared.length+'</strong><span>共有技術タグ</span></div>';
+  $("componentCount").textContent=assets.length+" ASSETS";
+  $("componentGrid").innerHTML=assets.length?assets.map(c=>'<article class="component-card"><h3>'+esc(c.name)+'</h3><p>'+esc(c.purpose||"用途の説明なし")+
+    '</p><div class="component-sources">'+c.sources.map(r=>'<a href="'+esc(r.url)+'" target="_blank" rel="noreferrer">'+esc(r.name)+'</a>').join("")+
+    '</div></article>').join(""):'<div class="empty-note">再利用候補がありません。</div>';
+  $("sharedTechList").innerHTML=shared.length?shared.map(([name,rs])=>'<div class="shared-tech"><strong>'+esc(name)+'</strong><span>'+rs.size+' repositories</span></div>').join(""):'<div class="empty-note">共有技術タグはありません。</div>';
+}
+function renderReport(markdown){
+  els.report.innerHTML=markdownToHtml(markdown);
+}
+function inlineMd(text){
+  let s=esc(text);
+  s=s.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,(_m,label,url)=>
+    '<a href="'+url+'" target="_blank" rel="noreferrer">'+label+'</a>');
+  s=s.replace(/`([^`]+)`/g,"<code>$1</code>");
+  s=s.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
+  s=s.replace(/\*([^*]+)\*/g,"<em>$1</em>");
+  return s;
+}
+function markdownToHtml(markdown){
+  const lines=String(markdown||"").replace(/\r\n/g,"\n").split("\n"),out=[];
+  let i=0;
+  while(i<lines.length){
+    const line=lines[i];
+    if(!line.trim()){i++;continue;}
+    if(/^---+$/.test(line.trim())){out.push("<hr>");i++;continue;}
+    if(line.startsWith("```")){
+      const code=[];i++;
+      while(i<lines.length&&!lines[i].startsWith("```")){code.push(lines[i]);i++;}
+      i++;out.push("<pre><code>"+esc(code.join("\n"))+"</code></pre>");continue;
+    }
+    const h=line.match(/^(#{1,6})\s+(.*)$/);
+    if(h){const n=h[1].length;out.push("<h"+n+">"+inlineMd(h[2])+"</h"+n+">");i++;continue;}
+    if(line.startsWith("> ")){
+      const q=[];while(i<lines.length&&lines[i].startsWith("> ")){q.push(inlineMd(lines[i].slice(2)));i++;}
+      out.push("<blockquote>"+q.join("<br>")+"</blockquote>");continue;
+    }
+    if(line.includes("|")&&i+1<lines.length&&/^\s*\|?[-\s:|]+\|?\s*$/.test(lines[i+1])){
+      const rows=[line];i+=2;
+      while(i<lines.length&&lines[i].includes("|")&&lines[i].trim()){rows.push(lines[i]);i++;}
+      const cells=rows.map(row=>row.trim().replace(/^\|/,"").replace(/\|$/,"").split("|").map(x=>x.trim()));
+      out.push("<table><thead><tr>"+cells[0].map(x=>"<th>"+inlineMd(x)+"</th>").join("")+"</tr></thead><tbody>"+
+        cells.slice(1).map(row=>"<tr>"+row.map(x=>"<td>"+inlineMd(x)+"</td>").join("")+"</tr>").join("")+"</tbody></table>");
+      continue;
+    }
+    if(/^\s*[-*]\s+/.test(line)||/^\s*\d+\.\s+/.test(line)){
+      const ordered=/^\s*\d+\.\s+/.test(line),items=[];
+      const re=ordered?/^\s*\d+\.\s+/:/^\s*[-*]\s+/;
+      while(i<lines.length&&re.test(lines[i])){items.push("<li>"+inlineMd(lines[i].replace(re,""))+"</li>");i++;}
+      out.push((ordered?"<ol>":"<ul>")+items.join("")+(ordered?"</ol>":"</ul>"));continue;
+    }
+    const p=[line];i++;
+    while(i<lines.length&&lines[i].trim()&&!/^(#{1,6})\s+/.test(lines[i])&&!lines[i].startsWith("> ")&&!lines[i].startsWith("```")&&!/^\s*[-*]\s+/.test(lines[i])&&!/^\s*\d+\.\s+/.test(lines[i])&&!/^---+$/.test(lines[i].trim())){
+      p.push(lines[i]);i++;
+    }
+    out.push("<p>"+inlineMd(p.join(" "))+"</p>");
+  }
+  return out.join("\n");
+}
+boot();
