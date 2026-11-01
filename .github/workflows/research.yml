@@ -14,7 +14,8 @@ on:
         default: false
         type: boolean
   schedule:
-    - cron: "17 0 * * 1"
+    # 03:30 JST every day (GitHub Actions cron uses UTC).
+    - cron: "30 18 * * *"
   push:
     branches: [main]
     paths:
