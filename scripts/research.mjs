@@ -94,20 +94,58 @@ function profilePrompt(data) {
     JSON.stringify(data)
   ].join("\n\n");
 }
-function reportPrompt(profiles,total) {
+function compactForSynthesis(entry, name) {
+  const p=entry.profile||{};
+  return {
+    repository:name,
+    purpose:String(p.purpose||"").slice(0,180),
+    architecture:String(p.architecture||"").slice(0,180),
+    technologies:(p.technologies||[]).slice(0,5),
+    algorithms:(p.algorithms||[]).slice(0,3),
+    hardware:(p.hardware||[]).slice(0,3),
+    interfaces:(p.interfaces||[]).slice(0,3),
+    reusable_components:(p.reusable_components||[]).slice(0,4).map(c=>({
+      name:String(c.name||""),
+      purpose:String(c.purpose||"").slice(0,100),
+      evidence:(c.evidence||[]).slice(0,2)
+    })),
+    constraints:(p.constraints||[]).slice(0,3),
+    maturity:p.maturity||"不明",
+    confidence:p.confidence||"low",
+    evidence:(p.evidence||[]).slice(0,3),
+    recent_commits:(entry.recent_commits||[]).slice(0,2)
+  };
+}
+function batchPrompt(batch,batchNumber,batchCount,total) {
   return [
-    "あなたはユーザー専属のAI開発研究員です。以下はユーザーが所有する公開GitHubリポジトリのプロフィールです。",
-    "日本語のMarkdownレポートを作成してください。必ず次を含めてください:",
-    "1. 技術的な全体像",
-    "2. 過去の実装から再利用できる技術（出典リポジトリ・ファイルパス付き）",
-    "3. 異なるプロジェクトを組み合わせる案（移植元・移植先・接続方法・必要な改修・リスク）",
-    "4. 古い実装と新しい実装の比較（証拠がある場合だけ）",
-    "5. この資産群から生まれる研究・開発テーマ3〜5件と最初の検証方法",
-    "6. 優先順位付きの次のアクション",
-    "7. 分からなかったこと",
-    "実装済み・README記載・仮説を区別し、存在しないファイルパスや実機検証結果を捏造しないでください。一般論で水増ししないでください。",
+    "あなたはユーザー専属のAI開発研究員です。公開GitHubリポジトリの技術プロフィールを横断分析してください。",
+    "これは全体の一部のバッチです。全リポジトリを比較する最終レポートの材料として、具体的な発見を抽出してください。",
+    "必須: 共通する技術・設計、再利用可能な具体的実装、異なるリポジトリの組み合わせ案、古い/新しい実装の比較（証拠がある場合のみ）、このバッチに固有の研究案。",
+    "重要な主張にはプロフィール内にある正確なリポジトリ名とファイルパスを付けてください。ファイルパスが確認できない主張は根拠不足と明記してください。",
+    "実装済み・README記載・仮説を区別し、実機結果や性能を捏造しないでください。日本語Markdownで簡潔に。",
+    "全公開リポジトリ数: "+total+"。バッチ "+batchNumber+"/"+batchCount+"。",
+    JSON.stringify(batch)
+  ].join("\n\n");
+}
+function finalPrompt(indexRows,batchReports,total) {
+  return [
+    "あなたはユーザー専属のAI開発研究員です。ユーザー所有の公開GitHubリポジトリ全体を横断する最終レポートを作成してください。",
+    "以下には全リポジトリのコンパクトな技術インデックスと、全バッチの詳細分析があります。両方を使い、バッチをまたぐ関連性も探してください。",
+    "日本語のMarkdownで、次の構成にしてください:",
+    "1. 全体像: どの技術領域・設計思想が多いか。全件の範囲を明示。",
+    "2. 再利用できる技術資産: 具体的な実装・モジュール・方式と出典パス。",
+    "3. プロジェクト横断の組み合わせ: 移植元、移植先、接続方法、必要な改修、リスク。",
+    "4. 過去と新しい実装の比較: コミット情報や証拠がある場合のみ。根拠がなければ比較不能とする。",
+    "5. 新しい研究・開発テーマを5〜8件: 既存資産に根差した具体案と最初の検証方法。",
+    "6. 優先順位付きロードマップ: すぐ試せるものから順に。",
+    "7. 分析の限界: README/プロフィールだけでは判断できないこと、実ソースを追加確認すべきこと。",
+    "必ず109件のプロフィール全体を俯瞰し、一部のプロジェクトだけに偏らないでください。重要な主張には正確なリポジトリ名とパスを付けてください。",
+    "実装済み・README記載・仮説を区別し、存在しないファイルパスや実機検証結果を作らないでください。AI生成プロフィール自体の確信度も考慮してください。",
     "公開リポジトリ総数: "+total,
-    JSON.stringify(profiles)
+    "全リポジトリ技術インデックス:",
+    JSON.stringify(indexRows),
+    "バッチごとの詳細な横断分析:",
+    batchReports.map((x,i)=>"## Batch "+(i+1)+"\n"+x).join("\n\n")
   ].join("\n\n");
 }
 async function main() {
@@ -153,15 +191,36 @@ async function main() {
       errors.push(repo.full_name+": "+e.message.slice(0,160));
     }
   }
-  const compact=Object.entries(profiles).map(([name,e])=>({repository:name,url:e.url,pushed_at:e.pushed_at,recent_commits:e.recent_commits||[],profile:e.profile}))
-    .sort((a,b)=>new Date(b.pushed_at||0)-new Date(a.pushed_at||0)).slice(0,120);
+  const entries=Object.entries(profiles).sort((a,b)=>new Date(b[1].pushed_at||0)-new Date(a[1].pushed_at||0));
+  const compact=entries.map(([name,e])=>compactForSynthesis(e,name)).slice(0,120);
   const date=new Date().toISOString().slice(0,10);
   let analysis;
+  const batchReports=[];
+  const batchSize=12;
+  const batchCount=Math.ceil(compact.length/batchSize);
+  for(let i=0;i<compact.length;i+=batchSize){
+    const batch=compact.slice(i,i+batchSize);
+    try{
+      console.log("Cross-analysis batch "+(batchReports.length+1)+"/"+batchCount);
+      const text=copilot(batchPrompt(batch,batchReports.length+1,batchCount,repos.length));
+      batchReports.push(text.slice(0,4500));
+    }catch(e){
+      const message="バッチ "+(batchReports.length+1)+" の詳細分析に失敗: "+e.message.slice(0,220);
+      console.error(message);
+      batchReports.push(message);
+    }
+  }
   try{
-    analysis=compact.length?copilot(reportPrompt(compact,repos.length)):
-      "## 分析待ち\n\n公開リポジトリ一覧は取得できましたが、プロフィールがありません。Actionsを再実行してください。";
+    if(!compact.length){
+      analysis="## 分析待ち\n\n公開リポジトリの一覧は取得できましたが、プロフィールがありません。Actionsを再実行してください。";
+    }else{
+      const prompt=finalPrompt(compact,batchReports,repos.length);
+      console.log("Final synthesis prompt bytes: "+Buffer.byteLength(prompt,"utf8"));
+      analysis=copilot(prompt);
+    }
   }catch(e){
-    analysis="## 横断分析を生成できませんでした\n\nプロフィールは保存しましたが、Copilot CLIの統合分析に失敗しました。\n\n"+e.message.slice(0,300);
+    analysis="## 統合レポート生成に失敗しました\n\n個別プロフィールとバッチ分析の一部は保存されています。\n\nエラー: "+e.message.slice(0,300)+"\n\n"+
+      batchReports.map((x,i)=>"### バッチ "+(i+1)+"\n"+x).join("\n\n");
   }
   const index={generated_at:new Date().toISOString(),owner,visibility_filter:"public only",repository_count:repos.length,repositories:repos};
   fs.writeFileSync("data/repository-index.json",JSON.stringify(index,null,2)+"\n");
