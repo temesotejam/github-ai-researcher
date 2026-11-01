@@ -8,6 +8,7 @@
   <title>GitHub AI Researcher</title>
   <link rel="stylesheet" href="./styles.css">
   <script src="./app.js" defer></script>
+  <script src="./graph.js" defer></script>
 </head>
 <body>
   <div class="app-shell">
@@ -69,7 +70,8 @@
         <button class="tab is-active" type="button" data-tab="overview"><span>01</span> OVERVIEW</button>
         <button class="tab" type="button" data-tab="repositories"><span>02</span> REPOSITORIES <b id="tabRepoCount">0</b></button>
         <button class="tab" type="button" data-tab="components"><span>03</span> REUSABLE ASSETS</button>
-        <button class="tab" type="button" data-tab="report"><span>04</span> RESEARCH REPORT</button>
+        <button class="tab" type="button" data-tab="graph"><span>04</span> KNOWLEDGE GRAPH</button>
+        <button class="tab" type="button" data-tab="report"><span>05</span> RESEARCH REPORT</button>
       </nav>
 
       <section class="tab-panel is-visible" id="panel-overview">
@@ -107,6 +109,60 @@
         <div class="asset-summary" id="assetSummary"></div>
         <div class="asset-layout"><div><div class="subsection-heading"><h3>再利用コンポーネント</h3><span id="componentCount">0 ASSETS</span></div><div class="component-grid" id="componentGrid"></div></div><div><div class="subsection-heading"><h3>共有技術</h3><span>EXACT TAG MATCH</span></div><div class="shared-tech-list" id="sharedTechList"></div></div></div>
         <p class="footnote">※ 同じ技術名が複数のリポジトリにあることは、実装が同一・互換であることを意味しません。統合前に根拠ファイルを確認してください。</p>
+      </section>
+
+      <section class="tab-panel" id="panel-graph">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">GITHUB KNOWLEDGE MAP</p>
+            <h2>GitHub全体のネットワーク</h2>
+            <p class="section-description">リポジトリ・技術・言語・開発テーマのつながりを探索します。ノードを選ぶと詳細と関連項目を確認できます。</p>
+          </div>
+          <span class="result-count" id="graphStatus">GRAPH LOADING</span>
+        </div>
+        <div class="graph-stats" id="graphStats"></div>
+        <div class="graph-toolbar panel">
+          <div class="graph-search">
+            <span>⌕</span>
+            <input id="graphSearch" type="search" placeholder="リポジトリ名・技術・テーマを検索…">
+            <button type="button" id="graphSearchClear">クリア</button>
+          </div>
+          <div class="graph-controls">
+            <label>表示するノード
+              <select id="graphTypeFilter">
+                <option value="all">すべて</option>
+                <option value="repository">リポジトリ</option>
+                <option value="technology">技術</option>
+                <option value="hardware">ハードウェア</option>
+                <option value="language">言語</option>
+                <option value="theme">テーマ</option>
+              </select>
+            </label>
+            <label class="graph-check"><input type="checkbox" id="graphRelatedOnly"> 関連リポジトリの線を強調</label>
+            <button class="graph-action" type="button" id="graphFit">全体表示 ⤢</button>
+            <button class="graph-action" type="button" id="graphReset">選択解除</button>
+          </div>
+        </div>
+        <div class="graph-layout">
+          <div class="graph-canvas-panel panel">
+            <div class="graph-legend">
+              <span><i class="legend-dot repo"></i> Repository</span>
+              <span><i class="legend-dot tech"></i> Technology</span>
+              <span><i class="legend-dot hardware"></i> Hardware</span>
+              <span><i class="legend-dot language"></i> Language</span>
+              <span><i class="legend-dot theme"></i> Theme</span>
+            </div>
+            <div class="graph-canvas-wrap" id="graphCanvasWrap">
+              <canvas id="knowledgeGraph" aria-label="GitHub repositories and technology network graph"></canvas>
+              <div class="graph-hint" id="graphHint">ノードをドラッグして移動 · 背景をドラッグして移動 · ホイールで拡大縮小</div>
+              <div class="graph-loading" id="graphLoading">ネットワークを構築中…</div>
+            </div>
+          </div>
+          <aside class="graph-detail panel" id="graphDetail">
+            <div class="detail-empty"><span>◎</span><h3>ノードを選択</h3><p>ネットワーク上のリポジトリや技術を選択すると、つながりを表示します。</p></div>
+          </aside>
+        </div>
+        <p class="graph-footnote">関係線はプロフィールに記録された技術・ハードウェア・テーマの共通性から生成した候補です。線があることは、コードの直接依存や実装互換性を意味しません。分類はAIプロフィールとキーワード規則に基づくため、誤分類もあり得ます。</p>
       </section>
 
       <section class="tab-panel" id="panel-report">
