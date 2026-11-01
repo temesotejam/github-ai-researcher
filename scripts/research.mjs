@@ -4,7 +4,7 @@ import crypto from "node:crypto";
 import { execFileSync } from "node:child_process";
 
 const owner = process.env.RESEARCH_OWNER || "temesotejam";
-const limit = Math.min(20, Math.max(1, Number(process.env.MAX_REPOS || 8)));
+const limit = Math.min(120, Math.max(1, Number(process.env.MAX_REPOS || 120)));
 const force = process.env.FORCE_PROFILES === "true";
 const headers = {
   Accept: "application/vnd.github+json",
@@ -152,7 +152,7 @@ async function main() {
     }
   }
   const compact=Object.entries(profiles).map(([name,e])=>({repository:name,url:e.url,pushed_at:e.pushed_at,recent_commits:e.recent_commits||[],profile:e.profile}))
-    .sort((a,b)=>new Date(b.pushed_at||0)-new Date(a.pushed_at||0)).slice(0,80);
+    .sort((a,b)=>new Date(b.pushed_at||0)-new Date(a.pushed_at||0)).slice(0,120);
   const date=new Date().toISOString().slice(0,10);
   let analysis;
   try{
