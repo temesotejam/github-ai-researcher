@@ -143,7 +143,7 @@ async function main() {
       profiles[repo.full_name]={
         url:repo.url,default_branch:repo.default_branch,pushed_at:repo.pushed_at,
         available_paths:[...new Set([...(data.tree_paths||[]),...(data.source_excerpts||[]).map(x=>x.path)])],
-        archived:repo.archived,fingerprint:fp(repo),analyzed_at:new Date().toISOString(),profile:result
+        recent_commits:data.recent_commits||[],archived:repo.archived,fingerprint:fp(repo),analyzed_at:new Date().toISOString(),profile:result
       };
       done++;
     }catch(e){
@@ -151,7 +151,7 @@ async function main() {
       errors.push(repo.full_name+": "+e.message.slice(0,160));
     }
   }
-  const compact=Object.entries(profiles).map(([name,e])=>({repository:name,url:e.url,pushed_at:e.pushed_at,profile:e.profile}))
+  const compact=Object.entries(profiles).map(([name,e])=>({repository:name,url:e.url,pushed_at:e.pushed_at,recent_commits:e.recent_commits||[],profile:e.profile}))
     .sort((a,b)=>new Date(b.pushed_at||0)-new Date(a.pushed_at||0)).slice(0,80);
   const date=new Date().toISOString().slice(0,10);
   let analysis;
