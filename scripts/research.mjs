@@ -142,6 +142,7 @@ async function main() {
       };
       profiles[repo.full_name]={
         url:repo.url,default_branch:repo.default_branch,pushed_at:repo.pushed_at,
+        available_paths:[...new Set([...(data.tree_paths||[]),...(data.source_excerpts||[]).map(x=>x.path)])],
         archived:repo.archived,fingerprint:fp(repo),analyzed_at:new Date().toISOString(),profile:result
       };
       done++;
@@ -166,8 +167,9 @@ async function main() {
   const evidence=["## 根拠ファイル一覧",""];
   for(const [name,e] of Object.entries(profiles)){
     const p=e.profile||{};
-    const paths=new Set(p.evidence||[]);
-    for(const c of p.reusable_components||[]) for(const f of c.evidence||[]) paths.add(f);
+    const allowed=new Set(e.available_paths||[]);
+    const paths=new Set((p.evidence||[]).filter(f=>allowed.has(f)));
+    for(const c of p.reusable_components||[]) for(const f of c.evidence||[]) if(allowed.has(f)) paths.add(f);
     if(!paths.size) continue;
     evidence.push("- **"+name+"** — [repository]("+e.url+")");
     for(const f of paths){
