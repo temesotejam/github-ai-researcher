@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-01T06:36:50.426Z",
+  "generated_at": "2026-11-01T06:43:21.357Z",
   "owner": "temesotejam",
   "repository_count": 109,
   "profiles": {
     "temesotejam/atoms3r-lateral-energy-control": {
       "url": "https://github.com/temesotejam/atoms3r-lateral-energy-control",
       "default_branch": "main",
-      "pushed_at": "2026-11-01T06:14:21Z",
+      "pushed_at": "2026-11-01T06:37:00Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -56,6 +56,7 @@
         "docs/NEGATIVE_ONE_PEAK_ENERGY_INVERSE.md",
         "docs/NORMAL_UPDATE_04720.md",
         "docs/OFFLINE_RUN_04721.md",
+        "docs/PEAK_MPC.md",
         "docs/PHASE_1N_RUN_ONESHOT_VALIDATION.md",
         "docs/POOLED_NEGATIVE_WORK_CONTROL.md",
         "docs/POSE_COMPARISON_0476.md",
@@ -207,10 +208,13 @@
         "src/imu_manager.h",
         "src/imu_poll_profile.h",
         "src/imu_poll_timer.h",
-        "src/imu_startup_boundary.h",
-        "src/lateral_cg_energy.h"
+        "src/imu_startup_boundary.h"
       ],
       "recent_commits": [
+        {
+          "sha": "e7603fe6",
+          "message": "Add bounded two-peak predictive control"
+        },
         {
           "sha": "3e871116",
           "message": "Show completed flash without waiting for serial reopen"
@@ -218,59 +222,56 @@
         {
           "sha": "215f333a",
           "message": "Skip unsupported Improv detection after flashing"
-        },
-        {
-          "sha": "2512a80e",
-          "message": "Limit sustained wheel bias and add USB download entry"
         }
       ],
       "archived": false,
-      "fingerprint": "2b63ae5bff7dc4a129b3a21277cc8874776f13c9d112f18c2b86c6c38e15f2c4",
-      "analyzed_at": "2026-11-01T06:32:02.618Z",
+      "fingerprint": "9db0c072e18b80b3f1a056d273b75aa00a488b6fe221b225529465350d9ba2cf",
+      "analyzed_at": "2026-11-01T06:39:14.851Z",
       "profile": {
-        "purpose": "AtomS3Rとリアクションホイールを使った左右揺動の制御・実機測定用ファームウェア。READMEでは、姿勢推定とピーク・ZEROクロス検出を用いて入力時間を調整する方式や、実験ログの解析を説明している。",
-        "architecture": "C++ファームウェアに、制御・タイミング計測用モジュールとブラウザ上のログ解析・書き込み用ページを組み合わせる構成とみられる。エネルギー制御やRWLOGの詳細はREADME・関連文書に記載があるが、提示されたソース抜粋だけでは全体の呼び出し関係を確認できない。",
+        "purpose": "AtomS3Rとリアクションホイールを使った左右揺動の制御・実機測定用ファームウェア。電流入力を調整し、次のピーク角を目標に近づけることを目的とする。",
+        "architecture": "MEKFによる姿勢推定とピーク・ZEROクロス検出を制御に利用し、実験条件や制御状態をRWLOGに記録する構成。Web画面から実験を操作し、ブラウザーでログを解析する機能もある。ソース抜粋では位相制御器、動的β制御器、制御遅延計測が独立モジュールとして確認できる。",
         "technologies": [
           "C++",
           "Arduino",
           "FreeRTOS",
-          "PlatformIO"
+          "MEKF",
+          "JavaScript",
+          "JSON",
+          "RWLOG"
         ],
         "algorithms": [
-          "BetaPhaseControllerはパルス開始からのジャイロ積分、旋回検出、帰還進捗に基づいてbeta上限を変える。",
-          "BetaTurnFastControllerは複数サンプルでの逆向き角速度を使って旋回を確認し、smoothstepでbetaを回復する。",
-          "READMEでは、MEKF推定角、ZEROクロス時の角速度、左右別の暫定係数を使うエネルギー制御を説明している。係数の妥当性と実機での閉ループ性能は未確定。"
+          "左右別のピーク・ZEROクロス検出と、次ピーク位置エネルギーに基づく入力時間の調整（README記載）",
+          "入力後の角速度反転を確認して動的βを回復する方式（ソース抜粋で実装を確認）",
+          "サンプル受信から制御完了までの遅延・超過を集計する計測方式（ソース抜粋で実装を確認）"
         ],
         "hardware": [
           "AtomS3R",
           "Unit Roller485",
-          "リアクションホイール",
-          "BMI270（関連する取得・タイミング用ファイル名から確認。実機構成での使用詳細は未確認）"
+          "リアクションホイール"
         ],
         "interfaces": [
-          "実機Web画面からの測定操作",
-          "RWLOG形式の測定ログ",
-          "ブラウザでのログ解析とCSV保存",
-          "PlatformIOのatoms3cam環境"
+          "本体Web画面からの実験操作",
+          "RWLOGによる実験・制御データ記録",
+          "ブラウザーでのログ解析とCSV保存"
         ],
         "reusable_components": [
           {
             "name": "BetaPhaseController",
-            "purpose": "パルス中の保護期間を考慮して運動方向の反転を検出し、帰還進捗に応じたbeta上限を計算する。制御対象に依存する定数はConfig経由で適応が必要。",
+            "purpose": "入力後の角速度積分から折り返しと戻り進捗を追跡し、指数補間でβ上限を求める。全体のエネルギー・幾何モデルに依存しない局所的な位相制御部品として再利用できる。",
             "evidence": [
               "src/beta_phase_controller.h"
             ]
           },
           {
             "name": "BetaTurnFastController",
-            "purpose": "逆向き角速度の複数サンプルで旋回を確認し、確認後またはタイムアウト後にsmoothstepでbetaを回復する。",
+            "purpose": "入力保護中の運動を判定から除外し、複数サンプルで折り返しを確認した後、smoothstepでβを回復する。確認不能時の時間ベースの回復経路も備える。",
             "evidence": [
               "src/beta_turn_fast_controller.h"
             ]
           },
           {
             "name": "control_latency::Profile",
-            "purpose": "センサーサンプルから制御処理完了までの経過時間、I/Oとの時間重複、予算超過を固定容量で記録し、JSON出力する。計測はCPU時間ではなく壁時計時間として扱う。",
+            "purpose": "受信・推定・制御完了などの時刻、I/Oとの重なり、キュー遅延、予算超過を固定容量で記録・集計する。JSON出力と超過件数・保存件数の分離も実装されている。",
             "evidence": [
               "src/control_latency.h",
               "src/control_latency.cpp"
@@ -278,28 +279,18 @@
           },
           {
             "name": "control_angle_reference::origin",
-            "purpose": "work_modeに応じて重力基準の角度原点または保存姿勢を返す。角度基準選択を小さな独立関数として再利用できる。",
+            "purpose": "制御モードに応じて重力基準または保存姿勢を原点として選択する小さな共有関数。",
             "evidence": [
               "src/control_angle_reference.h"
-            ]
-          },
-          {
-            "name": "左右別エネルギー制御方式",
-            "purpose": "README記載の、ZEROクロス時の状態から次ピークのエネルギーを予測し、入力方向とパルス幅を決める方式。実装詳細・他機構への適用条件は提示された抜粋から確認できず、係数の再同定が必要。",
-            "evidence": [
-              "README.md",
-              "src/lateral_cg_energy.h",
-              "docs/LATERAL_CG_ENERGY.md",
-              "docs/energy_model_validation_20261014.md"
             ]
           }
         ],
         "constraints": [
-          "提供されたソース抜粋は一部のみで、主要な実行経路や各モジュールの統合状況は確認できない。",
-          "READMEはエネルギー係数を暫定値とし、逆入力の応答同定が不十分であること、実機での閉ループ性能が自動試験だけでは確認できないことを記載している。",
-          "制御定数、センサー構成、タイミング特性は対象ハードウェアや機構に依存する。"
+          "提示されたソース抜粋は一部に限られるため、制御全体の実装や各モジュールの呼び出し関係は確認できない。",
+          "READMEでは係数が暫定値であり、逆入力の効果を無入力時の動きから独立して同定できていないとされる。",
+          "READMEでは実機の閉ループ性能は自動試験だけでは確認できないとしている。"
         ],
-        "maturity": "実験",
+        "maturity": "試作",
         "confidence": "medium",
         "evidence": [
           "README.md",
@@ -307,11 +298,7 @@
           "src/beta_turn_fast_controller.h",
           "src/control_angle_reference.h",
           "src/control_latency.h",
-          "src/control_latency.cpp",
-          "src/lateral_cg_energy.h",
-          "docs/LATERAL_CG_ENERGY.md",
-          "docs/energy_model_validation_20261014.md",
-          "platformio.ini"
+          "src/control_latency.cpp"
         ]
       }
     },
