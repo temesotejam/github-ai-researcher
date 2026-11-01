@@ -59,8 +59,7 @@ async function publicRepos() {
 }
 async function inspect(repo) {
   const base="/repos/"+repo.full_name;
-  const [langs,treeData,commits]=await Promise.all([
-    gh(base+"/languages").catch(()=>({})),
+  const [treeData,commits]=await Promise.all([
     gh(base+"/git/trees/"+encodeURIComponent(repo.default_branch)+"?recursive=1").catch(()=>null),
     gh(base+"/commits?per_page=3").catch(()=>[])
   ]);
@@ -78,7 +77,7 @@ async function inspect(repo) {
     if(text) excerpts.push({path:x.path,content:text.slice(0,6000)});
   }
   return {
-    repository:repo,languages:langs||{},tree_paths:tree.slice(0,200).map(x=>x.path),
+    repository:repo,primary_language:repo.language,tree_paths:tree.slice(0,200).map(x=>x.path),
     readme:readme.slice(0,12000),source_excerpts:excerpts,
     recent_commits:(commits||[]).map(x=>({sha:(x.sha||"").slice(0,8),message:((x.commit||{}).message||"").split("\n")[0]}))
   };
