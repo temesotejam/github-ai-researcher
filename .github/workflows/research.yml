@@ -6,7 +6,7 @@ on:
       max_repos:
         description: Maximum number of repositories to profile in this run
         required: false
-        default: 8
+        default: 120
         type: number
       force_profiles:
         description: Re-analyze repositories even when their source has not changed
@@ -15,6 +15,10 @@ on:
         type: boolean
   schedule:
     - cron: "17 0 * * 1"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/research.yml"
 
 permissions:
   contents: write
@@ -50,7 +54,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           RESEARCH_OWNER: temesotejam
-          MAX_REPOS: ${{ github.event.inputs.max_repos || 8 }}
+          MAX_REPOS: ${{ github.event.inputs.max_repos || 120 }}
           FORCE_PROFILES: ${{ github.event.inputs.force_profiles || 'false' }}
         run: node scripts/research.mjs
 
