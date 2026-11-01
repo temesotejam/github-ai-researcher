@@ -2,14 +2,16 @@
 
 ## Execution
 
-The system runs entirely in GitHub Actions. A scheduled run starts every Monday, and a manual run can be started from the Actions tab.
+The system runs entirely in GitHub Actions. A scheduled public-repository check runs every day at 03:30 JST (18:30 UTC on the previous day). A manual run can be started from the Actions tab.
 
 1. Query the GitHub REST API for repositories owned by the configured account with public visibility.
 2. Exclude this researcher repository to avoid self-analysis feedback loops.
 3. Read repository metadata, README, language statistics, a bounded file tree, selected source/configuration files, and recent commit subjects.
-4. Ask GitHub Copilot CLI to create one evidence-grounded profile per changed repository.
-5. Ask Copilot CLI to synthesize the cached profiles into a cross-project research report.
-6. Commit the index, profiles, and report to this repository.
+4. Compare each public repository's fingerprint with its last successfully analyzed fingerprint. The fingerprint includes its last push time and relevant repository metadata.
+5. If no repository changed and no previously public repository disappeared or became private, exit without invoking AI or rewriting reports.
+6. Ask GitHub Copilot CLI to create one evidence-grounded profile per changed repository. Failed profiles remain pending and are retried on the next check.
+7. Synthesize all cached profiles in small batches and generate a cross-project research report.
+8. Commit the index, profiles, and report to this repository only when the output changes.
 
 ## Data flow
 
@@ -26,7 +28,7 @@ The source repositories are never modified. Only this repository receives commit
 
 ## Collection limits
 
-To keep Actions runs bounded, each run profiles at most 8 repositories by default (maximum 20). A profile reads the README, language statistics, up to five selected source/configuration files, a limited file tree, and up to three recent commit subjects. Individual files over 60 KB are skipped. The synthesis stage uses at most 80 cached profiles.
+To keep Actions runs bounded, each run profiles up to 120 changed repositories. A profile reads the README, repository language metadata, up to five selected source/configuration files, a limited file tree, and up to three recent commit subjects. Individual files over 60 KB are skipped. The synthesis stage covers up to 120 cached profiles in batches.
 
 These limits are intended for discovery, not a complete code audit. A future version can add targeted deep dives after an idea is selected.
 
