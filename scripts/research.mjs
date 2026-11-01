@@ -4,12 +4,14 @@ import crypto from "node:crypto";
 import { execFileSync } from "node:child_process";
 
 const owner = process.env.RESEARCH_OWNER || "temesotejam";
+const token = process.env.GITHUB_TOKEN || "";
 const limit = Math.min(120, Math.max(1, Number(process.env.MAX_REPOS || 120)));
 const force = process.env.FORCE_PROFILES === "true";
 const headers = {
   Accept: "application/vnd.github+json",
   "X-GitHub-Api-Version": "2022-11-28",
-  "User-Agent": "github-ai-researcher"
+  "User-Agent": "github-ai-researcher",
+  ...(token ? { Authorization: "Bearer " + token } : {})
 };
 async function gh(url) {
   const r = await fetch(url.startsWith("http") ? url : "https://api.github.com" + url, { headers });
