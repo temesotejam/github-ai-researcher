@@ -203,7 +203,7 @@ async function main() {
     try{
       console.log("Cross-analysis batch "+(batchReports.length+1)+"/"+batchCount);
       const text=copilot(batchPrompt(batch,batchReports.length+1,batchCount,repos.length));
-      batchReports.push(text.slice(0,4500));
+      batchReports.push(text.slice(0,1200));
     }catch(e){
       const message="バッチ "+(batchReports.length+1)+" の詳細分析に失敗: "+e.message.slice(0,220);
       console.error(message);
@@ -214,8 +214,19 @@ async function main() {
     if(!compact.length){
       analysis="## 分析待ち\n\n公開リポジトリの一覧は取得できましたが、プロフィールがありません。Actionsを再実行してください。";
     }else{
-      const prompt=finalPrompt(compact,batchReports,repos.length);
-      console.log("Final synthesis prompt bytes: "+Buffer.byteLength(prompt,"utf8"));
+      const indexRows=compact.map(x=>({
+        repository:x.repository,
+        purpose:String(x.purpose||"").slice(0,100),
+        technologies:(x.technologies||[]).slice(0,3),
+        algorithms:(x.algorithms||[]).slice(0,2),
+        reusable_components:(x.reusable_components||[]).slice(0,3).map(c=>c.name),
+        maturity:x.maturity,
+        confidence:x.confidence
+      }));
+      const prompt=finalPrompt(indexRows,batchReports,repos.length);
+      const promptBytes=Buffer.byteLength(prompt,"utf8");
+      console.log("Final synthesis prompt bytes: "+promptBytes);
+      if(promptBytes>110000) throw new Error("Final synthesis prompt exceeds safe CLI argument size: "+promptBytes+" bytes");
       analysis=copilot(prompt);
     }
   }catch(e){
