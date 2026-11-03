@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-03T01:13:36.401Z",
+  "generated_at": "2026-11-03T23:38:47.022Z",
   "owner": "temesotejam",
   "repository_count": 111,
   "profiles": {
     "temesotejam/atoms3r-lateral-energy-control": {
       "url": "https://github.com/temesotejam/atoms3r-lateral-energy-control",
       "default_branch": "main",
-      "pushed_at": "2026-11-02T11:54:14Z",
+      "pushed_at": "2026-11-03T09:54:53Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -212,69 +212,68 @@
       ],
       "recent_commits": [
         {
-          "sha": "ecc1450b",
-          "message": "Prioritize paired-side tilt excitation during walking"
+          "sha": "31a9ef63",
+          "message": "Trial early bias correction while protecting sway"
         },
         {
-          "sha": "d5a9008a",
-          "message": "Explore longer negative assistance from matched peak timing"
+          "sha": "2e29b380",
+          "message": "Preserve early wheel oscillation and limit accumulating bias"
         },
         {
-          "sha": "c13f58f1",
-          "message": "Prioritize observed weaker-foot response during walking"
+          "sha": "cb58be47",
+          "message": "Clarify placement of camera feedback context"
         }
       ],
       "archived": false,
-      "fingerprint": "873ceb33f693e14a52f571901ad82d65448d9aeee1ea0e5878adbb02595a091e",
-      "analyzed_at": "2026-11-03T01:09:22.703Z",
+      "fingerprint": "da629b7458ada510ca450ed40c866c74e7479fbc07ce376d1b4347ecefa2c210",
+      "analyzed_at": "2026-11-03T23:34:33.961Z",
       "profile": {
-        "purpose": "AtomS3Rとリアクションホイールを使い、左右揺動のピーク角を目標に近づける制御を実機で試験・解析するファームウェア。制御則の比較や実験ログの収集・解析も行う。",
-        "architecture": "C++ファームウェアが姿勢推定とZEROクロス・ピーク検出を用いて入力を決定し、RWLOGに状態と実行結果を記録する。Web画面から実験を操作し、ブラウザー上の解析ページでログを調べる構成。エネルギー制御や負側入力の実機応答は、README上でも暫定・検証中とされている。",
+        "purpose": "AtomS3Rとリアクションホイールを用いた左右揺動の制御・実機測定用ファームウェア。姿勢推定とピーク／ZEROクロス検出に基づく入力制御のほか、制御応答や入力仕事の記録・解析を扱う。",
+        "architecture": "C++のファームウェアをsrc内の制御・観測・診断モジュールに分割し、config.hの設定を参照する構成。Web画面と解析ページはsiteにあり、実験手順・ログ形式・検証記録はdocsに集約されている。提示されたソース抜粋は一部モジュールに限られる。",
         "technologies": [
           "C++",
           "Arduino",
           "FreeRTOS",
-          "MEKF姿勢推定",
-          "PlatformIO",
-          "RWLOG"
+          "MEKF（README記載）",
+          "JSON形式の計測・診断データ"
         ],
         "algorithms": [
-          "ZEROクロス時の状態から次ピークの位置エネルギーを予測し、電流積分とパルス幅を逆算する方式（README記載）",
-          "左右別・入力方向別の予測誤差補正と、ピーク角に基づく積分補正（README記載）",
-          "パルス後の角速度符号反転を複数サンプルで確認し、betaを滑らかに復帰させる状態機械（beta_turn_fast_controller.h）",
-          "パルス開始からのジャイロ積分角と旋回確認に応じてbeta上限を変える状態機械（beta_phase_controller.h）",
-          "制御処理・I/O・キュー配送の経過時間を集計し、期限超過を有界バッファに記録する方式（control_latency.h、control_latency.cpp）"
+          "BetaPhaseControllerのパルス相対ジャイロ積分による旋回検出と、return_progressに基づく指数形beta上限遷移",
+          "BetaTurnFastControllerの旋回方向反転サンプル確認、時間切れフォールバック、smoothstepによるbeta回復",
+          "左右別の角速度・損失推定とエネルギー差から入力を決める方式（README記載。係数は暫定とされ、実機性能は未確認）"
         ],
         "hardware": [
           "M5Stack AtomS3R",
           "Unit Roller485",
-          "リアクションホイール",
-          "足カメラ（任意記録）"
+          "リアクションホイール"
         ],
         "interfaces": [
-          "Web画面による実験操作",
-          "RWLOGによる実験データ記録・エクスポート",
-          "ブラウザー上のwheel-work.htmlによるログ解析・CSV保存",
-          "FreeRTOSを介した制御処理とI/O処理"
+          "Arduino／FreeRTOS上の制御モジュール",
+          "Web UIによる実験操作（README記載）",
+          "RWLOGによる実験・タイミング記録（README記載）",
+          "診断情報のJSON出力",
+          "site内のブラウザログ解析ページ"
         ],
         "reusable_components": [
           {
-            "name": "BetaTurnFastController",
-            "purpose": "入力後の動きを角速度反転とピーク角で監視し、確認後または時間切れ後にsmoothstepでbetaを復帰させる。状態機械と更新周期制約を含み、パルス後の段階的な制御復帰に再利用できる。",
-            "evidence": [
-              "src/beta_turn_fast_controller.h"
-            ]
-          },
-          {
             "name": "BetaPhaseController",
-            "purpose": "パルス開始後の角度積分、入力保護中の判定抑制、旋回後の進捗に応じた指数補間のbeta上限を提供する。",
+            "purpose": "パルス開始からのバイアス補正済み角速度積分を使って旋回と復帰進捗を判定し、指数形のbeta上限を返す。入力保護中は旋回判定を保留する。",
             "evidence": [
-              "src/beta_phase_controller.h"
+              "src/beta_phase_controller.h",
+              "src/config.h"
             ]
           },
           {
-            "name": "control_latency::Profile",
-            "purpose": "受信から制御完了までの段階別遅延、I/O・キュー時間、期限超過を固定容量で記録しJSON出力する。組み込み制御ループの遅延診断に利用できる。",
+            "name": "BetaTurnFastController",
+            "purpose": "パルス後の旋回を複数サンプルで確認し、確認後または時間切れ後にsmoothstepでbetaを回復する。判定・回復状態を他の制御器へ移植する際の参考になる。",
+            "evidence": [
+              "src/beta_turn_fast_controller.h",
+              "src/config.h"
+            ]
+          },
+          {
+            "name": "control_latency計測",
+            "purpose": "サンプル受信から処理段階ごとの経過時間、I/O呼び出し、予算超過を固定容量の構造体に集計してJSON出力する。時間値はCPU占有時間ではなく割り込み等を含む壁時計時間である点も明示されている。",
             "evidence": [
               "src/control_latency.h",
               "src/control_latency.cpp"
@@ -282,17 +281,17 @@
           },
           {
             "name": "control_angle_reference::origin",
-            "purpose": "work_modeに応じて重力基準の角度原点または保存姿勢を返し、制御モード間の原点選択を小さな関数に分離する。",
+            "purpose": "work_modeに応じて重力基準の角度原点または保存姿勢を選ぶ小さな方針関数。角度基準の切り替えを呼び出し側から分離する用途に再利用できる。",
             "evidence": [
               "src/control_angle_reference.h"
             ]
           }
         ],
         "constraints": [
-          "エネルギー係数は限られた実機ログに基づく暫定値で、逆入力の効果を無入力時の動きから独立して同定できていない（README.md）。",
-          "閉ループ性能は自動試験だけでは確認できず、実機での検証が必要（README.md）。",
-          "BetaPhaseControllerとBetaTurnFastControllerは制御ロジックの実装を確認できるが、この資料だけでは製品制御への採用状況や実機効果は確認できない。",
-          "提示されたソース抜粋からは、ファームウェア全体の呼び出し関係や全機能の実装状況を確認できない。"
+          "提示されたソース抜粋は限定的で、ファームウェア全体の呼び出し関係や各機能の実装状況は確認できない。",
+          "READMEはエネルギーモデルの係数を暫定値とし、逆入力応答の独立同定不足と実機閉ループ性能の未確認を記載している。",
+          "control_latencyの計測値は壁時計上の重なりであり、純粋なCPU負荷・プリエンプション時間ではない。",
+          "Beta制御器の実機適用結果や有効性は、提示されたコード抜粋だけでは確認できない。"
         ],
         "maturity": "実験",
         "confidence": "medium",
@@ -303,8 +302,7 @@
           "src/control_angle_reference.h",
           "src/control_latency.h",
           "src/control_latency.cpp",
-          "platformio.ini",
-          "site/wheel-work.html",
+          "docs/rwlog_format.md",
           "site/wheel-work.js"
         ]
       }
@@ -312,7 +310,7 @@
     "temesotejam/github-tavern": {
       "url": "https://github.com/temesotejam/github-tavern",
       "default_branch": "main",
-      "pushed_at": "2026-11-02T21:48:41Z",
+      "pushed_at": "2026-11-03T19:38:10Z",
       "available_paths": [
         ".github",
         ".github/agents",
@@ -341,87 +339,89 @@
       ],
       "recent_commits": [
         {
+          "sha": "2a9767a2",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
+          "sha": "d63c5a98",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
           "sha": "c6e2d507",
           "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "b14f31a4",
-          "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "422e7a96",
-          "message": "chore: refresh verified public pages"
         }
       ],
       "archived": false,
-      "fingerprint": "e8f0f317b0fbf8240ad8c7ae336733ce3e80aaafdd8cf97a54edab916e0d483e",
-      "analyzed_at": "2026-11-03T01:09:06.605Z",
+      "fingerprint": "6eb4aaee994f85f879da9999b172dc3797cc56e1b32c469acd760087464282db",
+      "analyzed_at": "2026-11-03T23:34:19.271Z",
       "profile": {
-        "purpose": "公開GitHubリポジトリを検索・分類・閲覧する個人向けの静的ポータル。",
-        "architecture": "ブラウザー側のJavaScriptがGitHub APIから公開リポジトリを取得し、検索・分類・詳細表示を行う。要約や公開ページ情報はJSONファイルから読み込み、README由来の説明をカードに補完する。GitHub Actionsによる要約・公開ページ情報の更新も説明されているが、ワークフロー実装の詳細は未確認。",
+        "purpose": "公開GitHubリポジトリを検索・閲覧する個人向けの静的ポータル。",
+        "architecture": "ブラウザー側のJavaScriptがリポジトリ情報を扱い、分類・検索・詳細表示を行う構成。説明や公開ページ情報はJSONファイルから読み込む。READMEにはCopilotによる要約更新ワークフローの説明があるが、ワークフローの実装詳細は提示資料から確認できない。",
         "technologies": [
           "JavaScript",
           "HTML",
           "CSS",
           "GitHub API",
-          "GitHub Actions",
-          "GitHub Pages"
+          "GitHub Pages",
+          "ブラウザー Fetch API",
+          "MutationObserver"
         ],
         "algorithms": [
-          "名前・説明・言語・Topics・要約などを連結して行う横断検索",
-          "キーワード規則による優先順のカテゴリ分類",
-          "最大6件の並行処理キューによるREADME取得",
-          "Markdownのノイズ除去と先頭文抽出による短いプレビュー生成",
-          "正規表現による日本語説明文の口語化"
+          "キーワード規則によるリポジトリ分類",
+          "Markdownの除去・整形と先頭文抽出",
+          "最大6件の並列README取得",
+          "HTTP/HTTPS URLの検証",
+          "日本語説明文の口語変換"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザー上の検索・カテゴリ選択・詳細表示UI",
-          "GitHub APIからの公開リポジトリ取得",
-          "raw.githubusercontent.comからのREADME取得",
-          "data/summaries.jsonおよびdata/public-pages.jsonのJSONデータ"
+          "ブラウザー上の検索・分類・詳細表示UI",
+          "GitHub APIおよびraw.githubusercontent.comからの読み取り",
+          "data/summaries.jsonとdata/public-pages.jsonのJSONデータ"
         ],
         "reusable_components": [
           {
-            "name": "categoryOf / RULES",
-            "purpose": "リポジトリ情報をキーワード規則で技術カテゴリに分類する。",
+            "name": "cleanMarkdown / shortPreview",
+            "purpose": "README Markdownから装飾やノイズを除去し、短い説明文を生成する。",
+            "evidence": [
+              "card-enricher.js"
+            ]
+          },
+          {
+            "name": "README取得キュー",
+            "purpose": "カード表示に応じてREADMEを取得し、同時取得数を6件に制限して説明を補完する。",
+            "evidence": [
+              "card-enricher.js"
+            ]
+          },
+          {
+            "name": "categoryOf",
+            "purpose": "リポジトリ名・説明・言語・Topics・要約を規則ベースで分類する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "readReadme / shortPreview",
-            "purpose": "一般的なブランチ名・README名を順に試し、Markdownを整形してカード向けの短い説明を作る。",
+            "name": "validEntry",
+            "purpose": "公開ページのURLを解析し、HTTPまたはHTTPS以外を除外する。",
             "evidence": [
-              "card-enricher.js"
-            ]
-          },
-          {
-            "name": "CONCURRENCYキュー",
-            "purpose": "カードごとのREADME取得を重複排除しつつ、同時実行数を制限する。",
-            "evidence": [
-              "card-enricher.js"
+              "public-pages-client.js"
             ]
           },
           {
             "name": "spokenize",
-            "purpose": "日本語の技術説明を規則ベースで口語調に変換する純粋変換関数。",
+            "purpose": "日本語の技術説明文を口語調に変換する純粋変換関数。",
             "evidence": [
               "spoken-overview-client.js"
-            ]
-          },
-          {
-            "name": "validEntry",
-            "purpose": "公開ページのURLを解析し、HTTP/HTTPS以外のスキームを除外する。",
-            "evidence": [
-              "public-pages-client.js"
             ]
           }
         ],
         "constraints": [
-          "対象は公開リポジトリで、サイト側から書き込み操作を行わないとREADMEに記載されている。",
-          "カテゴリ分類は固定キーワード規則に基づくため、誤分類や未分類が起こり得る。",
-          "GitHub APIのレート制限、取得失敗時の挙動、要約生成スクリプトの詳細は提示された抜粋だけでは確認できない。"
+          "提示されたapp.jsの抜粋は一部のみで、取得・検索・詳細表示の全実装は確認できない。",
+          "READMEに記された自動要約ワークフローの挙動は、ワークフローのソース内容が提示されていないため独立に検証できない。",
+          "card-enricher.jsはREADMEのブランチ名・ファイル名を限定して試行する。",
+          "一部のデータ取得失敗時に空データとして表示を継続する実装がある。",
+          "テスト内容や実行結果は提示されていない。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
@@ -429,10 +429,11 @@
           "README.md",
           "app.js",
           "card-enricher.js",
-          "spoken-overview-client.js",
           "public-pages-client.js",
-          "data/summaries.json",
+          "spoken-overview-client.js",
+          "keeper-closing-client.js",
           "data/public-pages.json",
+          "data/summaries.json",
           ".github/workflows/copilot-summaries.yml"
         ]
       }
@@ -440,7 +441,7 @@
     "temesotejam/2026_10_24": {
       "url": "https://github.com/temesotejam/2026_10_24",
       "default_branch": "main",
-      "pushed_at": "2026-11-03T00:55:13Z",
+      "pushed_at": "2026-11-03T23:17:05Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -457,88 +458,87 @@
       ],
       "recent_commits": [
         {
+          "sha": "899a26af",
+          "message": "Update automatic news feed"
+        },
+        {
+          "sha": "53cb89e5",
+          "message": "Update automatic news feed"
+        },
+        {
           "sha": "6de327de",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "d6d2bb5e",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "93710194",
           "message": "Update automatic news feed"
         }
       ],
       "archived": false,
-      "fingerprint": "a563aafc2101785f815bf05d6588bddc20643d51d230d357c4f007a6312bd994",
-      "analyzed_at": "2026-11-03T01:08:52.326Z",
+      "fingerprint": "35b503778ca8903c54be87cd105e444cb6c1d4fdbf4d1a41670ac30ae2f4bbec",
+      "analyzed_at": "2026-11-03T23:34:06.743Z",
       "profile": {
-        "purpose": "ニュース見出しを迷宮のテーマやゲーム内イベントに反映する、ブラウザー向けの一人用探索ゲームです。",
-        "architecture": "app.js がゲーム状態と画面表示を管理し、HTML の canvas に描画します。data/news.json を読み込んでニュース選択肢を作り、選択したニュースをゲーム開始時のシードとして利用します。ニュース取得用スクリプトと GitHub Actions のワークフローもファイルツリーにあります。",
+        "purpose": "ニュース見出しや入力した現実の出来事を迷宮に反映する、一人用の探索ゲーム。",
+        "architecture": "GitHub Pagesで配信するブラウザーゲーム。app.jsがCanvas描画やゲーム状態、ニュース選択・表示を扱い、data/news.jsonを自動ニュースの入力元とする構成。READMEではGitHub ActionsによるRSS収集・データ更新が説明されているが、ワークフローや収集スクリプトの実装詳細は未確認。",
         "technologies": [
           "JavaScript",
-          "HTML canvas",
-          "ブラウザー Fetch API",
+          "HTML Canvas 2D",
+          "Fetch API",
           "localStorage",
-          "GitHub Actions"
+          "GitHub Pages",
+          "GitHub Actions",
+          "RSS"
         ],
         "algorithms": [
-          "日付を使ったニュース項目の選択と、乱数による選択",
-          "ニュース見出しのキーワードによる除外とカテゴリ分類",
-          "マンハッタン距離の計算"
+          "プレイヤーの行動ごとに仲間と敵も行動するターン制進行",
+          "乱数を用いた迷宮生成（具体的な生成手順は未確認）",
+          "日付から自動ニュース項目を選ぶ方式（app.js）",
+          "ニュース見出しに対するキーワード除外とURLプロトコル検査"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザー画面（canvas、キーボード・方向ボタンは README に記載）",
-          "data/news.json の JSON データ",
-          "localStorage の reality-dungeon-seed",
-          "RSS ニュース取得ワークフロー（README に記載）"
+          "矢印キー・WASD・画面上の方向ボタンによる操作",
+          "Canvas 2D描画",
+          "data/news.jsonからのJSON取得",
+          "RSS由来の記事の見出し・配信元・日時・出典リンク表示",
+          "localStorageによる入力ニュースの保存"
         ],
         "reusable_components": [
           {
             "name": "safeHttpUrl(value)",
-            "purpose": "URL を解析し、HTTP/HTTPS のみ許可して正規化した URL を返します。不正な URL や他のプロトコルは空文字にします。",
+            "purpose": "URLを解析し、HTTPまたはHTTPSの場合だけURL文字列を返す。ニュース出典リンクの検証や、保存済みデータの読み込みに利用できる。",
             "evidence": [
               "app.js"
             ]
           },
           {
             "name": "loadAutomaticNews()",
-            "purpose": "ニュース JSON を取得し、見出しの危険語・配信元・カテゴリを検査してゲーム用データへ整形します。取得失敗時は自動ニュースを空にします。",
+            "purpose": "ニュースJSONを取得し、カテゴリ・見出し・配信元を検査してゲーム用データへ整形する。取得失敗時は自動ニュースを空にする。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "savedSeed()",
-            "purpose": "localStorage から保存済みのニュースシードを読み込み、出典 URL を検証します。",
+            "name": "renderAutomaticNews()",
+            "purpose": "ニュース一覧をDOM要素として構築し、textContentで見出し等を表示する。選択時にゲーム開始へつなぐ。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "syncAppHeight()",
-            "purpose": "ウィンドウや visual viewport の高さを CSS 変数 --app-height に反映し、画面サイズ変更に追従します。",
+            "name": "カテゴリ別テーマ定義",
+            "purpose": "community、climate、mobility、scienceごとに迷宮の色・出現タイプ・説明を対応付ける。",
             "evidence": [
               "app.js"
             ]
           }
         ],
         "constraints": [
-          "確認できるソース抜粋は app.js の一部のみで、迷宮生成・戦闘・描画の具体的な実装詳細は確認できません。",
-          "ニュースの除外は抜粋上では主に見出しと配信元に対する文字列判定です。記事内容の検証を示す証拠はなく、読み込んだ項目も factVerified: false とされています。",
-          "RSS 取得、記事の保持方針、更新頻度は README の説明に基づき、ワークフローや取得スクリプトの実装は確認できていません。"
+          "提示されたソース抜粋はapp.jsの一部であり、迷宮生成や戦闘の詳細な実装は確認できない。",
+          "scripts/fetch-news.mjs、GitHub Actionsの設定、HTML・CSS、ニュースJSONの内容は提示されていないため、その実装やデータ品質は未確認。",
+          "見出しのキーワード除外はヒューリスティックであり、内容の安全性や正確性を保証しない。コードでは記事本文を確認済みと扱わない。"
         ],
         "maturity": "試作",
         "confidence": "medium",
         "evidence": [
           "README.md",
-          "app.js",
-          "scripts/fetch-news.mjs",
-          ".github/workflows/news.yml",
-          "data/news.json",
-          "index.html",
-          "styles.css"
+          "app.js"
         ]
       }
     },
@@ -11242,12 +11242,14 @@
     "temesotejam/personal-browser-os": {
       "url": "https://github.com/temesotejam/personal-browser-os",
       "default_branch": "main",
-      "pushed_at": "2026-11-02T07:23:15Z",
+      "pushed_at": "2026-11-03T05:38:03Z",
       "available_paths": [
         ".github",
         ".github/workflows",
         ".github/workflows/install-c-toolchain.yml",
+        ".github/workflows/install-python-runtime.yml",
         ".github/workflows/test-c-ide.yml",
+        ".github/workflows/test-python-ide.yml",
         ".nojekyll",
         "README.md",
         "app.js",
@@ -11270,109 +11272,123 @@
         "c-ide/toolchain/sysroot.tar",
         "index.html",
         "manifest.webmanifest",
+        "python-ide",
+        "python-ide/app.js",
+        "python-ide/index.html",
+        "python-ide/smoke-test.mjs",
+        "python-ide/style.css",
+        "python-ide/vendor",
+        "python-ide/vendor/pyodide-lock.json",
+        "python-ide/vendor/pyodide.asm.mjs",
+        "python-ide/vendor/pyodide.asm.wasm",
+        "python-ide/vendor/pyodide.js",
+        "python-ide/vendor/pyodide.mjs",
+        "python-ide/vendor/python_stdlib.zip",
+        "python-ide/worker.js",
         "styles.css",
         "sw.js"
       ],
       "recent_commits": [
         {
-          "sha": "5a0073ab",
-          "message": "Run end-to-end real C compiler smoke tests in Chromium on GitHub Actions"
+          "sha": "42a5f058",
+          "message": "Verify local Pyodide module runtime with Chrome end-to-end tests"
         },
         {
-          "sha": "ff8a4b00",
-          "message": "Add automated end-to-end browser test for C compiler and drawing"
+          "sha": "50d70d54",
+          "message": "Install locally hosted Pyodide Python runtime 314.0.7"
         },
         {
-          "sha": "114e5326",
-          "message": "Document native browser C IDE and drawing examples"
+          "sha": "fc84e6da",
+          "message": "Install Pyodide ES module entrypoint for module workers"
         }
       ],
       "archived": false,
-      "fingerprint": "e51ce306c93b2d904592ca672e39b3d6366b8a0914b9fbe33ff4402c8601b507",
-      "analyzed_at": "2026-11-03T01:09:36.263Z",
+      "fingerprint": "fbebeec0cf7d5758aeff1099f96490a0c74433b0f2ec59ebab0e3c0d4d55c3ad",
+      "analyzed_at": "2026-11-03T23:34:49.091Z",
       "profile": {
-        "purpose": "ブラウザー内にデスクトップ環境と複数のアプリを提供する静的Webアプリ。C言語IDEではCコードのコンパイル・実行と独自描画も扱う。",
-        "architecture": "ルートの app.js がデスクトップアプリを管理し、c-ide/ 以下にコード編集・コンパイル・WASM実行を担うIDEを分離。Service Workerがアプリシェルをキャッシュし、オフライン起動を支える構成。",
+        "purpose": "ブラウザー内にデスクトップ環境とC/Python開発環境を提供する静的Webアプリ。READMEではGitHub Pagesでの公開とオフライン起動基盤を説明している。",
+        "architecture": "ルートのapp.jsがアプリ一覧やウィンドウ管理を担い、各IDEは独立した画面とWeb Workerを持つ。C IDEはWorker内でコンパイル・WASI実行、Python IDEはWorker内でPyodide実行し、描画結果を親画面のCanvasへ渡す構成。",
         "technologies": [
           "JavaScript",
-          "HTML",
-          "CSS",
-          "Web Workers",
           "WebAssembly",
           "WASI Preview 1",
+          "Web Workers",
+          "Pyodide / CPython",
           "Canvas 2D",
           "localStorage",
-          "Service Worker",
-          "PWA"
+          "PWA / Service Worker"
         ],
         "algorithms": [
-          "WASIのfd_read/fd_write等を実装する標準入出力ブリッジ",
-          "行単位で独自描画命令を解析しCanvasに反映",
-          "Service Workerによるネットワーク優先・キャッシュ代替の取得処理"
+          "Cの標準出力を行単位で処理し、独自の@PLOT命令をCanvas描画へ振り分ける方式",
+          "Pythonグラフのデータ範囲から座標をCanvas上へ写像する描画処理",
+          "Web Workerの終了による実行停止と、実行時間上限による無限ループ対策（README記載）"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザーUI",
-          "localStorage",
-          "Web WorkerのpostMessage",
-          "WASI Preview 1",
-          "C標準入出力",
-          "@PLOT描画命令",
-          "PWA manifestおよびService Worker"
+          "C11ソース、標準入力・標準出力、WASI Preview 1",
+          "C IDE独自の@PLOT CLEAR/LINE/RECT/CIRCLE出力命令",
+          "Pythonソース、標準入出力、独自os_plot API",
+          ".c / .pyファイルの読込・保存（README記載）",
+          "ブラウザー画面、localStorage、Service Worker"
         ],
         "reusable_components": [
           {
             "name": "WASI実行Worker",
-            "purpose": "WASMモジュールを実行し、標準入力・標準出力・標準エラーや一部のWASI呼び出しをブラウザーに接続する。",
+            "purpose": "WASMモジュールに標準入出力、終了コード、時計、乱数などのWASI importを提供し、Worker単位で実行を停止できる。",
             "evidence": [
               "c-ide/runtime-worker.js"
             ]
           },
           {
-            "name": "描画命令パーサー",
-            "purpose": "Cプログラムの出力からCLEAR、LINE、RECT、CIRCLE命令を認識し、サイズと色を制限しながらCanvasへ描画する。",
+            "name": "C描画命令パーサー",
+            "purpose": "drawCommandが@PLOT命令を検証・解釈しCanvasへ描画する。safeColorによる色値の制限やwriteOutputTextによる出力振り分けも再利用可能。",
             "evidence": [
               "c-ide/app.js"
             ]
           },
           {
-            "name": "C IDEのソース保存・状態管理",
-            "purpose": "編集内容をlocalStorageへ保存し、ソース変更時にコンパイル済み状態を無効化する。",
+            "name": "Pyodide初期化・実行Worker",
+            "purpose": "ensureRuntimeでローカル配信のPyodideを初期化し、標準入出力と実行ごとのglobalsを設定してPythonコードを実行する。",
             "evidence": [
-              "c-ide/app.js"
+              "python-ide/worker.js"
             ]
           },
           {
-            "name": "アプリ情報の永続化ヘルパー",
-            "purpose": "localStorageからJSONを読み書きし、保存失敗時に通知する。",
+            "name": "os_plot互換レイヤー",
+            "purpose": "plot、scatter、bar、title、xlabel、ylabel、grid、clearをPythonモジュールとして提供し、JSONメッセージ経由で描画要求を送る。",
+            "evidence": [
+              "python-ide/worker.js",
+              "python-ide/app.js"
+            ]
+          },
+          {
+            "name": "デスクトップのアプリ登録・表示",
+            "purpose": "アプリメタデータを基にデスクトップアイコンやランチャーを構築し、localStorageからカスタムアプリ情報を読み込む。",
             "evidence": [
               "app.js"
-            ]
-          },
-          {
-            "name": "Service Workerのアプリシェルキャッシュ",
-            "purpose": "同一オリジンのGET応答をキャッシュし、ネットワーク利用不可時にキャッシュ済みページを返す。大容量ツールチェーンはService Workerキャッシュ対象外。",
-            "evidence": [
-              "sw.js"
             ]
           }
         ],
         "constraints": [
-          "提示された抜粋ではコンパイラ実装の詳細やアプリ全体のウィンドウ管理は確認できない。",
-          "READMEによるとツールチェーン初回読み込みは約70MBで、実行は10秒で停止する。",
-          "描画命令は独自拡張であり、標準CのグラフィックAPIではない。",
-          "READMEではOSシステムコール、Windows向けプログラム、ネイティブGUIは対象外とされている。",
-          "Service Workerのオフライン動作やブラウザー互換性は提示情報から独立に検証できない。"
+          "Cの描画命令とPythonのos_plotは独自拡張で、標準CのグラフィックAPIやmatplotlibとは異なる。",
+          "CのWASI実装は標準入出力などに限定される。OSシステムコール、Windows用実行ファイル、ネイティブGUIは対象外（README記載）。",
+          "Pythonはブラウザー内実行で、PC上の任意ファイル操作や一部モジュール・外部拡張パッケージに制限がある（README記載）。",
+          "Webサイトのiframe埋め込みは相手サイトの制約を受ける。埋め込み拒否の完全な自動検知はできない（README記載）。",
+          "各IDEのsmoke testやCI設定の存在はファイル一覧から確認できるが、この入力にはテスト内容・実行結果がなく、検証状況は不明。",
+          "メインのapp.jsとCコンパイル処理の抜粋は一部のみのため、全体のウィンドウ管理やコンパイル詳細は未確認。"
         ],
-        "maturity": "ツール",
+        "maturity": "試作",
         "confidence": "medium",
         "evidence": [
           "README.md",
           "app.js",
           "c-ide/app.js",
           "c-ide/runtime-worker.js",
+          "c-ide/compiler-worker.mjs",
+          "python-ide/app.js",
+          "python-ide/worker.js",
           "sw.js",
-          ".github/workflows/test-c-ide.yml"
+          "manifest.webmanifest"
         ]
       }
     },
