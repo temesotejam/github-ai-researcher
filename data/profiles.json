@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-01T22:19:20.632Z",
+  "generated_at": "2026-11-03T01:13:36.401Z",
   "owner": "temesotejam",
-  "repository_count": 110,
+  "repository_count": 111,
   "profiles": {
     "temesotejam/atoms3r-lateral-energy-control": {
       "url": "https://github.com/temesotejam/atoms3r-lateral-energy-control",
       "default_branch": "main",
-      "pushed_at": "2026-11-01T10:15:27Z",
+      "pushed_at": "2026-11-02T11:54:14Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -38,6 +38,9 @@
         "docs/FOOT_CALIBRATION_0477.md",
         "docs/FOOT_ENERGY.md",
         "docs/FOOT_PHASE_CONTROL_059.md",
+        "docs/FOOT_PHASE_CONTROL_060.md",
+        "docs/FOOT_PHASE_CONTROL_061.md",
+        "docs/FOOT_PHASE_CONTROL_062.md",
         "docs/FORE_AFT_STOP_04722.md",
         "docs/FREEFOOT_RUNTIME_V2.md",
         "docs/FREEFOOT_SUCCESS_TIMING_04710.md",
@@ -198,77 +201,80 @@
         "src/foot_calibration_diagnostics.h",
         "src/foot_calibration_table.h",
         "src/foot_energy_balance.h",
+        "src/foot_fullstride_observer.h",
         "src/foot_observer.cpp",
         "src/foot_observer.h",
         "src/foot_phase_cap.h",
         "src/foot_phase_observer.h",
         "src/foot_range_diagnostics.h",
-        "src/foot_tracking_config.h",
-        "src/foot_zero.h",
-        "src/gradual_start.h",
-        "src/gyro_steering.h",
-        "src/immutable_export.cpp",
-        "src/immutable_export.h"
+        "src/foot_span_candidate.h",
+        "src/foot_span_control.h"
       ],
       "recent_commits": [
         {
-          "sha": "77facc00",
-          "message": "Describe the experimental foot phase firmware on the flasher"
+          "sha": "ecc1450b",
+          "message": "Prioritize paired-side tilt excitation during walking"
         },
         {
-          "sha": "0da16e22",
-          "message": "Guard phase observations and document response uncertainty"
+          "sha": "d5a9008a",
+          "message": "Explore longer negative assistance from matched peak timing"
         },
         {
-          "sha": "4cdbdda7",
-          "message": "Move phase peak bookkeeping outside motion hot body"
+          "sha": "c13f58f1",
+          "message": "Prioritize observed weaker-foot response during walking"
         }
       ],
       "archived": false,
-      "fingerprint": "c1a0587f470ba74791c3835974f7b80f41b98e04bee09f33f8e8b035563976d1",
-      "analyzed_at": "2026-11-01T22:15:31.804Z",
+      "fingerprint": "873ceb33f693e14a52f571901ad82d65448d9aeee1ea0e5878adbb02595a091e",
+      "analyzed_at": "2026-11-03T01:09:22.703Z",
       "profile": {
-        "purpose": "AtomS3R上で左右揺動を制御・測定する実験用ファームウェア。姿勢推定とピーク・ZEROクロスに基づく入力制御を行い、実機ログやWeb画面で実験結果を確認する構成です。",
-        "architecture": "C++ファームウェアの制御モジュール群に、位相・動的β制御や制御遅延の計測機能があります。Web画面とログ解析用ページも含まれます。提示されたソース抜粋は一部の制御器・計測器に限られるため、全体の呼び出し関係は未確認です。",
+        "purpose": "AtomS3Rとリアクションホイールを使い、左右揺動のピーク角を目標に近づける制御を実機で試験・解析するファームウェア。制御則の比較や実験ログの収集・解析も行う。",
+        "architecture": "C++ファームウェアが姿勢推定とZEROクロス・ピーク検出を用いて入力を決定し、RWLOGに状態と実行結果を記録する。Web画面から実験を操作し、ブラウザー上の解析ページでログを調べる構成。エネルギー制御や負側入力の実機応答は、README上でも暫定・検証中とされている。",
         "technologies": [
           "C++",
           "Arduino",
           "FreeRTOS",
-          "MEKF姿勢推定（README記載）"
+          "MEKF姿勢推定",
+          "PlatformIO",
+          "RWLOG"
         ],
         "algorithms": [
-          "パルス開始後のジャイロ積分、旋回検出、帰還進捗に基づく位相制御",
-          "旋回を複数サンプルで確認する動的β制御と、時間経過時のフォールバック復帰",
-          "制御サンプルの処理段階・I/O・キュー遅延を集計するプロファイリング"
+          "ZEROクロス時の状態から次ピークの位置エネルギーを予測し、電流積分とパルス幅を逆算する方式（README記載）",
+          "左右別・入力方向別の予測誤差補正と、ピーク角に基づく積分補正（README記載）",
+          "パルス後の角速度符号反転を複数サンプルで確認し、betaを滑らかに復帰させる状態機械（beta_turn_fast_controller.h）",
+          "パルス開始からのジャイロ積分角と旋回確認に応じてbeta上限を変える状態機械（beta_phase_controller.h）",
+          "制御処理・I/O・キュー配送の経過時間を集計し、期限超過を有界バッファに記録する方式（control_latency.h、control_latency.cpp）"
         ],
         "hardware": [
           "M5Stack AtomS3R",
           "Unit Roller485",
-          "リアクションホイール"
+          "リアクションホイール",
+          "足カメラ（任意記録）"
         ],
         "interfaces": [
-          "ファームウェア内C++クラス・関数",
-          "プロファイラのJSON出力",
-          "Web UIとログ解析ページ（README記載）"
+          "Web画面による実験操作",
+          "RWLOGによる実験データ記録・エクスポート",
+          "ブラウザー上のwheel-work.htmlによるログ解析・CSV保存",
+          "FreeRTOSを介した制御処理とI/O処理"
         ],
         "reusable_components": [
           {
-            "name": "BetaPhaseController",
-            "purpose": "パルス開始から角速度の符号反転を検出し、位相帰還進捗に応じたβ上限を計算します。未校正の全体エネルギーモデルに依存しない局所的な位相制御方式です。",
-            "evidence": [
-              "src/beta_phase_controller.h"
-            ]
-          },
-          {
             "name": "BetaTurnFastController",
-            "purpose": "入力保護中は旋回判定を保留し、複数の逆方向サンプルで旋回を確認した後、smoothstepでβを復帰させます。確認できない場合の時間ベース復帰も備えます。",
+            "purpose": "入力後の動きを角速度反転とピーク角で監視し、確認後または時間切れ後にsmoothstepでbetaを復帰させる。状態機械と更新周期制約を含み、パルス後の段階的な制御復帰に再利用できる。",
             "evidence": [
               "src/beta_turn_fast_controller.h"
             ]
           },
           {
+            "name": "BetaPhaseController",
+            "purpose": "パルス開始後の角度積分、入力保護中の判定抑制、旋回後の進捗に応じた指数補間のbeta上限を提供する。",
+            "evidence": [
+              "src/beta_phase_controller.h"
+            ]
+          },
+          {
             "name": "control_latency::Profile",
-            "purpose": "受信から処理完了までの段階別遅延、I/O・ポーリングとの重なり、キュー遅延、予算超過を固定容量で記録し、JSONへ出力します。",
+            "purpose": "受信から制御完了までの段階別遅延、I/O・キュー時間、期限超過を固定容量で記録しJSON出力する。組み込み制御ループの遅延診断に利用できる。",
             "evidence": [
               "src/control_latency.h",
               "src/control_latency.cpp"
@@ -276,17 +282,17 @@
           },
           {
             "name": "control_angle_reference::origin",
-            "purpose": "制御モードに応じて角度原点を選択し、work modeでは保存姿勢でなく推定器の重力基準角を使います。",
+            "purpose": "work_modeに応じて重力基準の角度原点または保存姿勢を返し、制御モード間の原点選択を小さな関数に分離する。",
             "evidence": [
               "src/control_angle_reference.h"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋は限定的で、制御器が実運転経路でどう接続されるかは確認できません。",
-          "READMEは閉ループ性能を自動試験だけでは確認できないと記載しています。",
-          "BetaPhaseControllerとBetaTurnFastControllerの実機での効果・パラメータ妥当性は、提示資料からは確定できません。",
-          "遅延計測値はホスト側の壁時計時間であり、I/O時間やポーリング時間を純粋なCPU実行時間として解釈できません。"
+          "エネルギー係数は限られた実機ログに基づく暫定値で、逆入力の効果を無入力時の動きから独立して同定できていない（README.md）。",
+          "閉ループ性能は自動試験だけでは確認できず、実機での検証が必要（README.md）。",
+          "BetaPhaseControllerとBetaTurnFastControllerは制御ロジックの実装を確認できるが、この資料だけでは製品制御への採用状況や実機効果は確認できない。",
+          "提示されたソース抜粋からは、ファームウェア全体の呼び出し関係や全機能の実装状況を確認できない。"
         ],
         "maturity": "実験",
         "confidence": "medium",
@@ -294,16 +300,19 @@
           "README.md",
           "src/beta_phase_controller.h",
           "src/beta_turn_fast_controller.h",
+          "src/control_angle_reference.h",
           "src/control_latency.h",
           "src/control_latency.cpp",
-          "src/control_angle_reference.h"
+          "platformio.ini",
+          "site/wheel-work.html",
+          "site/wheel-work.js"
         ]
       }
     },
     "temesotejam/github-tavern": {
       "url": "https://github.com/temesotejam/github-tavern",
       "default_branch": "main",
-      "pushed_at": "2026-11-01T22:11:17Z",
+      "pushed_at": "2026-11-02T21:48:41Z",
       "available_paths": [
         ".github",
         ".github/agents",
@@ -332,85 +341,87 @@
       ],
       "recent_commits": [
         {
-          "sha": "5f845eca",
+          "sha": "c6e2d507",
           "message": "chore: refresh tavern summaries"
         },
         {
-          "sha": "eb2e66e6",
+          "sha": "b14f31a4",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
+          "sha": "422e7a96",
           "message": "chore: refresh verified public pages"
-        },
-        {
-          "sha": "cc614a6e",
-          "message": "chore: refresh tavern summaries"
         }
       ],
       "archived": false,
-      "fingerprint": "4c8539519bd047a7ac0ba516bce6edf189484babd635f27e5ea4a9cefa361c30",
-      "analyzed_at": "2026-11-01T22:15:08.190Z",
+      "fingerprint": "e8f0f317b0fbf8240ad8c7ae336733ce3e80aaafdd8cf97a54edab916e0d483e",
+      "analyzed_at": "2026-11-03T01:09:06.605Z",
       "profile": {
-        "purpose": "公開GitHubリポジトリを検索・分類し、詳細や説明を閲覧する静的な個人向けポータル。",
-        "architecture": "GitHub Pages上のブラウザーアプリとして、GitHub APIから取得した公開リポジトリを表示し、JSONデータの説明や公開ページ情報を画面に反映する構成。READMEではCopilotによる要約更新ワークフローも説明されているが、その実装詳細は提示されたソース抜粋からは確認できない。",
+        "purpose": "公開GitHubリポジトリを検索・分類・閲覧する個人向けの静的ポータル。",
+        "architecture": "ブラウザー側のJavaScriptがGitHub APIから公開リポジトリを取得し、検索・分類・詳細表示を行う。要約や公開ページ情報はJSONファイルから読み込み、README由来の説明をカードに補完する。GitHub Actionsによる要約・公開ページ情報の更新も説明されているが、ワークフロー実装の詳細は未確認。",
         "technologies": [
           "JavaScript",
-          "GitHub REST API",
-          "GitHub Pages",
-          "ブラウザーFetch API、DOM、MutationObserver"
+          "HTML",
+          "CSS",
+          "GitHub API",
+          "GitHub Actions",
+          "GitHub Pages"
         ],
         "algorithms": [
-          "キーワードの最初の一致によるリポジトリ分類",
-          "README Markdownの整形・ノイズ除去と短い説明文の抽出",
-          "最大同時実行数6のキューによるREADME取得",
-          "正規表現による日本語説明文の口語変換"
+          "名前・説明・言語・Topics・要約などを連結して行う横断検索",
+          "キーワード規則による優先順のカテゴリ分類",
+          "最大6件の並行処理キューによるREADME取得",
+          "Markdownのノイズ除去と先頭文抽出による短いプレビュー生成",
+          "正規表現による日本語説明文の口語化"
         ],
         "hardware": [],
         "interfaces": [
-          "GitHub REST APIからの公開リポジトリ取得",
+          "ブラウザー上の検索・カテゴリ選択・詳細表示UI",
+          "GitHub APIからの公開リポジトリ取得",
           "raw.githubusercontent.comからのREADME取得",
-          "data/summaries.jsonおよびdata/public-pages.jsonの読み込み",
-          "リポジトリ検索・分類フィルター・詳細表示のブラウザーUI"
+          "data/summaries.jsonおよびdata/public-pages.jsonのJSONデータ"
         ],
         "reusable_components": [
           {
-            "name": "card-enricher.js の cleanMarkdown / shortPreview",
-            "purpose": "READMEからHTML、コードブロック、画像、リンク等を除去し、カード用の短い説明を生成する。",
-            "evidence": [
-              "card-enricher.js"
-            ]
-          },
-          {
-            "name": "card-enricher.js の readReadme / pump",
-            "purpose": "複数の一般的なブランチ名・README表記を試し、同時実行数を制限してREADMEを取得する。別プロジェクトでは所有者、取得対象、失敗時の扱いの調整が必要。",
-            "evidence": [
-              "card-enricher.js"
-            ]
-          },
-          {
-            "name": "app.js の textFor / categoryOf",
-            "purpose": "リポジトリ情報と要約を検索用テキストにまとめ、キーワード規則で技術カテゴリを判定する。",
+            "name": "categoryOf / RULES",
+            "purpose": "リポジトリ情報をキーワード規則で技術カテゴリに分類する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "public-pages-client.js の validEntry",
-            "purpose": "公開ページURLを解析し、HTTPまたはHTTPS以外のURLをリンク対象から除外する。",
+            "name": "readReadme / shortPreview",
+            "purpose": "一般的なブランチ名・README名を順に試し、Markdownを整形してカード向けの短い説明を作る。",
             "evidence": [
-              "public-pages-client.js"
+              "card-enricher.js"
             ]
           },
           {
-            "name": "spoken-overview-client.js の spokenize",
-            "purpose": "日本語の技術説明文を正規表現で口語調に変換する純粋変換関数。",
+            "name": "CONCURRENCYキュー",
+            "purpose": "カードごとのREADME取得を重複排除しつつ、同時実行数を制限する。",
+            "evidence": [
+              "card-enricher.js"
+            ]
+          },
+          {
+            "name": "spokenize",
+            "purpose": "日本語の技術説明を規則ベースで口語調に変換する純粋変換関数。",
             "evidence": [
               "spoken-overview-client.js"
+            ]
+          },
+          {
+            "name": "validEntry",
+            "purpose": "公開ページのURLを解析し、HTTP/HTTPS以外のスキームを除外する。",
+            "evidence": [
+              "public-pages-client.js"
             ]
           }
         ],
         "constraints": [
-          "READMEによれば対象は所有者 temesotejam の公開リポジトリで、サイト側から書き込み操作は行わない。",
-          "提示された app.js は抜粋であり、検索・描画・GitHub API処理の全体は確認できない。",
-          "scripts、ワークフロー、JSONデータの内容は提示されていないため、要約生成や公開ページ検証の実装は未確認。",
-          "分類は提示コード上、規則内のキーワード一致に基づく。分類精度の評価やテスト結果は確認できない。"
+          "対象は公開リポジトリで、サイト側から書き込み操作を行わないとREADMEに記載されている。",
+          "カテゴリ分類は固定キーワード規則に基づくため、誤分類や未分類が起こり得る。",
+          "GitHub APIのレート制限、取得失敗時の挙動、要約生成スクリプトの詳細は提示された抜粋だけでは確認できない。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
@@ -418,16 +429,18 @@
           "README.md",
           "app.js",
           "card-enricher.js",
-          "keeper-closing-client.js",
+          "spoken-overview-client.js",
           "public-pages-client.js",
-          "spoken-overview-client.js"
+          "data/summaries.json",
+          "data/public-pages.json",
+          ".github/workflows/copilot-summaries.yml"
         ]
       }
     },
     "temesotejam/2026_10_24": {
       "url": "https://github.com/temesotejam/2026_10_24",
       "default_branch": "main",
-      "pushed_at": "2026-11-01T21:58:39Z",
+      "pushed_at": "2026-11-03T00:55:13Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -444,98 +457,88 @@
       ],
       "recent_commits": [
         {
-          "sha": "ea1b159b",
+          "sha": "6de327de",
           "message": "Update automatic news feed"
         },
         {
-          "sha": "93e0c493",
+          "sha": "d6d2bb5e",
           "message": "Update automatic news feed"
         },
         {
-          "sha": "694dac31",
+          "sha": "93710194",
           "message": "Update automatic news feed"
         }
       ],
       "archived": false,
-      "fingerprint": "aecf210a785390502b5b5e3c0a80f64484a28bda0c39e44d51e2541cd722bb5a",
-      "analyzed_at": "2026-11-01T22:15:19.099Z",
+      "fingerprint": "a563aafc2101785f815bf05d6588bddc20643d51d230d357c4f007a6312bd994",
+      "analyzed_at": "2026-11-03T01:08:52.326Z",
       "profile": {
-        "purpose": "ニュース見出しや手入力した情報を迷宮のテーマ・敵・観測ノートに反映する、一人用の探索ゲーム。",
-        "architecture": "ブラウザー上のJavaScriptアプリがゲーム画面と状態を扱い、data/news.jsonから自動収集ニュースを読み込む構成。READMEではGitHub ActionsによるRSS収集とGitHub Pagesでの公開が説明されているが、ワークフローの実装詳細は未確認。",
+        "purpose": "ニュース見出しを迷宮のテーマやゲーム内イベントに反映する、ブラウザー向けの一人用探索ゲームです。",
+        "architecture": "app.js がゲーム状態と画面表示を管理し、HTML の canvas に描画します。data/news.json を読み込んでニュース選択肢を作り、選択したニュースをゲーム開始時のシードとして利用します。ニュース取得用スクリプトと GitHub Actions のワークフローもファイルツリーにあります。",
         "technologies": [
           "JavaScript",
-          "HTML Canvas",
-          "Fetch API",
+          "HTML canvas",
+          "ブラウザー Fetch API",
           "localStorage",
-          "GitHub Actions",
-          "RSS",
-          "GitHub Pages"
+          "GitHub Actions"
         ],
         "algorithms": [
-          "ニュース項目をカテゴリ、見出し語、配信元で絞り込み、URLをHTTP/HTTPSに制限する処理。",
-          "日付から自動ニュースの初期選択を決める処理と、乱数によるニュース選択。",
-          "README記載のターン制進行、ランダム迷宮生成。生成や敵行動の具体的な実装詳細は未確認。"
+          "日付を使ったニュース項目の選択と、乱数による選択",
+          "ニュース見出しのキーワードによる除外とカテゴリ分類",
+          "マンハッタン距離の計算"
         ],
         "hardware": [],
         "interfaces": [
-          "Canvasを使うブラウザーゲーム画面",
-          "data/news.jsonのニュースデータ",
-          "公開RSSからのニュース収集（README記載。取得形式の詳細は未確認）",
-          "キーボード、画面上の方向ボタン"
+          "ブラウザー画面（canvas、キーボード・方向ボタンは README に記載）",
+          "data/news.json の JSON データ",
+          "localStorage の reality-dungeon-seed",
+          "RSS ニュース取得ワークフロー（README に記載）"
         ],
         "reusable_components": [
           {
-            "name": "safeHttpUrl",
-            "purpose": "URLを解析し、HTTP/HTTPS以外のスキームを除外する。",
+            "name": "safeHttpUrl(value)",
+            "purpose": "URL を解析し、HTTP/HTTPS のみ許可して正規化した URL を返します。不正な URL や他のプロトコルは空文字にします。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "esc",
-            "purpose": "HTMLで特別な意味を持つ文字をエスケープする。",
+            "name": "loadAutomaticNews()",
+            "purpose": "ニュース JSON を取得し、見出しの危険語・配信元・カテゴリを検査してゲーム用データへ整形します。取得失敗時は自動ニュースを空にします。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "loadAutomaticNews",
-            "purpose": "JSONニュースを取得し、カテゴリ・見出し・配信元のフィルターと文字数制限を適用してゲーム用データへ整形する。",
-            "evidence": [
-              "app.js",
-              "data/news.json"
-            ]
-          },
-          {
-            "name": "renderAutomaticNews",
-            "purpose": "自動収集ニュースをDOM要素として一覧表示し、選択時にゲーム開始へつなぐ。",
+            "name": "savedSeed()",
+            "purpose": "localStorage から保存済みのニュースシードを読み込み、出典 URL を検証します。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "savedSeed",
-            "purpose": "localStorageの保存データを読み込み、出典URLを検証して再利用する。",
+            "name": "syncAppHeight()",
+            "purpose": "ウィンドウや visual viewport の高さを CSS 変数 --app-height に反映し、画面サイズ変更に追従します。",
             "evidence": [
               "app.js"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋はapp.jsの一部のみで、ゲーム全体やRSS取得処理の実装は確認できない。",
-          "見出し語や配信元による除外はルールベースであり、誤検出・見逃しの有無は未検証。",
-          "READMEでは記事本文を保持せず、記事本文を確認済みとは表示しないとしている。実装上の確認はできていない。"
+          "確認できるソース抜粋は app.js の一部のみで、迷宮生成・戦闘・描画の具体的な実装詳細は確認できません。",
+          "ニュースの除外は抜粋上では主に見出しと配信元に対する文字列判定です。記事内容の検証を示す証拠はなく、読み込んだ項目も factVerified: false とされています。",
+          "RSS 取得、記事の保持方針、更新頻度は README の説明に基づき、ワークフローや取得スクリプトの実装は確認できていません。"
         ],
         "maturity": "試作",
-        "confidence": "low",
+        "confidence": "medium",
         "evidence": [
           "README.md",
           "app.js",
-          "data/news.json",
-          ".github/workflows/news.yml",
-          ".github/workflows/pages.yml",
           "scripts/fetch-news.mjs",
-          "index.html"
+          ".github/workflows/news.yml",
+          "data/news.json",
+          "index.html",
+          "styles.css"
         ]
       }
     },
@@ -11239,13 +11242,32 @@
     "temesotejam/personal-browser-os": {
       "url": "https://github.com/temesotejam/personal-browser-os",
       "default_branch": "main",
-      "pushed_at": "2026-11-01T09:42:13Z",
+      "pushed_at": "2026-11-02T07:23:15Z",
       "available_paths": [
+        ".github",
+        ".github/workflows",
+        ".github/workflows/install-c-toolchain.yml",
+        ".github/workflows/test-c-ide.yml",
         ".nojekyll",
         "README.md",
         "app.js",
         "assets",
         "assets/icon.svg",
+        "c-ide",
+        "c-ide/app.js",
+        "c-ide/compile.mjs",
+        "c-ide/compiler-worker.mjs",
+        "c-ide/index.html",
+        "c-ide/runtime-worker.js",
+        "c-ide/smoke-test.mjs",
+        "c-ide/style.css",
+        "c-ide/toolchain",
+        "c-ide/toolchain/VERSION",
+        "c-ide/toolchain/clang.mjs",
+        "c-ide/toolchain/clang.wasm",
+        "c-ide/toolchain/lld.mjs",
+        "c-ide/toolchain/lld.wasm",
+        "c-ide/toolchain/sysroot.tar",
         "index.html",
         "manifest.webmanifest",
         "styles.css",
@@ -11253,89 +11275,392 @@
       ],
       "recent_commits": [
         {
-          "sha": "ae3f322d",
-          "message": "Document browser-only navigation and embedding limitations"
+          "sha": "5a0073ab",
+          "message": "Run end-to-end real C compiler smoke tests in Chromium on GitHub Actions"
         },
         {
-          "sha": "04aab939",
-          "message": "Version browser app assets for in-window navigation"
+          "sha": "ff8a4b00",
+          "message": "Add automated end-to-end browser test for C compiler and drawing"
         },
         {
-          "sha": "aef54faf",
-          "message": "Refresh offline cache for in-window browser navigation"
+          "sha": "114e5326",
+          "message": "Document native browser C IDE and drawing examples"
         }
       ],
       "archived": false,
-      "fingerprint": "a9dd79f64b682332c33b34b42c5a44958f6dfee5b79df8d5672a80d8363b6c53",
-      "analyzed_at": "2026-11-01T22:15:43.706Z",
+      "fingerprint": "e51ce306c93b2d904592ca672e39b3d6366b8a0914b9fbe33ff4402c8601b507",
+      "analyzed_at": "2026-11-03T01:09:36.263Z",
       "profile": {
-        "purpose": "ブラウザー内にデスクトップ風の作業環境を提供する、ビルド不要の静的Webアプリです。",
-        "architecture": "index.html・styles.css・app.jsで構成されるクライアント側アプリです。app.jsは組み込みアプリやウィンドウ、ランチャーを扱い、設定やメモなどをlocalStorageに保存します。sw.jsはアプリシェルをキャッシュし、同一オリジンのGET要求をネットワーク優先で処理、失敗時にキャッシュへフォールバックします。",
+        "purpose": "ブラウザー内にデスクトップ環境と複数のアプリを提供する静的Webアプリ。C言語IDEではCコードのコンパイル・実行と独自描画も扱う。",
+        "architecture": "ルートの app.js がデスクトップアプリを管理し、c-ide/ 以下にコード編集・コンパイル・WASM実行を担うIDEを分離。Service Workerがアプリシェルをキャッシュし、オフライン起動を支える構成。",
         "technologies": [
           "JavaScript",
           "HTML",
           "CSS",
-          "Service Worker",
-          "Cache API",
+          "Web Workers",
+          "WebAssembly",
+          "WASI Preview 1",
+          "Canvas 2D",
           "localStorage",
-          "Web App Manifest"
+          "Service Worker",
+          "PWA"
         ],
         "algorithms": [
-          "アプリ名・説明への小文字化した部分一致によるランチャー検索（app.js）",
-          "同一オリジンGET要求のネットワーク優先・キャッシュフォールバック（sw.js）"
+          "WASIのfd_read/fd_write等を実装する標準入出力ブリッジ",
+          "行単位で独自描画命令を解析しCanvasに反映",
+          "Service Workerによるネットワーク優先・キャッシュ代替の取得処理"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザー内のデスクトップ、ランチャー、ドック、アプリウィンドウ",
-          "localStorageのメモ・テーマ・壁紙・追加アプリ用キー",
-          "Service Workerのインストール・activate・fetchイベント",
-          "カスタムWebアプリを表示するiframe（README.mdの説明。実装詳細は提示された抜粋では未確認）"
+          "ブラウザーUI",
+          "localStorage",
+          "Web WorkerのpostMessage",
+          "WASI Preview 1",
+          "C標準入出力",
+          "@PLOT描画命令",
+          "PWA manifestおよびService Worker"
         ],
         "reusable_components": [
           {
-            "name": "readStorage / writeStorage",
-            "purpose": "JSON形式のlocalStorage読み書きと、保存失敗時の通知を共通化します。読み込み失敗時は指定された既定値を返します。",
+            "name": "WASI実行Worker",
+            "purpose": "WASMモジュールを実行し、標準入力・標準出力・標準エラーや一部のWASI呼び出しをブラウザーに接続する。",
+            "evidence": [
+              "c-ide/runtime-worker.js"
+            ]
+          },
+          {
+            "name": "描画命令パーサー",
+            "purpose": "Cプログラムの出力からCLEAR、LINE、RECT、CIRCLE命令を認識し、サイズと色を制限しながらCanvasへ描画する。",
+            "evidence": [
+              "c-ide/app.js"
+            ]
+          },
+          {
+            "name": "C IDEのソース保存・状態管理",
+            "purpose": "編集内容をlocalStorageへ保存し、ソース変更時にコンパイル済み状態を無効化する。",
+            "evidence": [
+              "c-ide/app.js"
+            ]
+          },
+          {
+            "name": "アプリ情報の永続化ヘルパー",
+            "purpose": "localStorageからJSONを読み書きし、保存失敗時に通知する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "renderLauncher",
-            "purpose": "アプリ一覧を検索語で絞り込み、ランチャーUIを生成します。",
-            "evidence": [
-              "app.js"
-            ]
-          },
-          {
-            "name": "updateDockState",
-            "purpose": "ウィンドウの表示状態に応じて、ドック上のアプリボタンに開いている状態を反映します。",
-            "evidence": [
-              "app.js"
-            ]
-          },
-          {
-            "name": "Service Workerのアプリシェル・オフライン処理",
-            "purpose": "静的ファイルを事前キャッシュし、同一オリジンの取得失敗時にキャッシュ済み応答やナビゲーション用HTMLを返します。",
+            "name": "Service Workerのアプリシェルキャッシュ",
+            "purpose": "同一オリジンのGET応答をキャッシュし、ネットワーク利用不可時にキャッシュ済みページを返す。大容量ツールチェーンはService Workerキャッシュ対象外。",
             "evidence": [
               "sw.js"
             ]
           }
         ],
         "constraints": [
-          "iframeへの埋め込みは対象サイトのX-Frame-OptionsやContent-Security-Policyにより拒否される場合があります（README.md）。",
-          "データはブラウザー・端末ごとのlocalStorageに保存され、自動同期されません（README.md）。",
-          "Service WorkerとPWAの動作にはlocalhostまたはHTTPSが必要です（README.md）。",
-          "提示されたapp.js抜粋は途中で終わるため、ウィンドウ管理や各アプリの実装詳細は確認できません。"
+          "提示された抜粋ではコンパイラ実装の詳細やアプリ全体のウィンドウ管理は確認できない。",
+          "READMEによるとツールチェーン初回読み込みは約70MBで、実行は10秒で停止する。",
+          "描画命令は独自拡張であり、標準CのグラフィックAPIではない。",
+          "READMEではOSシステムコール、Windows向けプログラム、ネイティブGUIは対象外とされている。",
+          "Service Workerのオフライン動作やブラウザー互換性は提示情報から独立に検証できない。"
         ],
-        "maturity": "試作",
+        "maturity": "ツール",
         "confidence": "medium",
         "evidence": [
           "README.md",
           "app.js",
+          "c-ide/app.js",
+          "c-ide/runtime-worker.js",
           "sw.js",
-          "index.html",
-          "styles.css",
-          "manifest.webmanifest"
+          ".github/workflows/test-c-ide.yml"
+        ]
+      }
+    },
+    "temesotejam/Strata": {
+      "url": "https://github.com/temesotejam/Strata",
+      "default_branch": "main",
+      "pushed_at": "2026-10-31T07:39:18Z",
+      "available_paths": [
+        ".dockerignore",
+        ".gitattributes",
+        ".github",
+        ".github/FUNDING.yml",
+        ".github/ISSUE_TEMPLATE",
+        ".github/ISSUE_TEMPLATE/benchmark.yml",
+        ".github/ISSUE_TEMPLATE/bug_report.yml",
+        ".github/ISSUE_TEMPLATE/config.yml",
+        ".github/ISSUE_TEMPLATE/feature_request.yml",
+        ".github/ISSUE_TEMPLATE/question.yml",
+        ".github/pull_request_template.md",
+        ".github/scripts",
+        ".github/scripts/item-check.js",
+        ".github/scripts/item-check.test.js",
+        ".github/scripts/reset-bot.js",
+        ".github/workflows",
+        ".github/workflows/docker-images.yml",
+        ".github/workflows/intake.yml",
+        ".github/workflows/metal-build.yml",
+        ".github/workflows/reopen.yml",
+        ".github/workflows/scripts-test.yml",
+        ".github/workflows/terminal-minimal-server.yml",
+        ".github/workflows/terminal-portable-monitor.yml",
+        ".github/workflows/title-area.yml",
+        ".gitignore",
+        "AGENTS.md",
+        "BENCH.bat",
+        "CMakeLists.txt",
+        "CONTRIBUTING.md",
+        "Dockerfile",
+        "LICENSE",
+        "README.de.md",
+        "README.es.md",
+        "README.fr.md",
+        "README.ja.md",
+        "README.md",
+        "README.pl.md",
+        "README.pt-BR.md",
+        "README.zh-CN.md",
+        "SECURITY.md",
+        "SETUP.bat",
+        "START-HERE.bat",
+        "UPDATE.bat",
+        "apps",
+        "apps/desktop",
+        "apps/desktop/package-lock.json",
+        "apps/desktop/package.json",
+        "apps/desktop/scripts",
+        "apps/desktop/scripts/app-close-matrix.py",
+        "apps/desktop/scripts/cards-e2e.mjs",
+        "apps/desktop/scripts/fetch-node.ps1",
+        "apps/desktop/scripts/fetch-node.sh",
+        "apps/desktop/scripts/first-run-ui.mjs",
+        "apps/desktop/scripts/flatten-pnpm.mjs",
+        "apps/desktop/scripts/harness-budget.mjs",
+        "apps/desktop/scripts/harness-prune.mjs",
+        "apps/desktop/scripts/installed-flow.mjs",
+        "apps/desktop/scripts/installer-mockups.mjs",
+        "apps/desktop/scripts/local-gguf-e2e.mjs",
+        "apps/desktop/scripts/make-dmg.sh",
+        "apps/desktop/scripts/make-icons.mjs",
+        "apps/desktop/scripts/make-installer-images.mjs",
+        "apps/desktop/scripts/make-tester-readme.sh",
+        "apps/desktop/scripts/pics-e2e.mjs",
+        "apps/desktop/scripts/repack-appimage.sh",
+        "apps/desktop/scripts/stage-control.py",
+        "apps/desktop/scripts/stage-harness.mjs",
+        "apps/desktop/scripts/ui-flows.mjs",
+        "apps/desktop/scripts/vision-e2e.mjs",
+        "apps/desktop/src-tauri",
+        "apps/desktop/src-tauri/.gitignore",
+        "apps/desktop/src-tauri/Cargo.lock",
+        "apps/desktop/src-tauri/Cargo.toml",
+        "apps/desktop/src-tauri/build.rs",
+        "apps/desktop/src-tauri/entitlements.plist",
+        "apps/desktop/src-tauri/gen",
+        "apps/desktop/src-tauri/gen/schemas",
+        "apps/desktop/src-tauri/gen/schemas/acl-manifests.json",
+        "apps/desktop/src-tauri/gen/schemas/capabilities.json",
+        "apps/desktop/src-tauri/gen/schemas/desktop-schema.json",
+        "apps/desktop/src-tauri/gen/schemas/macOS-schema.json",
+        "apps/desktop/src-tauri/icons",
+        "apps/desktop/src-tauri/icons/128x128.png",
+        "apps/desktop/src-tauri/icons/128x128@2x.png",
+        "apps/desktop/src-tauri/icons/32x32.png",
+        "apps/desktop/src-tauri/icons/64x64.png",
+        "apps/desktop/src-tauri/icons/Square107x107Logo.png",
+        "apps/desktop/src-tauri/icons/Square142x142Logo.png",
+        "apps/desktop/src-tauri/icons/Square150x150Logo.png",
+        "apps/desktop/src-tauri/icons/Square284x284Logo.png",
+        "apps/desktop/src-tauri/icons/Square30x30Logo.png",
+        "apps/desktop/src-tauri/icons/Square310x310Logo.png",
+        "apps/desktop/src-tauri/icons/Square44x44Logo.png",
+        "apps/desktop/src-tauri/icons/Square71x71Logo.png",
+        "apps/desktop/src-tauri/icons/Square89x89Logo.png",
+        "apps/desktop/src-tauri/icons/StoreLogo.png",
+        "apps/desktop/src-tauri/icons/android",
+        "apps/desktop/src-tauri/icons/android/mipmap-anydpi-v26",
+        "apps/desktop/src-tauri/icons/android/mipmap-anydpi-v26/ic_launcher.xml",
+        "apps/desktop/src-tauri/icons/android/mipmap-hdpi",
+        "apps/desktop/src-tauri/icons/android/mipmap-hdpi/ic_launcher.png",
+        "apps/desktop/src-tauri/icons/android/mipmap-hdpi/ic_launcher_foreground.png",
+        "apps/desktop/src-tauri/icons/android/mipmap-hdpi/ic_launcher_round.png",
+        "apps/desktop/src-tauri/icons/android/mipmap-mdpi",
+        "apps/desktop/src-tauri/icons/android/mipmap-mdpi/ic_launcher.png",
+        "apps/desktop/src-tauri/icons/android/mipmap-mdpi/ic_launcher_foreground.png",
+        "apps/desktop/src-tauri/icons/android/mipmap-mdpi/ic_launcher_round.png",
+        "apps/desktop/src-tauri/icons/android/mipmap-xhdpi",
+        "apps/desktop/src-tauri/icons/android/mipmap-xhdpi/ic_launcher.png",
+        "apps/desktop/src-tauri/icons/android/mipmap-xhdpi/ic_launcher_foreground.png",
+        "apps/desktop/src-tauri/icons/android/mipmap-xhdpi/ic_launcher_round.png",
+        "apps/desktop/src-tauri/icons/android/mipmap-xxhdpi",
+        "apps/desktop/src-tauri/icons/android/mipmap-xxhdpi/ic_launcher.png",
+        "apps/desktop/src-tauri/icons/android/mipmap-xxhdpi/ic_launcher_foreground.png",
+        "apps/desktop/src-tauri/icons/android/mipmap-xxhdpi/ic_launcher_round.png",
+        "apps/desktop/src-tauri/icons/android/mipmap-xxxhdpi",
+        "apps/desktop/src-tauri/icons/android/mipmap-xxxhdpi/ic_launcher.png",
+        "apps/desktop/src-tauri/icons/android/mipmap-xxxhdpi/ic_launcher_foreground.png",
+        "apps/desktop/src-tauri/icons/android/mipmap-xxxhdpi/ic_launcher_round.png",
+        "apps/desktop/src-tauri/icons/android/values",
+        "apps/desktop/src-tauri/icons/android/values/ic_launcher_background.xml",
+        "apps/desktop/src-tauri/icons/icon.icns",
+        "apps/desktop/src-tauri/icons/icon.ico",
+        "apps/desktop/src-tauri/icons/icon.png",
+        "apps/desktop/src-tauri/icons/ios",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-20x20@1x.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-20x20@2x-1.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-20x20@2x.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-20x20@3x.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-29x29@1x.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-29x29@2x-1.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-29x29@2x.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-29x29@3x.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-40x40@1x.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-40x40@2x-1.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-40x40@2x.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-40x40@3x.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-512@2x.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-60x60@2x.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-60x60@3x.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-76x76@1x.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-76x76@2x.png",
+        "apps/desktop/src-tauri/icons/ios/AppIcon-83.5x83.5@2x.png",
+        "apps/desktop/src-tauri/nsis",
+        "apps/desktop/src-tauri/nsis/header.bmp",
+        "apps/desktop/src-tauri/nsis/installer.nsi",
+        "apps/desktop/src-tauri/nsis/sidebar.bmp",
+        "apps/desktop/src-tauri/resources",
+        "apps/desktop/src-tauri/resources/control",
+        "apps/desktop/src-tauri/resources/control/.gitignore",
+        "apps/desktop/src-tauri/resources/engine-bundle",
+        "apps/desktop/src-tauri/resources/engine-bundle/.gitignore",
+        "apps/desktop/src-tauri/resources/node",
+        "apps/desktop/src-tauri/resources/node/.gitignore",
+        "apps/desktop/src-tauri/src",
+        "apps/desktop/src-tauri/src/desktoplog.rs",
+        "apps/desktop/src-tauri/src/main.rs",
+        "apps/desktop/src-tauri/src/shell.rs",
+        "apps/desktop/src-tauri/src/supervisor.rs",
+        "apps/desktop/src-tauri/src/updater.rs",
+        "apps/desktop/src-tauri/tauri.conf.json",
+        "apps/desktop/src-tauri/tauri.release.conf.json",
+        "apps/desktop/src-tauri/tauri.tester.conf.json",
+        "apps/desktop/src-tauri/tauri.update.conf.json",
+        "apps/desktop/tester",
+        "apps/desktop/tester/README-amd-rx7900.txt.in",
+        "apps/desktop/tester/README-amd-rx9070.txt.in",
+        "apps/desktop/tester/README-linux.txt.in",
+        "apps/desktop/tester/README-mac.txt.in",
+        "apps/desktop/tester/common-gatekeeper-mac.txt",
+        "apps/desktop/tester/common-troubleshoot.txt",
+        "apps/host",
+        "apps/host/.gitignore",
+        "apps/host/README.md",
+        "apps/host/audit-fixes",
+        "apps/host/audit-fixes/FINDING-STATUS.md",
+        "apps/host/audit-fixes/PROGRESS.md",
+        "apps/host/audit-fixes/PROMPTS.md",
+        "apps/host/audit-fixes/README.md",
+        "apps/host/audit-fixes/REVIEW.md",
+        "apps/host/audit-fixes/apply-chat.py",
+        "apps/host/audit-fixes/apply-engine.py",
+        "apps/host/audit-fixes/apply-finishing.py",
+        "apps/host/audit-fixes/apply-model.py",
+        "apps/host/audit-fixes/apply-screens.py",
+        "apps/host/audit-fixes/apply-shared.py",
+        "apps/host/audit-fixes/baseline-preview-state.json",
+        "apps/host/audit-fixes/changed-files.txt",
+        "apps/host/audit-fixes/designs",
+        "apps/host/audit-fixes/designs/Engine v3.dc.html",
+        "apps/host/audit-fixes/designs/Model.dc.html",
+        "apps/host/audit-fixes/finding-status.json",
+        "apps/host/audit-fixes/findings.json",
+        "apps/host/audit-fixes/review-fixture.json",
+        "apps/host/audit-fixes/summary.json",
+        "apps/host/audit-fixes/tasks",
+        "apps/host/audit-fixes/tasks/T01-one-model-name.md",
+        "apps/host/audit-fixes/tasks/T02-overlay-layering.md",
+        "apps/host/audit-fixes/tasks/T03-control-states.md",
+        "apps/host/audit-fixes/tasks/T04-error-notice.md",
+        "apps/host/src/lib/model-icons.ts",
+        "apps/host/src/lib/model-picker.ts"
+      ],
+      "recent_commits": [
+        {
+          "sha": "c62d5e3a",
+          "message": "DeepSeek plan: the NVIDIA cards it counts are the ones setup runs (a card of 8 GB or less starts Off beside a bigger one), and the plan says which card is not used"
+        },
+        {
+          "sha": "7aa9a584",
+          "message": "Setup: say which card is not used when a card under 8 GB sits beside a bigger NVIDIA card (a line only, no change to the cards used)"
+        },
+        {
+          "sha": "987ebd44",
+          "message": "Launch: list the Arc Pro B65 (0xe222) and the other discrete Battlemage/Alchemist ids, so two cards are both named for a launch that names none"
+        }
+      ],
+      "archived": false,
+      "fingerprint": "b2062f6fb14324d39a6b5a01b80e0d56ae7b55d21aec4af90d6242a4b0acd3d8",
+      "analyzed_at": "2026-11-03T01:09:52.558Z",
+      "profile": {
+        "purpose": "ローカル環境でのAI推論をデスクトップアプリおよびターミナルから利用するプロジェクト。READMEではWindows・Linux・Mac対応と、ローカルAPI提供を掲げている。",
+        "architecture": "確認できる構成は、Tauriデスクトップ側（Rust）とホスト側アプリ（TypeScript/JavaScript）、Python製Control/Terminalバンドルの組み合わせ。stage-control.pyはTerminalとデスクトップでPythonランタイムを共有するビルド手順を示す。推論エンジン本体の実装は提示された抜粋から確認できない。",
+        "technologies": [
+          "Python",
+          "TypeScript",
+          "JavaScript",
+          "Rust",
+          "Tauri",
+          "GGUF（ツール名・README記載）"
+        ],
+        "algorithms": [
+          "SHA-256によるアーカイブ検証（stage-control.py）",
+          "ZIP展開先が展開ルート外に出ないことを確認するパス検査（stage-control.py）"
+        ],
+        "hardware": [
+          "READMEではNVIDIA・AMD・Intel GPUおよびApple Siliconを対応対象として記載。実機での対応状況や検証結果は提示資料から確認できない。"
+        ],
+        "interfaces": [
+          "README記載のローカルOpenAI互換・Anthropic互換API",
+          "README記載のstrata CLI",
+          "Tauriデスクトップアプリ"
+        ],
+        "reusable_components": [
+          {
+            "name": "ControlバンドルのステージングとPythonランチャー重複排除",
+            "purpose": "検証済みランタイムをアプリに同梱し、Python別名を小さなシェルランチャーに置き換える。Python実行環境の共有と配布サイズ抑制に応用できる。",
+            "evidence": [
+              "apps/desktop/scripts/stage-control.py"
+            ]
+          },
+          {
+            "name": "モデルピッカー状態・グループ化ヘルパー",
+            "purpose": "モデルの状態から表示ラベルや操作を決め、インストール済みモデルをファミリー別にまとめる純粋関数群。別のモデル管理UIでも状態表示ロジックを再利用できる。",
+            "evidence": [
+              "apps/host/src/lib/model-picker.ts"
+            ]
+          },
+          {
+            "name": "モデルファミリーアイコン選択",
+            "purpose": "モデルファミリー名をアイコン名へ対応付ける小さなUIヘルパー。",
+            "evidence": [
+              "apps/host/src/lib/model-icons.ts"
+            ]
+          }
+        ],
+        "constraints": [
+          "提示されたソース抜粋は一部に限られ、推論処理・APIルート・ハードウェア検出の実装や動作を確認できない。",
+          "apps/host/audit-fixes/apply-model.pyにはカタログ等を編集するスクリプトが含まれるが、その生成対象の実装状態をこの抜粋だけで確定できない。",
+          "README上の対応モデル・ハードウェア・API互換性は説明上の記載であり、提示資料だけでは独立に検証できない。"
+        ],
+        "maturity": "ツール",
+        "confidence": "medium",
+        "evidence": [
+          "README.md",
+          "apps/desktop/scripts/stage-control.py",
+          "apps/desktop/src-tauri/src/main.rs",
+          "apps/host/src/lib/model-picker.ts",
+          "apps/host/src/lib/model-icons.ts",
+          "apps/host/audit-fixes/apply-model.py"
         ]
       }
     }
