@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-03T23:38:47.022Z",
+  "generated_at": "2026-11-04T23:56:38.411Z",
   "owner": "temesotejam",
   "repository_count": 111,
   "profiles": {
     "temesotejam/atoms3r-lateral-energy-control": {
       "url": "https://github.com/temesotejam/atoms3r-lateral-energy-control",
       "default_branch": "main",
-      "pushed_at": "2026-11-03T09:54:53Z",
+      "pushed_at": "2026-11-04T12:14:17Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -202,45 +202,47 @@
         "src/foot_calibration_table.h",
         "src/foot_energy_balance.h",
         "src/foot_fullstride_observer.h",
+        "src/foot_gap_trend.h",
         "src/foot_observer.cpp",
         "src/foot_observer.h",
         "src/foot_phase_cap.h",
         "src/foot_phase_observer.h",
         "src/foot_range_diagnostics.h",
-        "src/foot_span_candidate.h",
-        "src/foot_span_control.h"
+        "src/foot_span_candidate.h"
       ],
       "recent_commits": [
         {
-          "sha": "31a9ef63",
-          "message": "Trial early bias correction while protecting sway"
+          "sha": "1fc75017",
+          "message": "Probe sustained weak-side recovery using two-cycle evidence (#13)"
         },
         {
-          "sha": "2e29b380",
-          "message": "Preserve early wheel oscillation and limit accumulating bias"
+          "sha": "e11f354d",
+          "message": "Evaluate sustained foot feedback against recent effective commands (#12)"
         },
         {
-          "sha": "cb58be47",
-          "message": "Clarify placement of camera feedback context"
+          "sha": "88db47ea",
+          "message": "Control relative foot swing over valid multi-cycle windows (#11)"
         }
       ],
       "archived": false,
-      "fingerprint": "da629b7458ada510ca450ed40c866c74e7479fbc07ce376d1b4347ecefa2c210",
-      "analyzed_at": "2026-11-03T23:34:33.961Z",
+      "fingerprint": "f469d12c1a01493744c607433c1c2655741ce8b60ae27783a82bea207238e6d3",
+      "analyzed_at": "2026-11-04T23:51:52.484Z",
       "profile": {
-        "purpose": "AtomS3Rとリアクションホイールを用いた左右揺動の制御・実機測定用ファームウェア。姿勢推定とピーク／ZEROクロス検出に基づく入力制御のほか、制御応答や入力仕事の記録・解析を扱う。",
-        "architecture": "C++のファームウェアをsrc内の制御・観測・診断モジュールに分割し、config.hの設定を参照する構成。Web画面と解析ページはsiteにあり、実験手順・ログ形式・検証記録はdocsに集約されている。提示されたソース抜粋は一部モジュールに限られる。",
+        "purpose": "AtomS3Rとリアクションホイールを使った左右揺動のエネルギー制御を実機で試験し、入力条件と運動応答を記録・解析するファームウェア。",
+        "architecture": "C++ファームウェアで姿勢推定と制御を行い、Web画面から実験条件を設定・開始する。測定データはRWLOGに記録し、ブラウザー上の解析ページで確認する。パルス後の位相制御、制御遅延計測、角度原点の選択は個別モジュールとして実装されている。",
         "technologies": [
           "C++",
           "Arduino",
           "FreeRTOS",
-          "MEKF（README記載）",
-          "JSON形式の計測・診断データ"
+          "MEKF姿勢推定",
+          "RWLOG",
+          "HTML/CSS/JavaScript"
         ],
         "algorithms": [
-          "BetaPhaseControllerのパルス相対ジャイロ積分による旋回検出と、return_progressに基づく指数形beta上限遷移",
-          "BetaTurnFastControllerの旋回方向反転サンプル確認、時間切れフォールバック、smoothstepによるbeta回復",
-          "左右別の角速度・損失推定とエネルギー差から入力を決める方式（README記載。係数は暫定とされ、実機性能は未確認）"
+          "左右別の角速度・位置エネルギー予測に基づく入力計算と、電流積分からパルス幅を選ぶ方式（README記載）",
+          "パルス後の角速度反転を検出し、復帰位相に応じてbeta上限を指数補間する方式（BetaPhaseController）",
+          "反転サンプルの連続確認後、またはタイムアウト後にsmoothstepでbetaを復帰させる方式（BetaTurnFastController）",
+          "処理段階・I/O・キュー配送の経過時間と、予算超過を集計する計測方式（control_latency::Profile）"
         ],
         "hardware": [
           "M5Stack AtomS3R",
@@ -248,32 +250,31 @@
           "リアクションホイール"
         ],
         "interfaces": [
-          "Arduino／FreeRTOS上の制御モジュール",
-          "Web UIによる実験操作（README記載）",
-          "RWLOGによる実験・タイミング記録（README記載）",
-          "診断情報のJSON出力",
-          "site内のブラウザログ解析ページ"
+          "本体Web画面による実験条件設定と測定開始",
+          "RWLOGによる制御状態・入力・測定値の記録",
+          "ブラウザー解析ページでのログ解析とCSV保存",
+          "FreeRTOSキュー配送を含む内部計測データのJSON出力"
         ],
         "reusable_components": [
           {
-            "name": "BetaPhaseController",
-            "purpose": "パルス開始からのバイアス補正済み角速度積分を使って旋回と復帰進捗を判定し、指数形のbeta上限を返す。入力保護中は旋回判定を保留する。",
+            "name": "BetaPhaseController（beginPulse、update、betaCeiling）",
+            "purpose": "パルス開始を基準に角速度を積分し、入力保護中は判定を保留して、運動の反転後に進行度に応じたbeta上限を返す。位相ゲートを持つ制御への移植候補。",
             "evidence": [
               "src/beta_phase_controller.h",
               "src/config.h"
             ]
           },
           {
-            "name": "BetaTurnFastController",
-            "purpose": "パルス後の旋回を複数サンプルで確認し、確認後または時間切れ後にsmoothstepでbetaを回復する。判定・回復状態を他の制御器へ移植する際の参考になる。",
+            "name": "BetaTurnFastController（beginPulse、update、betaTarget）",
+            "purpose": "入力後の反転を複数サンプルで確認し、確認後またはフォールバック後にsmoothstepで制御値を復帰させる。反転誤検出を抑えつつ復帰を平滑化する実装例。",
             "evidence": [
               "src/beta_turn_fast_controller.h",
               "src/config.h"
             ]
           },
           {
-            "name": "control_latency計測",
-            "purpose": "サンプル受信から処理段階ごとの経過時間、I/O呼び出し、予算超過を固定容量の構造体に集計してJSON出力する。時間値はCPU占有時間ではなく割り込み等を含む壁時計時間である点も明示されている。",
+            "name": "control_latency::Profile",
+            "purpose": "受信から処理完了までの段階別遅延、ポーリング/I/Oとの重なり、キュー配送時間、予算超過を固定容量で記録しJSON化する。組込み制御の遅延診断に再利用できる。",
             "evidence": [
               "src/control_latency.h",
               "src/control_latency.cpp"
@@ -281,17 +282,17 @@
           },
           {
             "name": "control_angle_reference::origin",
-            "purpose": "work_modeに応じて重力基準の角度原点または保存姿勢を選ぶ小さな方針関数。角度基準の切り替えを呼び出し側から分離する用途に再利用できる。",
+            "purpose": "制御モードに応じて重力基準の角度原点または保存姿勢を返す小さな切替関数。異なる角度基準を使う制御モードの境界を明示できる。",
             "evidence": [
               "src/control_angle_reference.h"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋は限定的で、ファームウェア全体の呼び出し関係や各機能の実装状況は確認できない。",
-          "READMEはエネルギーモデルの係数を暫定値とし、逆入力応答の独立同定不足と実機閉ループ性能の未確認を記載している。",
-          "control_latencyの計測値は壁時計上の重なりであり、純粋なCPU負荷・プリエンプション時間ではない。",
-          "Beta制御器の実機適用結果や有効性は、提示されたコード抜粋だけでは確認できない。"
+          "READMEではエネルギー係数を暫定値としており、逆入力の効果は無入力時の動きから独立して同定できていない。",
+          "READMEは自動試験だけでは実機の閉ループ性能を確認できないとしている。",
+          "提示されたソース抜粋は一部モジュールに限られるため、全体の呼び出し関係、各機能の実機適用状況、ビルド・試験結果はここからは確認できない。",
+          "制御遅延計測のコメントでは、計測値は割り込み等を含むホスト壁時計時間であり、純粋なCPU時間やプリエンプション時間ではないと明記されている。"
         ],
         "maturity": "実験",
         "confidence": "medium",
@@ -302,7 +303,7 @@
           "src/control_angle_reference.h",
           "src/control_latency.h",
           "src/control_latency.cpp",
-          "docs/rwlog_format.md",
+          "platformio.ini",
           "site/wheel-work.js"
         ]
       }
@@ -310,7 +311,7 @@
     "temesotejam/github-tavern": {
       "url": "https://github.com/temesotejam/github-tavern",
       "default_branch": "main",
-      "pushed_at": "2026-11-03T19:38:10Z",
+      "pushed_at": "2026-11-04T19:53:41Z",
       "available_paths": [
         ".github",
         ".github/agents",
@@ -339,89 +340,86 @@
       ],
       "recent_commits": [
         {
+          "sha": "349173c8",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
+          "sha": "40b26f15",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
           "sha": "2a9767a2",
-          "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "d63c5a98",
-          "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "c6e2d507",
           "message": "chore: refresh tavern summaries"
         }
       ],
       "archived": false,
-      "fingerprint": "6eb4aaee994f85f879da9999b172dc3797cc56e1b32c469acd760087464282db",
-      "analyzed_at": "2026-11-03T23:34:19.271Z",
+      "fingerprint": "df826c16b258a36bbf4a488523fe5db30a93af9ea76f033b772ef5e29203ee77",
+      "analyzed_at": "2026-11-04T23:51:36.161Z",
       "profile": {
-        "purpose": "公開GitHubリポジトリを検索・閲覧する個人向けの静的ポータル。",
-        "architecture": "ブラウザー側のJavaScriptがリポジトリ情報を扱い、分類・検索・詳細表示を行う構成。説明や公開ページ情報はJSONファイルから読み込む。READMEにはCopilotによる要約更新ワークフローの説明があるが、ワークフローの実装詳細は提示資料から確認できない。",
+        "purpose": "公開GitHubリポジトリを検索・分類し、選択したリポジトリの説明を表示する静的ポータル。READMEでは個人の公開リポジトリを探索する用途として説明されている。",
+        "architecture": "ブラウザー側のJavaScriptが一覧表示や詳細表示を担い、要約や公開ページ情報をJSONファイルから読み込む構成。カードのREADME補足取得、詳細画面の表示補助、説明文の口語化は別スクリプトに分かれている。自動要約更新のワークフローもファイルツリーにあるが、その実装詳細は確認できない。",
         "technologies": [
           "JavaScript",
           "HTML",
           "CSS",
-          "GitHub API",
-          "GitHub Pages",
-          "ブラウザー Fetch API",
-          "MutationObserver"
+          "GitHub REST API",
+          "raw.githubusercontent.com",
+          "ブラウザーのFetch API、MutationObserver、AbortController"
         ],
         "algorithms": [
-          "キーワード規則によるリポジトリ分類",
-          "Markdownの除去・整形と先頭文抽出",
-          "最大6件の並列README取得",
-          "HTTP/HTTPS URLの検証",
-          "日本語説明文の口語変換"
+          "リポジトリ名・説明・言語・Topics・要約に対するキーワード照合による簡易分類（app.js）",
+          "README Markdownの除去・文分割・ノイズ語除外によるカード用短文抽出（card-enricher.js）",
+          "同時実行数を6に制限したFIFO形式の取得キュー（card-enricher.js）"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザー上の検索・分類・詳細表示UI",
-          "GitHub APIおよびraw.githubusercontent.comからの読み取り",
-          "data/summaries.jsonとdata/public-pages.jsonのJSONデータ"
+          "ブラウザー上の検索・カテゴリ絞り込み・詳細表示UI（index.html、app.js）",
+          "GitHub APIおよびraw.githubusercontent.comからのHTTP取得（app.js、card-enricher.js）",
+          "data/summaries.jsonおよびdata/public-pages.jsonのJSONデータ（app.js、keeper-closing-client.js、public-pages-client.js）",
+          "公開ページへのリンク（public-pages-client.js）"
         ],
         "reusable_components": [
           {
-            "name": "cleanMarkdown / shortPreview",
-            "purpose": "README Markdownから装飾やノイズを除去し、短い説明文を生成する。",
+            "name": "README短文抽出とカード補完",
+            "purpose": "READMEのMarkdownやバッジ等を除去し、短い説明文を抽出してカードに反映する。複数カードの取得を同時実行数6で制御する。",
             "evidence": [
               "card-enricher.js"
             ]
           },
           {
-            "name": "README取得キュー",
-            "purpose": "カード表示に応じてREADMEを取得し、同時取得数を6件に制限して説明を補完する。",
-            "evidence": [
-              "card-enricher.js"
-            ]
-          },
-          {
-            "name": "categoryOf",
-            "purpose": "リポジトリ名・説明・言語・Topics・要約を規則ベースで分類する。",
+            "name": "キーワード分類・検索用テキスト構築",
+            "purpose": "リポジトリ情報と要約を検索用テキストにまとめ、キーワード規則で技術カテゴリを判定する。キーワード規則や分類語は他のリポジトリ群に合わせて調整が必要。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "validEntry",
-            "purpose": "公開ページのURLを解析し、HTTPまたはHTTPS以外を除外する。",
+            "name": "公開ページURLの検証と表示制御",
+            "purpose": "URLを解析しHTTP/HTTPS以外を除外して、現在選択中のリポジトリに対応するリンクを表示する。",
             "evidence": [
               "public-pages-client.js"
             ]
           },
           {
-            "name": "spokenize",
-            "purpose": "日本語の技術説明文を口語調に変換する純粋変換関数。",
+            "name": "説明文の口語変換",
+            "purpose": "日本語説明の定型表現を置換する純粋変換関数spokenizeを提供し、詳細説明に適用する。",
             "evidence": [
               "spoken-overview-client.js"
+            ]
+          },
+          {
+            "name": "要約データ連動の締めコメント表示",
+            "purpose": "詳細画面のリポジトリ名の変更を監視し、対応する要約データのclosingRemarkを表示する。",
+            "evidence": [
+              "keeper-closing-client.js"
             ]
           }
         ],
         "constraints": [
-          "提示されたapp.jsの抜粋は一部のみで、取得・検索・詳細表示の全実装は確認できない。",
-          "READMEに記された自動要約ワークフローの挙動は、ワークフローのソース内容が提示されていないため独立に検証できない。",
-          "card-enricher.jsはREADMEのブランチ名・ファイル名を限定して試行する。",
-          "一部のデータ取得失敗時に空データとして表示を継続する実装がある。",
-          "テスト内容や実行結果は提示されていない。"
+          "確認できる分類は固定キーワード規則による簡易判定で、分類精度の評価や多言語対応の範囲は不明。",
+          "README補完はmain/masterとREADMEの限られた大文字小文字の候補を試す実装で、他の配置やブランチは確認対象外。",
+          "README記載の定期要約更新やGitHub Actionsの権限・実行条件は、ワークフロー本文が提示されていないため検証できない。",
+          "テスト、アクセシビリティ、APIレート制限への対応状況は提示情報から確認できない。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
@@ -432,8 +430,8 @@
           "public-pages-client.js",
           "spoken-overview-client.js",
           "keeper-closing-client.js",
-          "data/public-pages.json",
           "data/summaries.json",
+          "data/public-pages.json",
           ".github/workflows/copilot-summaries.yml"
         ]
       }
@@ -441,7 +439,7 @@
     "temesotejam/2026_10_24": {
       "url": "https://github.com/temesotejam/2026_10_24",
       "default_branch": "main",
-      "pushed_at": "2026-11-03T23:17:05Z",
+      "pushed_at": "2026-11-04T23:38:13Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -458,87 +456,87 @@
       ],
       "recent_commits": [
         {
-          "sha": "899a26af",
+          "sha": "2375cf85",
           "message": "Update automatic news feed"
         },
         {
-          "sha": "53cb89e5",
+          "sha": "93c82402",
           "message": "Update automatic news feed"
         },
         {
-          "sha": "6de327de",
+          "sha": "b5ec87f2",
           "message": "Update automatic news feed"
         }
       ],
       "archived": false,
-      "fingerprint": "35b503778ca8903c54be87cd105e444cb6c1d4fdbf4d1a41670ac30ae2f4bbec",
-      "analyzed_at": "2026-11-03T23:34:06.743Z",
+      "fingerprint": "8cfc8397143c7d35fb205b9eb81d3960f94388cc53ba8106785f1415288b32c3",
+      "analyzed_at": "2026-11-04T23:51:18.472Z",
       "profile": {
-        "purpose": "ニュース見出しや入力した現実の出来事を迷宮に反映する、一人用の探索ゲーム。",
-        "architecture": "GitHub Pagesで配信するブラウザーゲーム。app.jsがCanvas描画やゲーム状態、ニュース選択・表示を扱い、data/news.jsonを自動ニュースの入力元とする構成。READMEではGitHub ActionsによるRSS収集・データ更新が説明されているが、ワークフローや収集スクリプトの実装詳細は未確認。",
+        "purpose": "ニュースや入力した現実の出来事を題材に、迷宮探索へ反映する一人用ブラウザーゲームです。",
+        "architecture": "ブラウザー上のJavaScriptゲームがCanvas描画とゲーム状態を扱い、data/news.jsonから自動収集ニュースを読み込みます。ニュース取得用スクリプトとGitHub Actionsのワークフローもファイルツリーにありますが、実装詳細は確認できません。",
         "technologies": [
           "JavaScript",
-          "HTML Canvas 2D",
-          "Fetch API",
-          "localStorage",
-          "GitHub Pages",
+          "HTML Canvas",
           "GitHub Actions",
-          "RSS"
+          "GitHub Pages"
         ],
         "algorithms": [
-          "プレイヤーの行動ごとに仲間と敵も行動するターン制進行",
-          "乱数を用いた迷宮生成（具体的な生成手順は未確認）",
-          "日付から自動ニュース項目を選ぶ方式（app.js）",
-          "ニュース見出しに対するキーワード除外とURLプロトコル検査"
+          "ニュース項目のカテゴリ許可リスト・見出し除外パターン・出典除外パターンによるフィルタリング",
+          "自動ニュースがある場合の日付ベースの選択",
+          "マンハッタン距離の計算"
         ],
         "hardware": [],
         "interfaces": [
-          "矢印キー・WASD・画面上の方向ボタンによる操作",
-          "Canvas 2D描画",
-          "data/news.jsonからのJSON取得",
-          "RSS由来の記事の見出し・配信元・日時・出典リンク表示",
-          "localStorageによる入力ニュースの保存"
+          "ブラウザー画面とCanvas",
+          "data/news.jsonのJSONニュース項目",
+          "HTTP/HTTPSの出典URL",
+          "矢印キー・WASD・画面上の方向ボタン（README記載）"
         ],
         "reusable_components": [
           {
-            "name": "safeHttpUrl(value)",
-            "purpose": "URLを解析し、HTTPまたはHTTPSの場合だけURL文字列を返す。ニュース出典リンクの検証や、保存済みデータの読み込みに利用できる。",
-            "evidence": [
-              "app.js"
-            ]
-          },
-          {
             "name": "loadAutomaticNews()",
-            "purpose": "ニュースJSONを取得し、カテゴリ・見出し・配信元を検査してゲーム用データへ整形する。取得失敗時は自動ニュースを空にする。",
+            "purpose": "ニュースJSONを取得し、カテゴリ・見出し・出典を検査してゲーム用データへ整形します。取得失敗時は自動ニュースを空にします。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "renderAutomaticNews()",
-            "purpose": "ニュース一覧をDOM要素として構築し、textContentで見出し等を表示する。選択時にゲーム開始へつなぐ。",
+            "name": "safeHttpUrl(value)",
+            "purpose": "URLを解析し、HTTP/HTTPS以外を拒否して安全な出典リンク候補を返します。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "カテゴリ別テーマ定義",
-            "purpose": "community、climate、mobility、scienceごとに迷宮の色・出現タイプ・説明を対応付ける。",
+            "name": "esc(v)",
+            "purpose": "HTMLに挿入する文字列の主要な特殊文字をエスケープします。",
+            "evidence": [
+              "app.js"
+            ]
+          },
+          {
+            "name": "categoryThemes",
+            "purpose": "地域・環境・交通・科学のカテゴリごとに迷宮の色、現象タイプ、表示ラベルを対応付けます。",
             "evidence": [
               "app.js"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋はapp.jsの一部であり、迷宮生成や戦闘の詳細な実装は確認できない。",
-          "scripts/fetch-news.mjs、GitHub Actionsの設定、HTML・CSS、ニュースJSONの内容は提示されていないため、その実装やデータ品質は未確認。",
-          "見出しのキーワード除外はヒューリスティックであり、内容の安全性や正確性を保証しない。コードでは記事本文を確認済みと扱わない。"
+          "提示されたソース抜粋はapp.jsの一部のみで、ゲーム進行やニュース収集の全実装は確認できません。",
+          "ニュース本文を確認済みとは扱わず、記事本文を複製しない方針はREADMEに記載されていますが、収集処理の実装は未確認です。",
+          "ニュース取得元、取得・重複排除方式、テストの有無は提示情報から確認できません。"
         ],
         "maturity": "試作",
         "confidence": "medium",
         "evidence": [
           "README.md",
-          "app.js"
+          "app.js",
+          "data/news.json",
+          "scripts/fetch-news.mjs",
+          ".github/workflows/news.yml",
+          ".github/workflows/pages.yml",
+          "index.html"
         ]
       }
     },
