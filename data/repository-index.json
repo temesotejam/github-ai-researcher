@@ -1,22 +1,9 @@
 {
-  "generated_at": "2026-11-04T23:56:38.359Z",
+  "generated_at": "2026-11-05T23:50:33.832Z",
   "owner": "temesotejam",
   "visibility_filter": "public only",
   "repository_count": 111,
   "repositories": [
-    {
-      "id": 1431824671,
-      "name": "2026_10_24",
-      "full_name": "temesotejam/2026_10_24",
-      "url": "https://github.com/temesotejam/2026_10_24",
-      "description": "",
-      "language": "JavaScript",
-      "topics": [],
-      "default_branch": "main",
-      "pushed_at": "2026-11-04T23:38:13Z",
-      "archived": false,
-      "fork": false
-    },
     {
       "id": 1356723072,
       "name": "github-tavern",
@@ -26,9 +13,35 @@
       "language": "JavaScript",
       "topics": [],
       "default_branch": "main",
-      "pushed_at": "2026-11-04T19:53:41Z",
+      "pushed_at": "2026-11-05T20:06:51Z",
       "archived": false,
       "fork": false
+    },
+    {
+      "id": 1431824671,
+      "name": "2026_10_24",
+      "full_name": "temesotejam/2026_10_24",
+      "url": "https://github.com/temesotejam/2026_10_24",
+      "description": "",
+      "language": "JavaScript",
+      "topics": [],
+      "default_branch": "main",
+      "pushed_at": "2026-11-05T19:53:50Z",
+      "archived": false,
+      "fork": false
+    },
+    {
+      "id": 1442583666,
+      "name": "Strata",
+      "full_name": "temesotejam/Strata",
+      "url": "https://github.com/temesotejam/Strata",
+      "description": "Qwen3.8-Flash-Next on any consumer hardware: one-click install for Windows / Linux. Strata inference engine, OpenAI/Anthropic API on localhost, optional image input.",
+      "language": "C++",
+      "topics": [],
+      "default_branch": "main",
+      "pushed_at": "2026-11-05T09:08:16Z",
+      "archived": false,
+      "fork": true
     },
     {
       "id": 1416789371,
@@ -39,7 +52,7 @@
       "language": "C++",
       "topics": [],
       "default_branch": "main",
-      "pushed_at": "2026-11-04T12:14:17Z",
+      "pushed_at": "2026-11-05T08:49:50Z",
       "archived": false,
       "fork": false
     },
@@ -68,19 +81,6 @@
       "pushed_at": "2026-10-31T14:59:56Z",
       "archived": false,
       "fork": false
-    },
-    {
-      "id": 1442583666,
-      "name": "Strata",
-      "full_name": "temesotejam/Strata",
-      "url": "https://github.com/temesotejam/Strata",
-      "description": "Qwen3.8-Flash-Next on any consumer hardware: one-click install for Windows / Linux. Strata inference engine, OpenAI/Anthropic API on localhost, optional image input.",
-      "language": "",
-      "topics": [],
-      "default_branch": "main",
-      "pushed_at": "2026-10-31T07:39:18Z",
-      "archived": false,
-      "fork": true
     },
     {
       "id": 1418263649,

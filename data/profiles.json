@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-04T23:56:38.411Z",
+  "generated_at": "2026-11-05T23:50:33.879Z",
   "owner": "temesotejam",
   "repository_count": 111,
   "profiles": {
     "temesotejam/atoms3r-lateral-energy-control": {
       "url": "https://github.com/temesotejam/atoms3r-lateral-energy-control",
       "default_branch": "main",
-      "pushed_at": "2026-11-04T12:14:17Z",
+      "pushed_at": "2026-11-05T08:49:50Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -212,69 +212,66 @@
       ],
       "recent_commits": [
         {
+          "sha": "4b831589",
+          "message": "Retry a clipped foot correction after fresh observation (#15)"
+        },
+        {
+          "sha": "a358d1c7",
+          "message": "Evaluate foot asymmetry across adjacent paired cycles (#14)"
+        },
+        {
           "sha": "1fc75017",
           "message": "Probe sustained weak-side recovery using two-cycle evidence (#13)"
-        },
-        {
-          "sha": "e11f354d",
-          "message": "Evaluate sustained foot feedback against recent effective commands (#12)"
-        },
-        {
-          "sha": "88db47ea",
-          "message": "Control relative foot swing over valid multi-cycle windows (#11)"
         }
       ],
       "archived": false,
-      "fingerprint": "f469d12c1a01493744c607433c1c2655741ce8b60ae27783a82bea207238e6d3",
-      "analyzed_at": "2026-11-04T23:51:52.484Z",
+      "fingerprint": "939dbdd8393b81b2ac7f3366f596c1882099786186b3d7bac43676362a9b7c79",
+      "analyzed_at": "2026-11-05T23:46:51.002Z",
       "profile": {
-        "purpose": "AtomS3Rとリアクションホイールを使った左右揺動のエネルギー制御を実機で試験し、入力条件と運動応答を記録・解析するファームウェア。",
-        "architecture": "C++ファームウェアで姿勢推定と制御を行い、Web画面から実験条件を設定・開始する。測定データはRWLOGに記録し、ブラウザー上の解析ページで確認する。パルス後の位相制御、制御遅延計測、角度原点の選択は個別モジュールとして実装されている。",
+        "purpose": "AtomS3Rとリアクションホイールを使った左右揺動の制御・実機測定用ファームウェア。エネルギー制御や入力条件の実験ログを取得し、比較・解析する。",
+        "architecture": "C++ファームウェアがMEKFによる姿勢推定と制御を行い、実機Web画面から実験を操作する。RWLOGに制御・計測データを記録し、ブラウザーの解析ページで確認する。提示されたソース抜粋では、パルス後の位相制御と制御遅延計測が独立モジュールとして実装されている。",
         "technologies": [
           "C++",
           "Arduino",
           "FreeRTOS",
-          "MEKF姿勢推定",
-          "RWLOG",
-          "HTML/CSS/JavaScript"
+          "MEKF",
+          "JSON"
         ],
         "algorithms": [
-          "左右別の角速度・位置エネルギー予測に基づく入力計算と、電流積分からパルス幅を選ぶ方式（README記載）",
-          "パルス後の角速度反転を検出し、復帰位相に応じてbeta上限を指数補間する方式（BetaPhaseController）",
-          "反転サンプルの連続確認後、またはタイムアウト後にsmoothstepでbetaを復帰させる方式（BetaTurnFastController）",
-          "処理段階・I/O・キュー配送の経過時間と、予算超過を集計する計測方式（control_latency::Profile）"
+          "目標ピークの位置エネルギーに基づくリアクションホイール制御（README記載）",
+          "入力後の角速度符号反転による旋回検出とβ回復",
+          "指数関数およびsmoothstepによる段階的な制御パラメーター回復",
+          "制御サンプルの処理段階・キュー遅延・期限超過の計測"
         ],
         "hardware": [
-          "M5Stack AtomS3R",
+          "AtomS3R",
           "Unit Roller485",
           "リアクションホイール"
         ],
         "interfaces": [
-          "本体Web画面による実験条件設定と測定開始",
-          "RWLOGによる制御状態・入力・測定値の記録",
-          "ブラウザー解析ページでのログ解析とCSV保存",
-          "FreeRTOSキュー配送を含む内部計測データのJSON出力"
+          "実機Web UI",
+          "RWLOG",
+          "JSON診断出力",
+          "FreeRTOSタスク間キュー"
         ],
         "reusable_components": [
           {
-            "name": "BetaPhaseController（beginPulse、update、betaCeiling）",
-            "purpose": "パルス開始を基準に角速度を積分し、入力保護中は判定を保留して、運動の反転後に進行度に応じたbeta上限を返す。位相ゲートを持つ制御への移植候補。",
+            "name": "BetaPhaseController",
+            "purpose": "パルス開始後の角速度積分、入力保護中の旋回判定抑制、旋回後の進捗に応じたβ上限の指数的回復を行う。",
             "evidence": [
-              "src/beta_phase_controller.h",
-              "src/config.h"
+              "src/beta_phase_controller.h"
             ]
           },
           {
-            "name": "BetaTurnFastController（beginPulse、update、betaTarget）",
-            "purpose": "入力後の反転を複数サンプルで確認し、確認後またはフォールバック後にsmoothstepで制御値を復帰させる。反転誤検出を抑えつつ復帰を平滑化する実装例。",
+            "name": "BetaTurnFastController",
+            "purpose": "複数サンプルで角速度の反転を確認して旋回を検出し、確認できない場合は時間経過でフォールバックする。βをsmoothstepで回復する。",
             "evidence": [
-              "src/beta_turn_fast_controller.h",
-              "src/config.h"
+              "src/beta_turn_fast_controller.h"
             ]
           },
           {
             "name": "control_latency::Profile",
-            "purpose": "受信から処理完了までの段階別遅延、ポーリング/I/Oとの重なり、キュー配送時間、予算超過を固定容量で記録しJSON化する。組込み制御の遅延診断に再利用できる。",
+            "purpose": "受信から処理完了までの段階別経過時間、キュー遅延、I/Oとの時間的重なり、期限超過を固定容量で記録し、JSON出力する。",
             "evidence": [
               "src/control_latency.h",
               "src/control_latency.cpp"
@@ -282,17 +279,16 @@
           },
           {
             "name": "control_angle_reference::origin",
-            "purpose": "制御モードに応じて重力基準の角度原点または保存姿勢を返す小さな切替関数。異なる角度基準を使う制御モードの境界を明示できる。",
+            "purpose": "制御モードに応じて、重力基準の角度原点または保存姿勢を返す小さな切り替え関数。",
             "evidence": [
               "src/control_angle_reference.h"
             ]
           }
         ],
         "constraints": [
-          "READMEではエネルギー係数を暫定値としており、逆入力の効果は無入力時の動きから独立して同定できていない。",
-          "READMEは自動試験だけでは実機の閉ループ性能を確認できないとしている。",
-          "提示されたソース抜粋は一部モジュールに限られるため、全体の呼び出し関係、各機能の実機適用状況、ビルド・試験結果はここからは確認できない。",
-          "制御遅延計測のコメントでは、計測値は割り込み等を含むホスト壁時計時間であり、純粋なCPU時間やプリエンプション時間ではないと明記されている。"
+          "README記載のエネルギー係数や制御性能は暫定で、閉ループ性能は自動試験だけでは確認できない。",
+          "BetaPhaseControllerとBetaTurnFastControllerのパラメーターはConfig依存であり、提示情報から既定値や実機での効果は確認できない。",
+          "ソース抜粋は一部に限られるため、全体のタスク構成、制御経路、ログ仕様の詳細は未確認。"
         ],
         "maturity": "実験",
         "confidence": "medium",
@@ -302,16 +298,14 @@
           "src/beta_turn_fast_controller.h",
           "src/control_angle_reference.h",
           "src/control_latency.h",
-          "src/control_latency.cpp",
-          "platformio.ini",
-          "site/wheel-work.js"
+          "src/control_latency.cpp"
         ]
       }
     },
     "temesotejam/github-tavern": {
       "url": "https://github.com/temesotejam/github-tavern",
       "default_branch": "main",
-      "pushed_at": "2026-11-04T19:53:41Z",
+      "pushed_at": "2026-11-05T20:06:51Z",
       "available_paths": [
         ".github",
         ".github/agents",
@@ -340,86 +334,89 @@
       ],
       "recent_commits": [
         {
+          "sha": "02a3f178",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
+          "sha": "d8fc9b83",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
           "sha": "349173c8",
-          "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "40b26f15",
-          "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "2a9767a2",
           "message": "chore: refresh tavern summaries"
         }
       ],
       "archived": false,
-      "fingerprint": "df826c16b258a36bbf4a488523fe5db30a93af9ea76f033b772ef5e29203ee77",
-      "analyzed_at": "2026-11-04T23:51:36.161Z",
+      "fingerprint": "dcd1b521bb9f6c2207f1a181a170791abd4c1cc885e5cb74c3221ac0ba896175",
+      "analyzed_at": "2026-11-05T23:46:03.736Z",
       "profile": {
-        "purpose": "公開GitHubリポジトリを検索・分類し、選択したリポジトリの説明を表示する静的ポータル。READMEでは個人の公開リポジトリを探索する用途として説明されている。",
-        "architecture": "ブラウザー側のJavaScriptが一覧表示や詳細表示を担い、要約や公開ページ情報をJSONファイルから読み込む構成。カードのREADME補足取得、詳細画面の表示補助、説明文の口語化は別スクリプトに分かれている。自動要約更新のワークフローもファイルツリーにあるが、その実装詳細は確認できない。",
+        "purpose": "公開GitHubリポジトリを検索・分類し、詳細や説明を閲覧する静的ポータル。",
+        "architecture": "GitHub Pages上のブラウザーUIがGitHub APIから公開リポジトリを取得し、JSONキャッシュの説明を表示する構成。READMEによれば、GitHub ActionsとCopilot CLIで説明データを更新する。",
         "technologies": [
           "JavaScript",
           "HTML",
           "CSS",
           "GitHub REST API",
-          "raw.githubusercontent.com",
-          "ブラウザーのFetch API、MutationObserver、AbortController"
+          "GitHub Pages",
+          "GitHub Actions",
+          "Copilot CLI"
         ],
         "algorithms": [
-          "リポジトリ名・説明・言語・Topics・要約に対するキーワード照合による簡易分類（app.js）",
-          "README Markdownの除去・文分割・ノイズ語除外によるカード用短文抽出（card-enricher.js）",
-          "同時実行数を6に制限したFIFO形式の取得キュー（card-enricher.js）"
+          "キーワードの先頭一致順によるリポジトリ分類",
+          "READMEのMarkdownを整形し、短いプレビュー文を抽出",
+          "最大6件の並行処理キュー",
+          "MutationObserverによるDOM変更検知"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザー上の検索・カテゴリ絞り込み・詳細表示UI（index.html、app.js）",
-          "GitHub APIおよびraw.githubusercontent.comからのHTTP取得（app.js、card-enricher.js）",
-          "data/summaries.jsonおよびdata/public-pages.jsonのJSONデータ（app.js、keeper-closing-client.js、public-pages-client.js）",
-          "公開ページへのリンク（public-pages-client.js）"
+          "GitHub API（api.github.com）",
+          "raw.githubusercontent.com",
+          "data/summaries.json",
+          "data/public-pages.json",
+          "ブラウザー上の検索・分類・詳細表示UI"
         ],
         "reusable_components": [
           {
-            "name": "README短文抽出とカード補完",
-            "purpose": "READMEのMarkdownやバッジ等を除去し、短い説明文を抽出してカードに反映する。複数カードの取得を同時実行数6で制御する。",
+            "name": "card-enricher.js の cleanMarkdown / shortPreview",
+            "purpose": "READMEから装飾やノイズを除いてカード向けの短い説明を作る。",
             "evidence": [
               "card-enricher.js"
             ]
           },
           {
-            "name": "キーワード分類・検索用テキスト構築",
-            "purpose": "リポジトリ情報と要約を検索用テキストにまとめ、キーワード規則で技術カテゴリを判定する。キーワード規則や分類語は他のリポジトリ群に合わせて調整が必要。",
+            "name": "card-enricher.js のキュー処理",
+            "purpose": "カードのREADME取得を重複排除し、最大6件まで並行実行する。",
+            "evidence": [
+              "card-enricher.js"
+            ]
+          },
+          {
+            "name": "app.js の categoryOf / RULES",
+            "purpose": "リポジトリ情報と要約をキーワードで簡易分類する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "公開ページURLの検証と表示制御",
-            "purpose": "URLを解析しHTTP/HTTPS以外を除外して、現在選択中のリポジトリに対応するリンクを表示する。",
+            "name": "app.js の esc / withTimeout",
+            "purpose": "HTML出力向けの文字エスケープと、AbortControllerを用いたfetchのタイムアウト制御を提供する。",
+            "evidence": [
+              "app.js"
+            ]
+          },
+          {
+            "name": "public-pages-client.js の validEntry",
+            "purpose": "公開ページURLを解析し、HTTPまたはHTTPSのみを有効なリンクとして扱う。",
             "evidence": [
               "public-pages-client.js"
-            ]
-          },
-          {
-            "name": "説明文の口語変換",
-            "purpose": "日本語説明の定型表現を置換する純粋変換関数spokenizeを提供し、詳細説明に適用する。",
-            "evidence": [
-              "spoken-overview-client.js"
-            ]
-          },
-          {
-            "name": "要約データ連動の締めコメント表示",
-            "purpose": "詳細画面のリポジトリ名の変更を監視し、対応する要約データのclosingRemarkを表示する。",
-            "evidence": [
-              "keeper-closing-client.js"
             ]
           }
         ],
         "constraints": [
-          "確認できる分類は固定キーワード規則による簡易判定で、分類精度の評価や多言語対応の範囲は不明。",
-          "README補完はmain/masterとREADMEの限られた大文字小文字の候補を試す実装で、他の配置やブランチは確認対象外。",
-          "README記載の定期要約更新やGitHub Actionsの権限・実行条件は、ワークフロー本文が提示されていないため検証できない。",
-          "テスト、アクセシビリティ、APIレート制限への対応状況は提示情報から確認できない。"
+          "所有者名と対象リポジトリ名がクライアントコードに固定されている。",
+          "README記載では対象は公開リポジトリのみ。",
+          "提供されたソース抜粋は一部に限られるため、全体の動作やエラー処理は未確認。",
+          "自動要約ワークフローの詳細な実装は提示された抜粋から確認できない。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
@@ -429,17 +426,16 @@
           "card-enricher.js",
           "public-pages-client.js",
           "spoken-overview-client.js",
-          "keeper-closing-client.js",
-          "data/summaries.json",
-          "data/public-pages.json",
-          ".github/workflows/copilot-summaries.yml"
+          ".github/workflows/copilot-summaries.yml",
+          "scripts/update-summaries.mjs",
+          "data/summaries.json"
         ]
       }
     },
     "temesotejam/2026_10_24": {
       "url": "https://github.com/temesotejam/2026_10_24",
       "default_branch": "main",
-      "pushed_at": "2026-11-04T23:38:13Z",
+      "pushed_at": "2026-11-05T19:53:50Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -456,76 +452,90 @@
       ],
       "recent_commits": [
         {
+          "sha": "d6cb1229",
+          "message": "Update automatic news feed"
+        },
+        {
+          "sha": "f6515ef7",
+          "message": "Update automatic news feed"
+        },
+        {
           "sha": "2375cf85",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "93c82402",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "b5ec87f2",
           "message": "Update automatic news feed"
         }
       ],
       "archived": false,
-      "fingerprint": "8cfc8397143c7d35fb205b9eb81d3960f94388cc53ba8106785f1415288b32c3",
-      "analyzed_at": "2026-11-04T23:51:18.472Z",
+      "fingerprint": "d596ae5055932ed56d50318ecc47b3cad4572cadd2ebb87d45a537d09d43fd0e",
+      "analyzed_at": "2026-11-05T23:46:19.154Z",
       "profile": {
-        "purpose": "ニュースや入力した現実の出来事を題材に、迷宮探索へ反映する一人用ブラウザーゲームです。",
-        "architecture": "ブラウザー上のJavaScriptゲームがCanvas描画とゲーム状態を扱い、data/news.jsonから自動収集ニュースを読み込みます。ニュース取得用スクリプトとGitHub Actionsのワークフローもファイルツリーにありますが、実装詳細は確認できません。",
+        "purpose": "公開ニュースの見出しを迷宮のテーマやゲーム内地点に反映する、一人用の探索ゲーム。",
+        "architecture": "ブラウザー上の静的アプリで、app.jsがゲーム状態とCanvas描画を扱う構成とみられる。READMEによれば、GitHub Actionsが公開RSSを取得してdata/news.jsonを更新し、ゲームがそのデータを読み込む。スクリプトやワークフローの実装詳細は提示されていない。",
         "technologies": [
           "JavaScript",
-          "HTML Canvas",
+          "HTML",
+          "CSS",
+          "Canvas API",
+          "ブラウザーFetch API",
+          "localStorage",
           "GitHub Actions",
-          "GitHub Pages"
+          "RSS",
+          "JSON"
         ],
         "algorithms": [
-          "ニュース項目のカテゴリ許可リスト・見出し除外パターン・出典除外パターンによるフィルタリング",
-          "自動ニュースがある場合の日付ベースの選択",
-          "マンハッタン距離の計算"
+          "乱数を使った迷宮生成・探索（READMEに記載。生成処理の詳細は未確認）",
+          "日付を使ったニュース項目の選択と乱数による選択",
+          "見出しのキーワード除外とURLスキーム検査"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザー画面とCanvas",
-          "data/news.jsonのJSONニュース項目",
-          "HTTP/HTTPSの出典URL",
-          "矢印キー・WASD・画面上の方向ボタン（README記載）"
+          "キーボード（矢印キー/WASD）と画面上の方向ボタン",
+          "Canvasによるゲーム表示",
+          "data/news.jsonのニュースデータ",
+          "ニュース出典へのHTTP/HTTPSリンク",
+          "ブラウザーlocalStorageへの調査テーマ保存"
         ],
         "reusable_components": [
           {
-            "name": "loadAutomaticNews()",
-            "purpose": "ニュースJSONを取得し、カテゴリ・見出し・出典を検査してゲーム用データへ整形します。取得失敗時は自動ニュースを空にします。",
+            "name": "safeHttpUrl(value)",
+            "purpose": "URLを解析し、HTTP/HTTPS以外のスキームを拒否して安全なリンク表示に利用する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "safeHttpUrl(value)",
-            "purpose": "URLを解析し、HTTP/HTTPS以外を拒否して安全な出典リンク候補を返します。",
+            "name": "loadAutomaticNews()",
+            "purpose": "ニュースJSONを取得し、カテゴリ・見出し・出典などを検査・整形してゲーム用データにする。見出しの除外語や出典の除外条件も含む。",
+            "evidence": [
+              "app.js"
+            ]
+          },
+          {
+            "name": "savedSeed()",
+            "purpose": "localStorageから保存済みテーマを読み込み、出典URLが有効な場合にゲーム用テーマとして返す。",
             "evidence": [
               "app.js"
             ]
           },
           {
             "name": "esc(v)",
-            "purpose": "HTMLに挿入する文字列の主要な特殊文字をエスケープします。",
+            "purpose": "HTMLで特別な意味を持つ文字をエスケープする。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "categoryThemes",
-            "purpose": "地域・環境・交通・科学のカテゴリごとに迷宮の色、現象タイプ、表示ラベルを対応付けます。",
+            "name": "カテゴリ別テーマ定義",
+            "purpose": "地域・環境・交通・科学のカテゴリを迷宮の色や出現現象に対応づける。",
             "evidence": [
               "app.js"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋はapp.jsの一部のみで、ゲーム進行やニュース収集の全実装は確認できません。",
-          "ニュース本文を確認済みとは扱わず、記事本文を複製しない方針はREADMEに記載されていますが、収集処理の実装は未確認です。",
-          "ニュース取得元、取得・重複排除方式、テストの有無は提示情報から確認できません。"
+          "提示されたソース抜粋はapp.jsの一部のみで、迷宮生成・ターン処理・描画の実装詳細は確認できない。",
+          "ニュースは見出し等を扱い、記事本文を確認済みとは表示しないとREADMEに記載されている。",
+          "ニュースのキーワード除外は見出しによる判定であり、記事内容の事実確認を示すものではない。",
+          "RSS取得や更新失敗時の保持動作はREADMEの説明に基づき、ワークフロー実装自体は未確認。"
         ],
         "maturity": "試作",
         "confidence": "medium",
@@ -533,10 +543,10 @@
           "README.md",
           "app.js",
           "data/news.json",
-          "scripts/fetch-news.mjs",
           ".github/workflows/news.yml",
-          ".github/workflows/pages.yml",
-          "index.html"
+          "scripts/fetch-news.mjs",
+          "index.html",
+          "styles.css"
         ]
       }
     },
@@ -11393,13 +11403,14 @@
     "temesotejam/Strata": {
       "url": "https://github.com/temesotejam/Strata",
       "default_branch": "main",
-      "pushed_at": "2026-10-31T07:39:18Z",
+      "pushed_at": "2026-11-05T09:08:16Z",
       "available_paths": [
         ".dockerignore",
         ".gitattributes",
         ".github",
         ".github/FUNDING.yml",
         ".github/ISSUE_TEMPLATE",
+        ".github/ISSUE_TEMPLATE/amd_split_report.yml",
         ".github/ISSUE_TEMPLATE/benchmark.yml",
         ".github/ISSUE_TEMPLATE/bug_report.yml",
         ".github/ISSUE_TEMPLATE/config.yml",
@@ -11594,87 +11605,106 @@
         "apps/host/audit-fixes/tasks/T01-one-model-name.md",
         "apps/host/audit-fixes/tasks/T02-overlay-layering.md",
         "apps/host/audit-fixes/tasks/T03-control-states.md",
-        "apps/host/audit-fixes/tasks/T04-error-notice.md",
         "apps/host/src/lib/model-icons.ts",
         "apps/host/src/lib/model-picker.ts"
       ],
       "recent_commits": [
         {
-          "sha": "c62d5e3a",
-          "message": "DeepSeek plan: the NVIDIA cards it counts are the ones setup runs (a card of 8 GB or less starts Off beside a bigger one), and the plan says which card is not used"
+          "sha": "ffa80d73",
+          "message": "App: a layer split runs DFlash2 alone, one request at a time. chooseParallel kept the app's default of 4 slots on two or more cards, so the Python plan (drafting.blocked_by) refused DFlash2 for slots > 1, the MTP layer was not on the disk (a DFlash2 install leaves it out) and the start ran with no drafter. The one-request rule for DFlash2 no longer asks for one card; a number the person chose still stays, and the MTP keeps its slots. Test: two cards with DFlash2 give one slot and the note, two cards with the MTP keep more than one."
         },
         {
-          "sha": "7aa9a584",
-          "message": "Setup: say which card is not used when a card under 8 GB sits beside a bigger NVIDIA card (a line only, no change to the cards used)"
+          "sha": "974074c5",
+          "message": "0.2.10: the all-cards split engine is Terminal-only; the app's drafting plan and fetch ask without it; the split's lanes are cut to 1..8"
         },
         {
-          "sha": "987ebd44",
-          "message": "Launch: list the Arc Pro B65 (0xe222) and the other discrete Battlemage/Alchemist ids, so two cards are both named for a launch that names none"
+          "sha": "3482b3df",
+          "message": "Merge f-0210-ds-mac-vision: the Mac DeepSeek picture tower (engine commit f457ed7b9)"
         }
       ],
       "archived": false,
-      "fingerprint": "b2062f6fb14324d39a6b5a01b80e0d56ae7b55d21aec4af90d6242a4b0acd3d8",
-      "analyzed_at": "2026-11-03T01:09:52.558Z",
+      "fingerprint": "a22640b6a6969c11d5243cb6376c550730ce65693e726c7c357dc658bcf172dd",
+      "analyzed_at": "2026-11-05T23:46:37.111Z",
       "profile": {
-        "purpose": "ローカル環境でのAI推論をデスクトップアプリおよびターミナルから利用するプロジェクト。READMEではWindows・Linux・Mac対応と、ローカルAPI提供を掲げている。",
-        "architecture": "確認できる構成は、Tauriデスクトップ側（Rust）とホスト側アプリ（TypeScript/JavaScript）、Python製Control/Terminalバンドルの組み合わせ。stage-control.pyはTerminalとデスクトップでPythonランタイムを共有するビルド手順を示す。推論エンジン本体の実装は提示された抜粋から確認できない。",
+        "purpose": "ローカルPCでのモデル利用を支援するデスクトップ／ターミナル向けツール。READMEではローカル推論とOpenAI／Anthropic互換APIを掲げているが、推論エンジンの実装詳細は提示資料から確認できない。",
+        "architecture": "README上はデスクトップアプリとターミナルアプリを提供。デスクトップ側はTauriのRustコードを含み、PythonのControlバンドルを同梱する構成が示されている。提示されたPythonスクリプトでは、ターミナル用バンドルを再利用してControlをステージする。ホスト側にはモデル選択・適合判定のTypeScriptモジュールがある。",
         "technologies": [
+          "C++（リポジトリの主言語として提示）",
           "Python",
+          "Rust",
           "TypeScript",
           "JavaScript",
-          "Rust",
           "Tauri",
-          "GGUF（ツール名・README記載）"
+          "CMake",
+          "CPython 3.12.15（バンドル用）"
         ],
         "algorithms": [
-          "SHA-256によるアーカイブ検証（stage-control.py）",
-          "ZIP展開先が展開ルート外に出ないことを確認するパス検査（stage-control.py）"
+          "SHA-256によるアーカイブ等のダイジェスト計算",
+          "ZIP展開前に展開先パスを検査するアーカイブ安全性チェック",
+          "モデル容量・コンテキスト長・メモリ量に基づく適合度のヒューリスティック判定"
         ],
         "hardware": [
-          "READMEではNVIDIA・AMD・Intel GPUおよびApple Siliconを対応対象として記載。実機での対応状況や検証結果は提示資料から確認できない。"
+          "READMEではNVIDIA、AMD、Intel Arc、Apple Silicon、AMD Ryzen AI Max、DGX Sparkを対象として記載。実機での対応状況や検証結果は提示資料だけでは確認できない。"
         ],
         "interfaces": [
-          "README記載のローカルOpenAI互換・Anthropic互換API",
-          "README記載のstrata CLI",
-          "Tauriデスクトップアプリ"
+          "ターミナルのstrataコマンド（README記載）",
+          "OpenAI／Anthropic互換API（README記載。実装詳細は未確認）",
+          "Tauriデスクトップアプリ",
+          "CPython・ロック済みwheel・Control関連ファイルを含むバンドル"
         ],
         "reusable_components": [
           {
-            "name": "ControlバンドルのステージングとPythonランチャー重複排除",
-            "purpose": "検証済みランタイムをアプリに同梱し、Python別名を小さなシェルランチャーに置き換える。Python実行環境の共有と配布サイズ抑制に応用できる。",
+            "name": "Controlバンドルのステージング",
+            "purpose": "既存のターミナルバンドル生成機能を再利用して、デスクトップ用Controlを構築する。アーカイブ指定やオフラインwheelhouse指定、ステージ済み内容の検査にも対応する。",
             "evidence": [
               "apps/desktop/scripts/stage-control.py"
             ]
           },
           {
-            "name": "モデルピッカー状態・グループ化ヘルパー",
-            "purpose": "モデルの状態から表示ラベルや操作を決め、インストール済みモデルをファミリー別にまとめる純粋関数群。別のモデル管理UIでも状態表示ロジックを再利用できる。",
+            "name": "バンドル内Pythonの重複排除",
+            "purpose": "python／python3名を小さなシェルランチャーに置き換え、同一インタープリターの複製による容量増加を抑える。",
+            "evidence": [
+              "apps/desktop/scripts/stage-control.py"
+            ]
+          },
+          {
+            "name": "モデルのメモリ適合判定",
+            "purpose": "モデル容量、KVキャッシュ相当量、アクセラレーターのVRAMや統合メモリを使い、fast／slower／too-big／unknownの適合区分を返す。速度ベンチマークではない。",
+            "evidence": [
+              "apps/host/src/lib/model-versions.ts"
+            ]
+          },
+          {
+            "name": "インストール済みモデルの選択ロジック",
+            "purpose": "モデル状態からダウンロード・切替などの表示状態を決め、利用可能なモデルをファミリー別にまとめる。ロード済みインスタンスと重複するネイティブモデルも除外する。",
             "evidence": [
               "apps/host/src/lib/model-picker.ts"
             ]
           },
           {
-            "name": "モデルファミリーアイコン選択",
-            "purpose": "モデルファミリー名をアイコン名へ対応付ける小さなUIヘルパー。",
+            "name": "モデルファミリーのアイコン選択",
+            "purpose": "ファミリー名がQwenに一致するかでアイコンを選ぶ、小さく移植しやすい表示補助関数。",
             "evidence": [
               "apps/host/src/lib/model-icons.ts"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋は一部に限られ、推論処理・APIルート・ハードウェア検出の実装や動作を確認できない。",
-          "apps/host/audit-fixes/apply-model.pyにはカタログ等を編集するスクリプトが含まれるが、その生成対象の実装状態をこの抜粋だけで確定できない。",
-          "README上の対応モデル・ハードウェア・API互換性は説明上の記載であり、提示資料だけでは独立に検証できない。"
+          "推論エンジン本体のC++ソースや内部アルゴリズムは提示資料に含まれず、実装や性能は評価できない。",
+          "READMEの対応ハードウェア、モデル対応、互換APIの記述は資料上の主張であり、提示されたコード抜粋では動作を確認できない。",
+          "モデル適合判定は概算のヒューリスティックであり、実測性能や実際のメモリ使用量を保証しない。",
+          "リポジトリはforkとして提示されているが、上流との差分や由来は資料だけでは評価できない。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
         "evidence": [
           "README.md",
           "apps/desktop/scripts/stage-control.py",
-          "apps/desktop/src-tauri/src/main.rs",
+          "apps/host/src/lib/model-versions.ts",
           "apps/host/src/lib/model-picker.ts",
           "apps/host/src/lib/model-icons.ts",
-          "apps/host/audit-fixes/apply-model.py"
+          "apps/desktop/src-tauri/src/main.rs",
+          "CMakeLists.txt"
         ]
       }
     }

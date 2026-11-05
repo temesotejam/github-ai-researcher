@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-04T23:56:38.407Z",
+  "generated_at": "2026-11-05T23:50:33.876Z",
   "owner": "temesotejam",
   "stats": {
     "repository_count": 111,
     "node_count": 220,
-    "edge_count": 1148,
-    "related_repository_pairs": 252
+    "edge_count": 1158,
+    "related_repository_pairs": 255
   },
   "nodes": [
     {
@@ -18,18 +18,18 @@
       "degree": 111
     },
     {
-      "id": "repository:2026_10_24",
+      "id": "repository:github-tavern",
       "type": "repository",
-      "label": "2026_10_24",
-      "repo": "temesotejam/2026_10_24",
-      "url": "https://github.com/temesotejam/2026_10_24",
+      "label": "github-tavern",
+      "repo": "temesotejam/github-tavern",
+      "url": "https://github.com/temesotejam/github-tavern",
       "description": "",
-      "purpose": "ニュースや入力した現実の出来事を題材に、迷宮探索へ反映する一人用ブラウザーゲームです。",
+      "purpose": "公開GitHubリポジトリを検索・分類し、詳細や説明を閲覧する静的ポータル。",
       "language": "JavaScript",
       "confidence": "medium",
       "archived": false,
-      "pushed_at": "2026-11-04T23:38:13Z",
-      "degree": 24
+      "pushed_at": "2026-11-05T20:06:51Z",
+      "degree": 26
     },
     {
       "id": "technology:javascript",
@@ -39,18 +39,18 @@
       "degree": 20
     },
     {
-      "id": "technology:html%20canvas",
+      "id": "technology:html",
       "type": "technology",
-      "label": "HTML Canvas",
+      "label": "HTML",
       "repoCount": 1,
-      "degree": 2
+      "degree": 8
     },
     {
-      "id": "technology:github%20actions",
+      "id": "technology:css",
       "type": "technology",
-      "label": "GitHub Actions",
+      "label": "CSS",
       "repoCount": 1,
-      "degree": 21
+      "degree": 6
     },
     {
       "id": "technology:github%20pages",
@@ -58,6 +58,13 @@
       "label": "GitHub Pages",
       "repoCount": 1,
       "degree": 17
+    },
+    {
+      "id": "technology:github%20actions",
+      "type": "technology",
+      "label": "GitHub Actions",
+      "repoCount": 1,
+      "degree": 22
     },
     {
       "id": "theme:web%E3%83%BB%E9%96%8B%E7%99%BA%E3%83%84%E3%83%BC%E3%83%AB",
@@ -74,11 +81,11 @@
       "degree": 47
     },
     {
-      "id": "theme:%E3%82%B2%E3%83%BC%E3%83%A0%E3%83%BB%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%A9%E3%82%AF%E3%83%86%E3%82%A3%E3%83%96",
+      "id": "theme:ai%E3%83%BB%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92",
       "type": "theme",
-      "label": "ゲーム・インタラクティブ",
+      "label": "AI・機械学習",
       "repoCount": 1,
-      "degree": 6
+      "degree": 3
     },
     {
       "id": "language:javascript",
@@ -88,32 +95,102 @@
       "degree": 20
     },
     {
-      "id": "repository:github-tavern",
+      "id": "repository:2026_10_24",
       "type": "repository",
-      "label": "github-tavern",
-      "repo": "temesotejam/github-tavern",
-      "url": "https://github.com/temesotejam/github-tavern",
+      "label": "2026_10_24",
+      "repo": "temesotejam/2026_10_24",
+      "url": "https://github.com/temesotejam/2026_10_24",
       "description": "",
-      "purpose": "公開GitHubリポジトリを検索・分類し、選択したリポジトリの説明を表示する静的ポータル。READMEでは個人の公開リポジトリを探索する用途として説明されている。",
+      "purpose": "公開ニュースの見出しを迷宮のテーマやゲーム内地点に反映する、一人用の探索ゲーム。",
       "language": "JavaScript",
       "confidence": "medium",
       "archived": false,
-      "pushed_at": "2026-11-04T19:53:41Z",
-      "degree": 14
+      "pushed_at": "2026-11-05T19:53:50Z",
+      "degree": 22
     },
     {
-      "id": "technology:html",
+      "id": "technology:localstorage",
       "type": "technology",
-      "label": "HTML",
+      "label": "localStorage",
+      "repoCount": 1,
+      "degree": 2
+    },
+    {
+      "id": "technology:json",
+      "type": "technology",
+      "label": "JSON",
+      "repoCount": 1,
+      "degree": 4
+    },
+    {
+      "id": "theme:%E3%82%B2%E3%83%BC%E3%83%A0%E3%83%BB%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%A9%E3%82%AF%E3%83%86%E3%82%A3%E3%83%96",
+      "type": "theme",
+      "label": "ゲーム・インタラクティブ",
+      "repoCount": 1,
+      "degree": 5
+    },
+    {
+      "id": "repository:strata",
+      "type": "repository",
+      "label": "Strata",
+      "repo": "temesotejam/Strata",
+      "url": "https://github.com/temesotejam/Strata",
+      "description": "Qwen3.8-Flash-Next on any consumer hardware: one-click install for Windows / Linux. Strata inference engine, OpenAI/Anthropic API on localhost, optional image input.",
+      "purpose": "ローカルPCでのモデル利用を支援するデスクトップ／ターミナル向けツール。READMEではローカル推論とOpenAI／Anthropic互換APIを掲げているが、推論エンジンの実装詳細は提示資料から確認できない。",
+      "language": "C++",
+      "confidence": "medium",
+      "archived": false,
+      "pushed_at": "2026-11-05T09:08:16Z",
+      "degree": 18
+    },
+    {
+      "id": "technology:c%2B%2B(%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA%E3%81%AE%E4%B8%BB%E8%A8%80%E8%AA%9E%E3%81%A8%E3%81%97%E3%81%A6%E6%8F%90%E7%A4%BA)",
+      "type": "technology",
+      "label": "C++（リポジトリの主言語として提示）",
+      "repoCount": 1,
+      "degree": 4
+    },
+    {
+      "id": "technology:python",
+      "type": "technology",
+      "label": "Python",
       "repoCount": 1,
       "degree": 7
     },
     {
-      "id": "technology:css",
+      "id": "technology:typescript",
       "type": "technology",
-      "label": "CSS",
+      "label": "TypeScript",
       "repoCount": 1,
-      "degree": 5
+      "degree": 2
+    },
+    {
+      "id": "technology:cmake",
+      "type": "technology",
+      "label": "CMake",
+      "repoCount": 1,
+      "degree": 8
+    },
+    {
+      "id": "theme:%E7%94%BB%E5%83%8F%E5%87%A6%E7%90%86%E3%83%BB%E3%82%B3%E3%83%B3%E3%83%94%E3%83%A5%E3%83%BC%E3%82%BF%E3%83%93%E3%82%B8%E3%83%A7%E3%83%B3",
+      "type": "theme",
+      "label": "画像処理・コンピュータビジョン",
+      "repoCount": 1,
+      "degree": 15
+    },
+    {
+      "id": "theme:%E8%88%AA%E6%B3%95%E3%83%BB%E4%BD%8D%E7%BD%AE%E6%8E%A8%E5%AE%9A",
+      "type": "theme",
+      "label": "航法・位置推定",
+      "repoCount": 1,
+      "degree": 26
+    },
+    {
+      "id": "language:c%2B%2B",
+      "type": "language",
+      "label": "C++",
+      "repoCount": 1,
+      "degree": 45
     },
     {
       "id": "repository:atoms3r-lateral-energy-control",
@@ -122,12 +199,12 @@
       "repo": "temesotejam/atoms3r-lateral-energy-control",
       "url": "https://github.com/temesotejam/atoms3r-lateral-energy-control",
       "description": "",
-      "purpose": "AtomS3Rとリアクションホイールを使った左右揺動のエネルギー制御を実機で試験し、入力条件と運動応答を記録・解析するファームウェア。",
+      "purpose": "AtomS3Rとリアクションホイールを使った左右揺動の制御・実機測定用ファームウェア。エネルギー制御や入力条件の実験ログを取得し、比較・解析する。",
       "language": "C++",
       "confidence": "medium",
       "archived": false,
-      "pushed_at": "2026-11-04T12:14:17Z",
-      "degree": 20
+      "pushed_at": "2026-11-05T08:49:50Z",
+      "degree": 21
     },
     {
       "id": "technology:c%2B%2B",
@@ -151,13 +228,6 @@
       "degree": 8
     },
     {
-      "id": "hardware:m5stack%20atoms3r",
-      "type": "hardware",
-      "label": "M5Stack AtomS3R",
-      "repoCount": 1,
-      "degree": 3
-    },
-    {
       "id": "theme:%E7%B5%84%E3%81%BF%E8%BE%BC%E3%81%BF%E3%83%BB%E3%83%95%E3%82%A1%E3%83%BC%E3%83%A0%E3%82%A6%E3%82%A7%E3%82%A2",
       "type": "theme",
       "label": "組み込み・ファームウェア",
@@ -172,13 +242,6 @@
       "degree": 25
     },
     {
-      "id": "language:c%2B%2B",
-      "type": "language",
-      "label": "C++",
-      "repoCount": 1,
-      "degree": 44
-    },
-    {
       "id": "repository:personal-browser-os",
       "type": "repository",
       "label": "personal-browser-os",
@@ -190,7 +253,7 @@
       "confidence": "medium",
       "archived": false,
       "pushed_at": "2026-11-03T05:38:03Z",
-      "degree": 9
+      "degree": 10
     },
     {
       "id": "technology:canvas%202d",
@@ -214,13 +277,6 @@
       "degree": 13
     },
     {
-      "id": "technology:typescript",
-      "type": "technology",
-      "label": "TypeScript",
-      "repoCount": 1,
-      "degree": 2
-    },
-    {
       "id": "technology:webgl",
       "type": "technology",
       "label": "WebGL",
@@ -233,41 +289,6 @@
       "label": "電子回路・モーター",
       "repoCount": 1,
       "degree": 7
-    },
-    {
-      "id": "repository:strata",
-      "type": "repository",
-      "label": "Strata",
-      "repo": "temesotejam/Strata",
-      "url": "https://github.com/temesotejam/Strata",
-      "description": "Qwen3.8-Flash-Next on any consumer hardware: one-click install for Windows / Linux. Strata inference engine, OpenAI/Anthropic API on localhost, optional image input.",
-      "purpose": "ローカル環境でのAI推論をデスクトップアプリおよびターミナルから利用するプロジェクト。READMEではWindows・Linux・Mac対応と、ローカルAPI提供を掲げている。",
-      "language": "",
-      "confidence": "medium",
-      "archived": false,
-      "pushed_at": "2026-10-31T07:39:18Z",
-      "degree": 14
-    },
-    {
-      "id": "technology:python",
-      "type": "technology",
-      "label": "Python",
-      "repoCount": 1,
-      "degree": 7
-    },
-    {
-      "id": "theme:%E7%94%BB%E5%83%8F%E5%87%A6%E7%90%86%E3%83%BB%E3%82%B3%E3%83%B3%E3%83%94%E3%83%A5%E3%83%BC%E3%82%BF%E3%83%93%E3%82%B8%E3%83%A7%E3%83%B3",
-      "type": "theme",
-      "label": "画像処理・コンピュータビジョン",
-      "repoCount": 1,
-      "degree": 15
-    },
-    {
-      "id": "theme:%E8%88%AA%E6%B3%95%E3%83%BB%E4%BD%8D%E7%BD%AE%E6%8E%A8%E5%AE%9A",
-      "type": "theme",
-      "label": "航法・位置推定",
-      "repoCount": 1,
-      "degree": 26
     },
     {
       "id": "repository:pico-copter-fc",
@@ -438,13 +459,6 @@
       "degree": 13
     },
     {
-      "id": "technology:cmake",
-      "type": "technology",
-      "label": "CMake",
-      "repoCount": 1,
-      "degree": 7
-    },
-    {
       "id": "repository:pico-copter-fc-esc-telemetry",
       "type": "repository",
       "label": "pico-copter-fc-esc-telemetry",
@@ -491,7 +505,7 @@
       "confidence": "medium",
       "archived": false,
       "pushed_at": "2026-10-24T03:46:48Z",
-      "degree": 16
+      "degree": 17
     },
     {
       "id": "language:html",
@@ -617,7 +631,7 @@
       "confidence": "medium",
       "archived": false,
       "pushed_at": "2026-10-06T03:01:53Z",
-      "degree": 14
+      "degree": 13
     },
     {
       "id": "technology:github%20pages(readme%E8%A8%98%E8%BC%89)",
@@ -652,7 +666,7 @@
       "confidence": "medium",
       "archived": false,
       "pushed_at": "2026-09-29T11:50:43Z",
-      "degree": 16
+      "degree": 15
     },
     {
       "id": "technology:cloudflare%20workers",
@@ -715,7 +729,7 @@
       "confidence": "medium",
       "archived": false,
       "pushed_at": "2026-09-25T11:47:01Z",
-      "degree": 23
+      "degree": 22
     },
     {
       "id": "repository:realsense-web-viewer",
@@ -844,6 +858,13 @@
       "degree": 24
     },
     {
+      "id": "hardware:m5stack%20atoms3r",
+      "type": "hardware",
+      "label": "M5Stack AtomS3R",
+      "repoCount": 1,
+      "degree": 2
+    },
+    {
       "id": "repository:atoms3r-visual-pose-tracker",
       "type": "repository",
       "label": "atoms3r-visual-pose-tracker",
@@ -876,7 +897,7 @@
       "confidence": "medium",
       "archived": false,
       "pushed_at": "2026-09-21T08:52:48Z",
-      "degree": 18
+      "degree": 17
     },
     {
       "id": "repository:atoms3r-mekf-dynamic-validation",
@@ -919,13 +940,6 @@
       "archived": false,
       "pushed_at": "2026-09-19T10:56:27Z",
       "degree": 15
-    },
-    {
-      "id": "technology:c%2B%2B(%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA%E3%81%AE%E4%B8%BB%E8%A8%80%E8%AA%9E%E3%81%A8%E3%81%97%E3%81%A6%E6%8F%90%E7%A4%BA)",
-      "type": "technology",
-      "label": "C++（リポジトリの主言語として提示）",
-      "repoCount": 1,
-      "degree": 3
     },
     {
       "id": "hardware:m5stack%20atoms3r-m12",
@@ -1212,7 +1226,7 @@
       "confidence": "low",
       "archived": false,
       "pushed_at": "2026-08-29T06:56:14Z",
-      "degree": 15
+      "degree": 16
     },
     {
       "id": "repository:reaction-wheel-rocker-baseline-sim",
@@ -1331,7 +1345,7 @@
       "confidence": "low",
       "archived": false,
       "pushed_at": "2026-08-21T06:37:37Z",
-      "degree": 23
+      "degree": 22
     },
     {
       "id": "repository:spike-rt-hub-dumper",
@@ -1395,13 +1409,6 @@
       "archived": false,
       "pushed_at": "2026-08-20T03:47:25Z",
       "degree": 7
-    },
-    {
-      "id": "theme:ai%E3%83%BB%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92",
-      "type": "theme",
-      "label": "AI・機械学習",
-      "repoCount": 1,
-      "degree": 2
     },
     {
       "id": "repository:rl-cartpole-swingup-ppo",
@@ -1779,7 +1786,7 @@
       "confidence": "low",
       "archived": false,
       "pushed_at": "2026-08-02T06:51:15Z",
-      "degree": 15
+      "degree": 14
     },
     {
       "id": "repository:mediapipe-hand-demo",
@@ -1793,7 +1800,7 @@
       "confidence": "low",
       "archived": false,
       "pushed_at": "2026-08-02T04:40:43Z",
-      "degree": 15
+      "degree": 14
     },
     {
       "id": "repository:pico-uf2-web-builder",
@@ -1940,14 +1947,7 @@
       "confidence": "low",
       "archived": false,
       "pushed_at": "2026-05-21T23:25:06Z",
-      "degree": 7
-    },
-    {
-      "id": "technology:json",
-      "type": "technology",
-      "label": "JSON",
-      "repoCount": 1,
-      "degree": 2
+      "degree": 9
     },
     {
       "id": "language:dart",
@@ -2330,6 +2330,67 @@
   ],
   "edges": [
     {
+      "id": "account:temesotejam|owns|repository:github-tavern",
+      "source": "account:temesotejam",
+      "target": "repository:github-tavern",
+      "type": "owns",
+      "hidden_by_default": true
+    },
+    {
+      "id": "repository:github-tavern|technology:javascript|uses",
+      "source": "repository:github-tavern",
+      "target": "technology:javascript",
+      "type": "uses"
+    },
+    {
+      "id": "repository:github-tavern|technology:html|uses",
+      "source": "repository:github-tavern",
+      "target": "technology:html",
+      "type": "uses"
+    },
+    {
+      "id": "repository:github-tavern|technology:css|uses",
+      "source": "repository:github-tavern",
+      "target": "technology:css",
+      "type": "uses"
+    },
+    {
+      "id": "repository:github-tavern|technology:github%20pages|uses",
+      "source": "repository:github-tavern",
+      "target": "technology:github%20pages",
+      "type": "uses"
+    },
+    {
+      "id": "repository:github-tavern|technology:github%20actions|uses",
+      "source": "repository:github-tavern",
+      "target": "technology:github%20actions",
+      "type": "uses"
+    },
+    {
+      "id": "belongs_to|repository:github-tavern|theme:web%E3%83%BB%E9%96%8B%E7%99%BA%E3%83%84%E3%83%BC%E3%83%AB",
+      "source": "repository:github-tavern",
+      "target": "theme:web%E3%83%BB%E9%96%8B%E7%99%BA%E3%83%84%E3%83%BC%E3%83%AB",
+      "type": "belongs_to"
+    },
+    {
+      "id": "belongs_to|repository:github-tavern|theme:%E3%83%87%E3%83%BC%E3%82%BF%E8%A7%A3%E6%9E%90%E3%83%BB%E8%A8%88%E6%B8%AC",
+      "source": "repository:github-tavern",
+      "target": "theme:%E3%83%87%E3%83%BC%E3%82%BF%E8%A7%A3%E6%9E%90%E3%83%BB%E8%A8%88%E6%B8%AC",
+      "type": "belongs_to"
+    },
+    {
+      "id": "belongs_to|repository:github-tavern|theme:ai%E3%83%BB%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92",
+      "source": "repository:github-tavern",
+      "target": "theme:ai%E3%83%BB%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92",
+      "type": "belongs_to"
+    },
+    {
+      "id": "language:javascript|repository:github-tavern|written_in",
+      "source": "repository:github-tavern",
+      "target": "language:javascript",
+      "type": "written_in"
+    },
+    {
       "id": "account:temesotejam|owns|repository:2026_10_24",
       "source": "account:temesotejam",
       "target": "repository:2026_10_24",
@@ -2343,9 +2404,21 @@
       "type": "uses"
     },
     {
-      "id": "repository:2026_10_24|technology:html%20canvas|uses",
+      "id": "repository:2026_10_24|technology:html|uses",
       "source": "repository:2026_10_24",
-      "target": "technology:html%20canvas",
+      "target": "technology:html",
+      "type": "uses"
+    },
+    {
+      "id": "repository:2026_10_24|technology:css|uses",
+      "source": "repository:2026_10_24",
+      "target": "technology:css",
+      "type": "uses"
+    },
+    {
+      "id": "repository:2026_10_24|technology:localstorage|uses",
+      "source": "repository:2026_10_24",
+      "target": "technology:localstorage",
       "type": "uses"
     },
     {
@@ -2355,9 +2428,9 @@
       "type": "uses"
     },
     {
-      "id": "repository:2026_10_24|technology:github%20pages|uses",
+      "id": "repository:2026_10_24|technology:json|uses",
       "source": "repository:2026_10_24",
-      "target": "technology:github%20pages",
+      "target": "technology:json",
       "type": "uses"
     },
     {
@@ -2385,52 +2458,64 @@
       "type": "written_in"
     },
     {
-      "id": "account:temesotejam|owns|repository:github-tavern",
+      "id": "account:temesotejam|owns|repository:strata",
       "source": "account:temesotejam",
-      "target": "repository:github-tavern",
+      "target": "repository:strata",
       "type": "owns",
       "hidden_by_default": true
     },
     {
-      "id": "repository:github-tavern|technology:javascript|uses",
-      "source": "repository:github-tavern",
+      "id": "repository:strata|technology:c%2B%2B(%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA%E3%81%AE%E4%B8%BB%E8%A8%80%E8%AA%9E%E3%81%A8%E3%81%97%E3%81%A6%E6%8F%90%E7%A4%BA)|uses",
+      "source": "repository:strata",
+      "target": "technology:c%2B%2B(%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA%E3%81%AE%E4%B8%BB%E8%A8%80%E8%AA%9E%E3%81%A8%E3%81%97%E3%81%A6%E6%8F%90%E7%A4%BA)",
+      "type": "uses"
+    },
+    {
+      "id": "repository:strata|technology:python|uses",
+      "source": "repository:strata",
+      "target": "technology:python",
+      "type": "uses"
+    },
+    {
+      "id": "repository:strata|technology:typescript|uses",
+      "source": "repository:strata",
+      "target": "technology:typescript",
+      "type": "uses"
+    },
+    {
+      "id": "repository:strata|technology:javascript|uses",
+      "source": "repository:strata",
       "target": "technology:javascript",
       "type": "uses"
     },
     {
-      "id": "repository:github-tavern|technology:html|uses",
-      "source": "repository:github-tavern",
-      "target": "technology:html",
+      "id": "repository:strata|technology:cmake|uses",
+      "source": "repository:strata",
+      "target": "technology:cmake",
       "type": "uses"
     },
     {
-      "id": "repository:github-tavern|technology:css|uses",
-      "source": "repository:github-tavern",
-      "target": "technology:css",
-      "type": "uses"
+      "id": "belongs_to|repository:strata|theme:%E7%94%BB%E5%83%8F%E5%87%A6%E7%90%86%E3%83%BB%E3%82%B3%E3%83%B3%E3%83%94%E3%83%A5%E3%83%BC%E3%82%BF%E3%83%93%E3%82%B8%E3%83%A7%E3%83%B3",
+      "source": "repository:strata",
+      "target": "theme:%E7%94%BB%E5%83%8F%E5%87%A6%E7%90%86%E3%83%BB%E3%82%B3%E3%83%B3%E3%83%94%E3%83%A5%E3%83%BC%E3%82%BF%E3%83%93%E3%82%B8%E3%83%A7%E3%83%B3",
+      "type": "belongs_to"
     },
     {
-      "id": "belongs_to|repository:github-tavern|theme:web%E3%83%BB%E9%96%8B%E7%99%BA%E3%83%84%E3%83%BC%E3%83%AB",
-      "source": "repository:github-tavern",
+      "id": "belongs_to|repository:strata|theme:%E8%88%AA%E6%B3%95%E3%83%BB%E4%BD%8D%E7%BD%AE%E6%8E%A8%E5%AE%9A",
+      "source": "repository:strata",
+      "target": "theme:%E8%88%AA%E6%B3%95%E3%83%BB%E4%BD%8D%E7%BD%AE%E6%8E%A8%E5%AE%9A",
+      "type": "belongs_to"
+    },
+    {
+      "id": "belongs_to|repository:strata|theme:web%E3%83%BB%E9%96%8B%E7%99%BA%E3%83%84%E3%83%BC%E3%83%AB",
+      "source": "repository:strata",
       "target": "theme:web%E3%83%BB%E9%96%8B%E7%99%BA%E3%83%84%E3%83%BC%E3%83%AB",
       "type": "belongs_to"
     },
     {
-      "id": "belongs_to|repository:github-tavern|theme:%E3%83%87%E3%83%BC%E3%82%BF%E8%A7%A3%E6%9E%90%E3%83%BB%E8%A8%88%E6%B8%AC",
-      "source": "repository:github-tavern",
-      "target": "theme:%E3%83%87%E3%83%BC%E3%82%BF%E8%A7%A3%E6%9E%90%E3%83%BB%E8%A8%88%E6%B8%AC",
-      "type": "belongs_to"
-    },
-    {
-      "id": "belongs_to|repository:github-tavern|theme:%E3%82%B2%E3%83%BC%E3%83%A0%E3%83%BB%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%A9%E3%82%AF%E3%83%86%E3%82%A3%E3%83%96",
-      "source": "repository:github-tavern",
-      "target": "theme:%E3%82%B2%E3%83%BC%E3%83%A0%E3%83%BB%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%A9%E3%82%AF%E3%83%86%E3%82%A3%E3%83%96",
-      "type": "belongs_to"
-    },
-    {
-      "id": "language:javascript|repository:github-tavern|written_in",
-      "source": "repository:github-tavern",
-      "target": "language:javascript",
+      "id": "language:c%2B%2B|repository:strata|written_in",
+      "source": "repository:strata",
+      "target": "language:c%2B%2B",
       "type": "written_in"
     },
     {
@@ -2459,10 +2544,10 @@
       "type": "uses"
     },
     {
-      "id": "hardware:m5stack%20atoms3r|repository:atoms3r-lateral-energy-control|uses_hardware",
+      "id": "repository:atoms3r-lateral-energy-control|technology:json|uses",
       "source": "repository:atoms3r-lateral-energy-control",
-      "target": "hardware:m5stack%20atoms3r",
-      "type": "uses_hardware"
+      "target": "technology:json",
+      "type": "uses"
     },
     {
       "id": "belongs_to|repository:atoms3r-lateral-energy-control|theme:%E7%B5%84%E3%81%BF%E8%BE%BC%E3%81%BF%E3%83%BB%E3%83%95%E3%82%A1%E3%83%BC%E3%83%A0%E3%82%A6%E3%82%A7%E3%82%A2",
@@ -2505,6 +2590,12 @@
       "id": "repository:personal-browser-os|technology:canvas%202d|uses",
       "source": "repository:personal-browser-os",
       "target": "technology:canvas%202d",
+      "type": "uses"
+    },
+    {
+      "id": "repository:personal-browser-os|technology:localstorage|uses",
+      "source": "repository:personal-browser-os",
+      "target": "technology:localstorage",
       "type": "uses"
     },
     {
@@ -2567,49 +2658,6 @@
       "source": "repository:2026_10_24_2",
       "target": "language:javascript",
       "type": "written_in"
-    },
-    {
-      "id": "account:temesotejam|owns|repository:strata",
-      "source": "account:temesotejam",
-      "target": "repository:strata",
-      "type": "owns",
-      "hidden_by_default": true
-    },
-    {
-      "id": "repository:strata|technology:python|uses",
-      "source": "repository:strata",
-      "target": "technology:python",
-      "type": "uses"
-    },
-    {
-      "id": "repository:strata|technology:typescript|uses",
-      "source": "repository:strata",
-      "target": "technology:typescript",
-      "type": "uses"
-    },
-    {
-      "id": "repository:strata|technology:javascript|uses",
-      "source": "repository:strata",
-      "target": "technology:javascript",
-      "type": "uses"
-    },
-    {
-      "id": "belongs_to|repository:strata|theme:%E7%94%BB%E5%83%8F%E5%87%A6%E7%90%86%E3%83%BB%E3%82%B3%E3%83%B3%E3%83%94%E3%83%A5%E3%83%BC%E3%82%BF%E3%83%93%E3%82%B8%E3%83%A7%E3%83%B3",
-      "source": "repository:strata",
-      "target": "theme:%E7%94%BB%E5%83%8F%E5%87%A6%E7%90%86%E3%83%BB%E3%82%B3%E3%83%B3%E3%83%94%E3%83%A5%E3%83%BC%E3%82%BF%E3%83%93%E3%82%B8%E3%83%A7%E3%83%B3",
-      "type": "belongs_to"
-    },
-    {
-      "id": "belongs_to|repository:strata|theme:%E8%88%AA%E6%B3%95%E3%83%BB%E4%BD%8D%E7%BD%AE%E6%8E%A8%E5%AE%9A",
-      "source": "repository:strata",
-      "target": "theme:%E8%88%AA%E6%B3%95%E3%83%BB%E4%BD%8D%E7%BD%AE%E6%8E%A8%E5%AE%9A",
-      "type": "belongs_to"
-    },
-    {
-      "id": "belongs_to|repository:strata|theme:web%E3%83%BB%E9%96%8B%E7%99%BA%E3%83%84%E3%83%BC%E3%83%AB",
-      "source": "repository:strata",
-      "target": "theme:web%E3%83%BB%E9%96%8B%E7%99%BA%E3%83%84%E3%83%BC%E3%83%AB",
-      "type": "belongs_to"
     },
     {
       "id": "account:temesotejam|owns|repository:pico-copter-fc",
@@ -3221,12 +3269,6 @@
       "id": "repository:smart-annotator|technology:javascript|uses",
       "source": "repository:smart-annotator",
       "target": "technology:javascript",
-      "type": "uses"
-    },
-    {
-      "id": "repository:smart-annotator|technology:html%20canvas|uses",
-      "source": "repository:smart-annotator",
-      "target": "technology:html%20canvas",
       "type": "uses"
     },
     {
@@ -7817,77 +7859,62 @@
       "type": "belongs_to"
     },
     {
-      "id": "related_to|repository:2026_10_24|repository:marker-angle-recorder",
-      "source": "repository:2026_10_24",
-      "target": "repository:marker-angle-recorder",
-      "type": "related_to",
-      "weight": 7.2,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "GitHub Actions",
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール",
-          "データ解析・計測"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24|repository:spike-rt-web-project",
-      "source": "repository:2026_10_24",
-      "target": "repository:spike-rt-web-project",
-      "type": "related_to",
-      "weight": 7.2,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "GitHub Actions",
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール",
-          "データ解析・計測"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24|repository:wheel-terrain-sim",
-      "source": "repository:2026_10_24",
-      "target": "repository:wheel-terrain-sim",
-      "type": "related_to",
-      "weight": 7.2,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "GitHub Actions",
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール",
-          "データ解析・計測"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24|repository:research-break-arcade",
-      "source": "repository:2026_10_24",
+      "id": "related_to|repository:github-tavern|repository:research-break-arcade",
+      "source": "repository:github-tavern",
       "target": "repository:research-break-arcade",
       "type": "related_to",
-      "weight": 6.6,
+      "weight": 10.6,
       "shared": {
         "technology": [
           "JavaScript",
-          "GitHub Actions",
-          "GitHub Pages"
+          "HTML",
+          "CSS",
+          "GitHub Pages",
+          "GitHub Actions"
         ],
         "hardware": [],
         "theme": [
           "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:github-tavern|repository:mediapipe-hand-demo",
+      "source": "repository:github-tavern",
+      "target": "repository:mediapipe-hand-demo",
+      "type": "related_to",
+      "weight": 10.6,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "HTML",
+          "CSS",
+          "GitHub Pages",
+          "GitHub Actions"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_10_24|repository:github-tavern",
+      "source": "repository:github-tavern",
+      "target": "repository:2026_10_24",
+      "type": "related_to",
+      "weight": 9.2,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "HTML",
+          "CSS",
+          "GitHub Actions"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール",
+          "データ解析・計測"
         ]
       }
     },
@@ -7911,16 +7938,17 @@
       }
     },
     {
-      "id": "related_to|repository:github-tavern|repository:research-break-arcade",
-      "source": "repository:github-tavern",
+      "id": "related_to|repository:2026_10_24|repository:research-break-arcade",
+      "source": "repository:2026_10_24",
       "target": "repository:research-break-arcade",
       "type": "related_to",
-      "weight": 6.6,
+      "weight": 8.6,
       "shared": {
         "technology": [
           "JavaScript",
           "HTML",
-          "CSS"
+          "CSS",
+          "GitHub Actions"
         ],
         "hardware": [],
         "theme": [
@@ -7929,16 +7957,17 @@
       }
     },
     {
-      "id": "related_to|repository:github-tavern|repository:mediapipe-hand-demo",
-      "source": "repository:github-tavern",
+      "id": "related_to|repository:2026_10_24|repository:mediapipe-hand-demo",
+      "source": "repository:2026_10_24",
       "target": "repository:mediapipe-hand-demo",
       "type": "related_to",
-      "weight": 6.6,
+      "weight": 8.6,
       "shared": {
         "technology": [
           "JavaScript",
           "HTML",
-          "CSS"
+          "CSS",
+          "GitHub Actions"
         ],
         "hardware": [],
         "theme": [
@@ -7947,13 +7976,14 @@
       }
     },
     {
-      "id": "related_to|repository:github-tavern|repository:video-rwlog-angle-analyzer",
-      "source": "repository:github-tavern",
-      "target": "repository:video-rwlog-angle-analyzer",
+      "id": "related_to|repository:2026_10_22|repository:2026_10_24",
+      "source": "repository:2026_10_24",
+      "target": "repository:2026_10_22",
       "type": "related_to",
-      "weight": 5.2,
+      "weight": 7.2,
       "shared": {
         "technology": [
+          "JavaScript",
           "HTML",
           "CSS"
         ],
@@ -7961,137 +7991,6 @@
         "theme": [
           "Web・開発ツール",
           "データ解析・計測"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:personal-browser-os|repository:research-break-arcade",
-      "source": "repository:personal-browser-os",
-      "target": "repository:research-break-arcade",
-      "type": "related_to",
-      "weight": 4.6,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "Canvas 2D"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24|repository:personal-browser-os",
-      "source": "repository:2026_10_24",
-      "target": "repository:personal-browser-os",
-      "type": "related_to",
-      "weight": 2.6,
-      "shared": {
-        "technology": [
-          "JavaScript"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:github-tavern|repository:personal-browser-os",
-      "source": "repository:github-tavern",
-      "target": "repository:personal-browser-os",
-      "type": "related_to",
-      "weight": 2.6,
-      "shared": {
-        "technology": [
-          "JavaScript"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:personal-browser-os|repository:strata",
-      "source": "repository:personal-browser-os",
-      "target": "repository:strata",
-      "type": "related_to",
-      "weight": 2.6,
-      "shared": {
-        "technology": [
-          "JavaScript"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24|repository:2026_10_24_2",
-      "source": "repository:2026_10_24",
-      "target": "repository:2026_10_24_2",
-      "type": "related_to",
-      "weight": 3.2,
-      "shared": {
-        "technology": [
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール",
-          "ゲーム・インタラクティブ"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24_2|repository:controller-web-demo",
-      "source": "repository:2026_10_24_2",
-      "target": "repository:controller-web-demo",
-      "type": "related_to",
-      "weight": 3.2,
-      "shared": {
-        "technology": [
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール",
-          "ゲーム・インタラクティブ"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24_2|repository:strata",
-      "source": "repository:2026_10_24_2",
-      "target": "repository:strata",
-      "type": "related_to",
-      "weight": 2.6,
-      "shared": {
-        "technology": [
-          "TypeScript"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24_2|repository:spike-rt-web-toolkit",
-      "source": "repository:2026_10_24_2",
-      "target": "repository:spike-rt-web-toolkit",
-      "type": "related_to",
-      "weight": 2.6,
-      "shared": {
-        "technology": [
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール"
         ]
       }
     },
@@ -8159,6 +8058,137 @@
         "hardware": [],
         "theme": [
           "画像処理・コンピュータビジョン",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_10_24|repository:personal-browser-os",
+      "source": "repository:2026_10_24",
+      "target": "repository:personal-browser-os",
+      "type": "related_to",
+      "weight": 4.6,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "localStorage"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:personal-browser-os|repository:research-break-arcade",
+      "source": "repository:personal-browser-os",
+      "target": "repository:research-break-arcade",
+      "type": "related_to",
+      "weight": 4.6,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "Canvas 2D"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:github-tavern|repository:personal-browser-os",
+      "source": "repository:github-tavern",
+      "target": "repository:personal-browser-os",
+      "type": "related_to",
+      "weight": 2.6,
+      "shared": {
+        "technology": [
+          "JavaScript"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:personal-browser-os|repository:strata",
+      "source": "repository:strata",
+      "target": "repository:personal-browser-os",
+      "type": "related_to",
+      "weight": 2.6,
+      "shared": {
+        "technology": [
+          "JavaScript"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_10_24_2|repository:controller-web-demo",
+      "source": "repository:2026_10_24_2",
+      "target": "repository:controller-web-demo",
+      "type": "related_to",
+      "weight": 3.2,
+      "shared": {
+        "technology": [
+          "GitHub Pages"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール",
+          "ゲーム・インタラクティブ"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_10_24_2|repository:github-tavern",
+      "source": "repository:github-tavern",
+      "target": "repository:2026_10_24_2",
+      "type": "related_to",
+      "weight": 2.6,
+      "shared": {
+        "technology": [
+          "GitHub Pages"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_10_24_2|repository:strata",
+      "source": "repository:strata",
+      "target": "repository:2026_10_24_2",
+      "type": "related_to",
+      "weight": 2.6,
+      "shared": {
+        "technology": [
+          "TypeScript"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_10_24_2|repository:spike-rt-web-toolkit",
+      "source": "repository:2026_10_24_2",
+      "target": "repository:spike-rt-web-toolkit",
+      "type": "related_to",
+      "weight": 2.6,
+      "shared": {
+        "technology": [
+          "GitHub Pages"
+        ],
+        "hardware": [],
+        "theme": [
           "Web・開発ツール"
         ]
       }
@@ -8283,8 +8313,8 @@
       }
     },
     {
-      "id": "related_to|repository:2026_10_24|repository:uno-r3-4esc-dshot300",
-      "source": "repository:2026_10_24",
+      "id": "related_to|repository:github-tavern|repository:uno-r3-4esc-dshot300",
+      "source": "repository:github-tavern",
       "target": "repository:uno-r3-4esc-dshot300",
       "type": "related_to",
       "weight": 4.6,
@@ -8300,9 +8330,9 @@
       }
     },
     {
-      "id": "related_to|repository:uno-r3-4esc-dshot300|repository:youtube-video-fetcher",
-      "source": "repository:uno-r3-4esc-dshot300",
-      "target": "repository:youtube-video-fetcher",
+      "id": "related_to|repository:2026_10_24|repository:uno-r3-4esc-dshot300",
+      "source": "repository:2026_10_24",
+      "target": "repository:uno-r3-4esc-dshot300",
       "type": "related_to",
       "weight": 4.6,
       "shared": {
@@ -8425,42 +8455,6 @@
       }
     },
     {
-      "id": "related_to|repository:2026_10_22|repository:video-rwlog-angle-analyzer",
-      "source": "repository:2026_10_22",
-      "target": "repository:video-rwlog-angle-analyzer",
-      "type": "related_to",
-      "weight": 5.2,
-      "shared": {
-        "technology": [
-          "HTML",
-          "CSS"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール",
-          "データ解析・計測"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24|repository:smart-annotator",
-      "source": "repository:2026_10_24",
-      "target": "repository:smart-annotator",
-      "type": "related_to",
-      "weight": 5.2,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "HTML Canvas"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール",
-          "データ解析・計測"
-        ]
-      }
-    },
-    {
       "id": "related_to|repository:2026_10_22|repository:smart-annotator",
       "source": "repository:2026_10_22",
       "target": "repository:smart-annotator",
@@ -8515,6 +8509,24 @@
       }
     },
     {
+      "id": "related_to|repository:marker-angle-recorder|repository:smart-annotator",
+      "source": "repository:smart-annotator",
+      "target": "repository:marker-angle-recorder",
+      "type": "related_to",
+      "weight": 3.8,
+      "shared": {
+        "technology": [
+          "JavaScript"
+        ],
+        "hardware": [],
+        "theme": [
+          "画像処理・コンピュータビジョン",
+          "Web・開発ツール",
+          "データ解析・計測"
+        ]
+      }
+    },
+    {
       "id": "related_to|repository:robot-core-arena|repository:rw-walker-digital-twin",
       "source": "repository:robot-core-arena",
       "target": "repository:rw-walker-digital-twin",
@@ -8527,23 +8539,6 @@
         "hardware": [],
         "theme": [
           "ロボティクス・制御",
-          "Web・開発ツール",
-          "データ解析・計測"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24|repository:robot-core-arena",
-      "source": "repository:2026_10_24",
-      "target": "repository:robot-core-arena",
-      "type": "related_to",
-      "weight": 3.2,
-      "shared": {
-        "technology": [
-          "JavaScript"
-        ],
-        "hardware": [],
-        "theme": [
           "Web・開発ツール",
           "データ解析・計測"
         ]
@@ -8567,6 +8562,23 @@
       }
     },
     {
+      "id": "related_to|repository:2026_10_24|repository:robot-core-arena",
+      "source": "repository:2026_10_24",
+      "target": "repository:robot-core-arena",
+      "type": "related_to",
+      "weight": 3.2,
+      "shared": {
+        "technology": [
+          "JavaScript"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール",
+          "データ解析・計測"
+        ]
+      }
+    },
+    {
       "id": "related_to|repository:2026_10_22|repository:robot-core-arena",
       "source": "repository:2026_10_22",
       "target": "repository:robot-core-arena",
@@ -8575,6 +8587,24 @@
       "shared": {
         "technology": [
           "JavaScript"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール",
+          "データ解析・計測"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:github-tavern|repository:youtube-video-fetcher",
+      "source": "repository:github-tavern",
+      "target": "repository:youtube-video-fetcher",
+      "type": "related_to",
+      "weight": 5.2,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "GitHub Actions"
         ],
         "hardware": [],
         "theme": [
@@ -8623,24 +8653,6 @@
       "id": "related_to|repository:marker-angle-recorder|repository:youtube-video-fetcher",
       "source": "repository:youtube-video-fetcher",
       "target": "repository:marker-angle-recorder",
-      "type": "related_to",
-      "weight": 5.2,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "GitHub Actions"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール",
-          "データ解析・計測"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:spike-rt-web-project|repository:youtube-video-fetcher",
-      "source": "repository:youtube-video-fetcher",
-      "target": "repository:spike-rt-web-project",
       "type": "related_to",
       "weight": 5.2,
       "shared": {
@@ -9016,6 +9028,25 @@
       }
     },
     {
+      "id": "related_to|repository:github-tavern|repository:marker-angle-recorder",
+      "source": "repository:github-tavern",
+      "target": "repository:marker-angle-recorder",
+      "type": "related_to",
+      "weight": 7.2,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "GitHub Pages",
+          "GitHub Actions"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール",
+          "データ解析・計測"
+        ]
+      }
+    },
+    {
       "id": "related_to|repository:marker-angle-recorder|repository:spike-rt-web-project",
       "source": "repository:marker-angle-recorder",
       "target": "repository:spike-rt-web-project",
@@ -9314,16 +9345,16 @@
       }
     },
     {
-      "id": "related_to|repository:2026_10_24|repository:spike-rt-web-project-selected",
-      "source": "repository:2026_10_24",
+      "id": "related_to|repository:github-tavern|repository:spike-rt-web-project-selected",
+      "source": "repository:github-tavern",
       "target": "repository:spike-rt-web-project-selected",
       "type": "related_to",
       "weight": 6.6,
       "shared": {
         "technology": [
           "JavaScript",
-          "GitHub Actions",
-          "GitHub Pages"
+          "GitHub Pages",
+          "GitHub Actions"
         ],
         "hardware": [],
         "theme": [
@@ -9353,6 +9384,25 @@
       }
     },
     {
+      "id": "related_to|repository:github-tavern|repository:spike-rt-web-project",
+      "source": "repository:github-tavern",
+      "target": "repository:spike-rt-web-project",
+      "type": "related_to",
+      "weight": 7.2,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "GitHub Pages",
+          "GitHub Actions"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール",
+          "データ解析・計測"
+        ]
+      }
+    },
+    {
       "id": "related_to|repository:controller-web-demo|repository:spike-rt-hub-dumper",
       "source": "repository:spike-rt-hub-dumper",
       "target": "repository:controller-web-demo",
@@ -9367,6 +9417,25 @@
         "theme": [
           "組み込み・ファームウェア",
           "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:github-tavern|repository:wheel-terrain-sim",
+      "source": "repository:github-tavern",
+      "target": "repository:wheel-terrain-sim",
+      "type": "related_to",
+      "weight": 7.2,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "GitHub Pages",
+          "GitHub Actions"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール",
+          "データ解析・計測"
         ]
       }
     },
@@ -9427,6 +9496,23 @@
       }
     },
     {
+      "id": "related_to|repository:github-tavern|repository:rl-pendulum-ppo",
+      "source": "repository:github-tavern",
+      "target": "repository:rl-pendulum-ppo",
+      "type": "related_to",
+      "weight": 3.2,
+      "shared": {
+        "technology": [
+          "GitHub Actions"
+        ],
+        "hardware": [],
+        "theme": [
+          "データ解析・計測",
+          "AI・機械学習"
+        ]
+      }
+    },
+    {
       "id": "related_to|repository:2026_10_24|repository:rl-pendulum-ppo",
       "source": "repository:2026_10_24",
       "target": "repository:rl-pendulum-ppo",
@@ -9475,205 +9561,11 @@
       }
     },
     {
-      "id": "related_to|repository:research-break-arcade|repository:rl-pendulum-ppo",
-      "source": "repository:research-break-arcade",
-      "target": "repository:rl-pendulum-ppo",
-      "type": "related_to",
-      "weight": 2.6,
-      "shared": {
-        "technology": [
-          "GitHub Actions"
-        ],
-        "hardware": [],
-        "theme": [
-          "ロボティクス・制御"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:controller-web-demo|repository:dualsense-input-inspector",
-      "source": "repository:dualsense-input-inspector",
-      "target": "repository:controller-web-demo",
-      "type": "related_to",
-      "weight": 6.6,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "WebHID",
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:dualsense-input-inspector|repository:research-break-arcade",
-      "source": "repository:research-break-arcade",
-      "target": "repository:dualsense-input-inspector",
-      "type": "related_to",
-      "weight": 5.2,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "ロボティクス・制御",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24|repository:dualsense-input-inspector",
-      "source": "repository:2026_10_24",
-      "target": "repository:dualsense-input-inspector",
-      "type": "related_to",
-      "weight": 4.6,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:dualsense-input-inspector|repository:marker-angle-recorder",
-      "source": "repository:marker-angle-recorder",
-      "target": "repository:dualsense-input-inspector",
-      "type": "related_to",
-      "weight": 4.6,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24|repository:controller-web-demo",
-      "source": "repository:2026_10_24",
-      "target": "repository:controller-web-demo",
-      "type": "related_to",
-      "weight": 5.2,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール",
-          "ゲーム・インタラクティブ"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:controller-web-demo|repository:spike-rt-web-project-selected",
-      "source": "repository:spike-rt-web-project-selected",
-      "target": "repository:controller-web-demo",
-      "type": "related_to",
-      "weight": 5.2,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:controller-web-demo|repository:spike-rt-web-project",
-      "source": "repository:spike-rt-web-project",
-      "target": "repository:controller-web-demo",
-      "type": "related_to",
-      "weight": 5.2,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24|repository:mediapipe-hand-demo",
-      "source": "repository:2026_10_24",
-      "target": "repository:mediapipe-hand-demo",
-      "type": "related_to",
-      "weight": 6.6,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "GitHub Actions",
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:pico-uf2-web-builder|repository:spike-rt-web-toolkit",
-      "source": "repository:spike-rt-web-toolkit",
-      "target": "repository:pico-uf2-web-builder",
-      "type": "related_to",
-      "weight": 5.2,
-      "shared": {
-        "technology": [
-          "GitHub Actions",
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:pico-uf2-web-builder|repository:spike-rt-web-project-selected",
-      "source": "repository:spike-rt-web-project-selected",
-      "target": "repository:pico-uf2-web-builder",
-      "type": "related_to",
-      "weight": 5.2,
-      "shared": {
-        "technology": [
-          "GitHub Actions",
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:research-break-arcade|repository:video-rwlog-angle-analyzer",
-      "source": "repository:research-break-arcade",
+      "id": "related_to|repository:github-tavern|repository:video-rwlog-angle-analyzer",
+      "source": "repository:github-tavern",
       "target": "repository:video-rwlog-angle-analyzer",
       "type": "related_to",
-      "weight": 4.6,
+      "weight": 5.2,
       "shared": {
         "technology": [
           "HTML",
@@ -9681,14 +9573,51 @@
         ],
         "hardware": [],
         "theme": [
-          "Web・開発ツール"
+          "Web・開発ツール",
+          "データ解析・計測"
         ]
       }
     },
     {
-      "id": "related_to|repository:mediapipe-hand-demo|repository:video-rwlog-angle-analyzer",
-      "source": "repository:video-rwlog-angle-analyzer",
-      "target": "repository:mediapipe-hand-demo",
+      "id": "related_to|repository:2026_10_24|repository:video-rwlog-angle-analyzer",
+      "source": "repository:2026_10_24",
+      "target": "repository:video-rwlog-angle-analyzer",
+      "type": "related_to",
+      "weight": 5.2,
+      "shared": {
+        "technology": [
+          "HTML",
+          "CSS"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール",
+          "データ解析・計測"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_10_22|repository:video-rwlog-angle-analyzer",
+      "source": "repository:2026_10_22",
+      "target": "repository:video-rwlog-angle-analyzer",
+      "type": "related_to",
+      "weight": 5.2,
+      "shared": {
+        "technology": [
+          "HTML",
+          "CSS"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール",
+          "データ解析・計測"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:research-break-arcade|repository:video-rwlog-angle-analyzer",
+      "source": "repository:research-break-arcade",
+      "target": "repository:video-rwlog-angle-analyzer",
       "type": "related_to",
       "weight": 4.6,
       "shared": {
@@ -9853,23 +9782,143 @@
       }
     },
     {
-      "id": "related_to|repository:atoms3r-amplitude-control-development|repository:atoms3r-lateral-energy-control",
-      "source": "repository:atoms3r-lateral-energy-control",
-      "target": "repository:atoms3r-amplitude-control-development",
+      "id": "related_to|repository:controller-web-demo|repository:dualsense-input-inspector",
+      "source": "repository:dualsense-input-inspector",
+      "target": "repository:controller-web-demo",
       "type": "related_to",
-      "weight": 9.8,
+      "weight": 6.6,
       "shared": {
         "technology": [
-          "C++",
-          "Arduino",
-          "FreeRTOS"
+          "JavaScript",
+          "WebHID",
+          "GitHub Pages"
         ],
-        "hardware": [
-          "M5Stack AtomS3R"
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:dualsense-input-inspector|repository:research-break-arcade",
+      "source": "repository:research-break-arcade",
+      "target": "repository:dualsense-input-inspector",
+      "type": "related_to",
+      "weight": 5.2,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "GitHub Pages"
         ],
+        "hardware": [],
+        "theme": [
+          "ロボティクス・制御",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:dualsense-input-inspector|repository:github-tavern",
+      "source": "repository:github-tavern",
+      "target": "repository:dualsense-input-inspector",
+      "type": "related_to",
+      "weight": 4.6,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "GitHub Pages"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:dualsense-input-inspector|repository:marker-angle-recorder",
+      "source": "repository:marker-angle-recorder",
+      "target": "repository:dualsense-input-inspector",
+      "type": "related_to",
+      "weight": 4.6,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "GitHub Pages"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:controller-web-demo|repository:spike-rt-web-project-selected",
+      "source": "repository:spike-rt-web-project-selected",
+      "target": "repository:controller-web-demo",
+      "type": "related_to",
+      "weight": 5.2,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "GitHub Pages"
+        ],
+        "hardware": [],
         "theme": [
           "組み込み・ファームウェア",
-          "ロボティクス・制御",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:controller-web-demo|repository:spike-rt-web-project",
+      "source": "repository:spike-rt-web-project",
+      "target": "repository:controller-web-demo",
+      "type": "related_to",
+      "weight": 5.2,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "GitHub Pages"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:pico-uf2-web-builder|repository:spike-rt-web-toolkit",
+      "source": "repository:spike-rt-web-toolkit",
+      "target": "repository:pico-uf2-web-builder",
+      "type": "related_to",
+      "weight": 5.2,
+      "shared": {
+        "technology": [
+          "GitHub Actions",
+          "GitHub Pages"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:pico-uf2-web-builder|repository:spike-rt-web-project-selected",
+      "source": "repository:spike-rt-web-project-selected",
+      "target": "repository:pico-uf2-web-builder",
+      "type": "related_to",
+      "weight": 5.2,
+      "shared": {
+        "technology": [
+          "GitHub Actions",
+          "GitHub Pages"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
           "Web・開発ツール"
         ]
       }
@@ -9878,6 +9927,26 @@
       "id": "related_to|repository:atoms3r-amplitude-control-v46al-r2-stable|repository:atoms3r-lateral-energy-control",
       "source": "repository:atoms3r-lateral-energy-control",
       "target": "repository:atoms3r-amplitude-control-v46al-r2-stable",
+      "type": "related_to",
+      "weight": 7.8,
+      "shared": {
+        "technology": [
+          "C++",
+          "Arduino",
+          "FreeRTOS"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
+          "ロボティクス・制御",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:atoms3r-amplitude-control-development|repository:atoms3r-lateral-energy-control",
+      "source": "repository:atoms3r-lateral-energy-control",
+      "target": "repository:atoms3r-amplitude-control-development",
       "type": "related_to",
       "weight": 7.8,
       "shared": {
@@ -9933,6 +10002,135 @@
       }
     },
     {
+      "id": "related_to|repository:2026_05_21_flutter_gsi_gnss_offline_map_monitor|repository:atoms3r-lateral-energy-control",
+      "source": "repository:atoms3r-lateral-energy-control",
+      "target": "repository:2026_05_21_flutter_gsi_gnss_offline_map_monitor",
+      "type": "related_to",
+      "weight": 3.2,
+      "shared": {
+        "technology": [
+          "JSON"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_05_21_flutter_gsi_gnss_offline_map_monitor|repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
+      "source": "repository:2026_05_21_flutter_gsi_gnss_offline_map_monitor",
+      "target": "repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
+      "type": "related_to",
+      "weight": 3.2,
+      "shared": {
+        "technology": [
+          "JSON"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_05_21_flutter_gsi_gnss_offline_map_monitor|repository:2026_10_24",
+      "source": "repository:2026_10_24",
+      "target": "repository:2026_05_21_flutter_gsi_gnss_offline_map_monitor",
+      "type": "related_to",
+      "weight": 2.6,
+      "shared": {
+        "technology": [
+          "JSON"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_8_12|repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
+      "source": "repository:2026_8_12",
+      "target": "repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
+      "type": "related_to",
+      "weight": 10.6,
+      "shared": {
+        "technology": [
+          "C++",
+          "PlatformIO",
+          "CSV",
+          "UART"
+        ],
+        "hardware": [
+          "M5Stack CoreS3"
+        ],
+        "theme": [
+          "組み込み・ファームウェア"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:cores3-xiao-esp32s3-sense-uart-sd-logger|repository:m5stackcores3i2cdemouwb",
+      "source": "repository:m5stackcores3i2cdemouwb",
+      "target": "repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
+      "type": "related_to",
+      "weight": 7.2,
+      "shared": {
+        "technology": [
+          "PlatformIO",
+          "UART"
+        ],
+        "hardware": [
+          "M5Stack CoreS3"
+        ],
+        "theme": [
+          "組み込み・ファームウェア",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:cores3-lite-goplus2-touchless|repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
+      "source": "repository:cores3-lite-goplus2-touchless",
+      "target": "repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
+      "type": "related_to",
+      "weight": 7.2,
+      "shared": {
+        "technology": [
+          "C++",
+          "PlatformIO",
+          "UART"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
+          "データ解析・計測"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_8_6|repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
+      "source": "repository:2026_8_6",
+      "target": "repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
+      "type": "related_to",
+      "weight": 7.2,
+      "shared": {
+        "technology": [
+          "C++",
+          "PlatformIO",
+          "UART"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
       "id": "related_to|repository:pico-bluejay-configurator|repository:pico-copter-fc-esc-telemetry",
       "source": "repository:pico-bluejay-configurator",
       "target": "repository:pico-copter-fc-esc-telemetry",
@@ -9946,6 +10144,334 @@
         ],
         "hardware": [
           "Raspberry Pi Pico（RP2040）"
+        ],
+        "theme": [
+          "組み込み・ファームウェア",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:pico-copter-fc|repository:pico-copter-fc-esc-telemetry",
+      "source": "repository:pico-copter-fc",
+      "target": "repository:pico-copter-fc-esc-telemetry",
+      "type": "related_to",
+      "weight": 7.8,
+      "shared": {
+        "technology": [
+          "Raspberry Pi Pico SDK",
+          "Eigen",
+          "USB CDC"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
+          "Web・開発ツール",
+          "データ解析・計測"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:atoms3r-foot-angle-tracker|repository:pico-copter-fc-esc-telemetry",
+      "source": "repository:pico-copter-fc-esc-telemetry",
+      "target": "repository:atoms3r-foot-angle-tracker",
+      "type": "related_to",
+      "weight": 5.2,
+      "shared": {
+        "technology": [
+          "C++",
+          "Web Serial"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:atoms3r-amplitude-control-v46al-r2-stable|repository:reaction-wheel-v58-experiment-firmware",
+      "source": "repository:atoms3r-amplitude-control-v46al-r2-stable",
+      "target": "repository:reaction-wheel-v58-experiment-firmware",
+      "type": "related_to",
+      "weight": 9.8,
+      "shared": {
+        "technology": [
+          "C++",
+          "Arduino",
+          "M5Unified",
+          "PlatformIO"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
+          "ロボティクス・制御",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:atoms3r-amplitude-control-development|repository:reaction-wheel-v58-experiment-firmware",
+      "source": "repository:atoms3r-amplitude-control-development",
+      "target": "repository:reaction-wheel-v58-experiment-firmware",
+      "type": "related_to",
+      "weight": 9.8,
+      "shared": {
+        "technology": [
+          "C++",
+          "Arduino",
+          "M5Unified",
+          "PlatformIO"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
+          "ロボティクス・制御",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:atoms3r-camera-webui-oneshot-stable|repository:reaction-wheel-v58-experiment-firmware",
+      "source": "repository:atoms3r-camera-webui-oneshot-stable",
+      "target": "repository:reaction-wheel-v58-experiment-firmware",
+      "type": "related_to",
+      "weight": 7.2,
+      "shared": {
+        "technology": [
+          "C++",
+          "Arduino",
+          "M5Unified"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
+          "ロボティクス・制御"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:atoms3r-foot-angle-tracker|repository:reaction-wheel-v58-experiment-firmware",
+      "source": "repository:atoms3r-foot-angle-tracker",
+      "target": "repository:reaction-wheel-v58-experiment-firmware",
+      "type": "related_to",
+      "weight": 7.2,
+      "shared": {
+        "technology": [
+          "C++",
+          "Arduino",
+          "M5Unified"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:atoms3r-6dof-mekf|repository:atoms3r-m12-vio",
+      "source": "repository:atoms3r-m12-vio",
+      "target": "repository:atoms3r-6dof-mekf",
+      "type": "related_to",
+      "weight": 5.2,
+      "shared": {
+        "technology": [
+          "ESP32-S3"
+        ],
+        "hardware": [
+          "M5Stack AtomS3R-M12"
+        ],
+        "theme": [
+          "組み込み・ファームウェア",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:atoms3r-foot-angle-tracker|repository:atoms3r-m12-vio",
+      "source": "repository:atoms3r-foot-angle-tracker",
+      "target": "repository:atoms3r-m12-vio",
+      "type": "related_to",
+      "weight": 3.8,
+      "shared": {
+        "technology": [
+          "BMI270 IMU"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
+          "画像処理・コンピュータビジョン",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:atoms3r-m12-vio|repository:strata",
+      "source": "repository:strata",
+      "target": "repository:atoms3r-m12-vio",
+      "type": "related_to",
+      "weight": 3.2,
+      "shared": {
+        "technology": [
+          "C++（リポジトリの主言語として提示）"
+        ],
+        "hardware": [],
+        "theme": [
+          "画像処理・コンピュータビジョン",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:atoms3r-m12-vio|repository:atoms3r-visual-pose-tracker",
+      "source": "repository:atoms3r-visual-pose-tracker",
+      "target": "repository:atoms3r-m12-vio",
+      "type": "related_to",
+      "weight": 3.2,
+      "shared": {
+        "technology": [
+          "ESP32-S3"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
+          "画像処理・コンピュータビジョン"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_8_12|repository:m5stackcores3i2cdemouwb",
+      "source": "repository:m5stackcores3i2cdemouwb",
+      "target": "repository:2026_8_12",
+      "type": "related_to",
+      "weight": 9.2,
+      "shared": {
+        "technology": [
+          "PlatformIO",
+          "I2C",
+          "UART"
+        ],
+        "hardware": [
+          "M5Stack CoreS3"
+        ],
+        "theme": [
+          "組み込み・ファームウェア",
+          "航法・位置推定"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_8_12|repository:cores3-lite-goplus2-touchless",
+      "source": "repository:cores3-lite-goplus2-touchless",
+      "target": "repository:2026_8_12",
+      "type": "related_to",
+      "weight": 9.2,
+      "shared": {
+        "technology": [
+          "C++",
+          "PlatformIO",
+          "I2C",
+          "UART"
+        ],
+        "hardware": [],
+        "theme": [
+          "組み込み・ファームウェア",
+          "航法・位置推定"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_8_12|repository:cores3-android-dualsense-bridge-web",
+      "source": "repository:2026_8_12",
+      "target": "repository:cores3-android-dualsense-bridge-web",
+      "type": "related_to",
+      "weight": 8.6,
+      "shared": {
+        "technology": [
+          "PlatformIO",
+          "UART",
+          "I2C"
+        ],
+        "hardware": [
+          "M5Stack CoreS3"
+        ],
+        "theme": [
+          "組み込み・ファームウェア"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:cores3-android-dualsense-bridge-web|repository:xiao-cores3-imu-uart-web-bridge",
+      "source": "repository:cores3-android-dualsense-bridge-web",
+      "target": "repository:xiao-cores3-imu-uart-web-bridge",
+      "type": "related_to",
+      "weight": 7.2,
+      "shared": {
+        "technology": [
+          "Wi-Fiアクセスポイント",
+          "UART"
+        ],
+        "hardware": [
+          "M5Stack CoreS3"
+        ],
+        "theme": [
+          "組み込み・ファームウェア",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:cores3-android-dualsense-bridge|repository:xiao-cores3-imu-uart-web-bridge",
+      "source": "repository:cores3-android-dualsense-bridge",
+      "target": "repository:xiao-cores3-imu-uart-web-bridge",
+      "type": "related_to",
+      "weight": 7.2,
+      "shared": {
+        "technology": [
+          "Wi-Fiアクセスポイント",
+          "UART"
+        ],
+        "hardware": [
+          "M5Stack CoreS3"
+        ],
+        "theme": [
+          "組み込み・ファームウェア",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:m5stackcores3i2cdemouwb|repository:xiao-cores3-imu-uart-web-bridge",
+      "source": "repository:m5stackcores3i2cdemouwb",
+      "target": "repository:xiao-cores3-imu-uart-web-bridge",
+      "type": "related_to",
+      "weight": 5.2,
+      "shared": {
+        "technology": [
+          "UART"
+        ],
+        "hardware": [
+          "M5Stack CoreS3"
+        ],
+        "theme": [
+          "組み込み・ファームウェア",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:cores3-xiao-esp32s3-sense-uart-sd-logger|repository:xiao-cores3-imu-uart-web-bridge",
+      "source": "repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
+      "target": "repository:xiao-cores3-imu-uart-web-bridge",
+      "type": "related_to",
+      "weight": 5.2,
+      "shared": {
+        "technology": [
+          "UART"
+        ],
+        "hardware": [
+          "M5Stack CoreS3"
         ],
         "theme": [
           "組み込み・ファームウェア",
@@ -10052,44 +10578,6 @@
         "theme": [
           "組み込み・ファームウェア",
           "ロボティクス・制御"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:pico-copter-fc|repository:pico-copter-fc-esc-telemetry",
-      "source": "repository:pico-copter-fc",
-      "target": "repository:pico-copter-fc-esc-telemetry",
-      "type": "related_to",
-      "weight": 7.8,
-      "shared": {
-        "technology": [
-          "Raspberry Pi Pico SDK",
-          "Eigen",
-          "USB CDC"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "Web・開発ツール",
-          "データ解析・計測"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:atoms3r-foot-angle-tracker|repository:pico-copter-fc-esc-telemetry",
-      "source": "repository:pico-copter-fc-esc-telemetry",
-      "target": "repository:atoms3r-foot-angle-tracker",
-      "type": "related_to",
-      "weight": 5.2,
-      "shared": {
-        "technology": [
-          "C++",
-          "Web Serial"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "Web・開発ツール"
         ]
       }
     },
@@ -10769,86 +11257,6 @@
       }
     },
     {
-      "id": "related_to|repository:atoms3r-amplitude-control-v46al-r2-stable|repository:reaction-wheel-v58-experiment-firmware",
-      "source": "repository:atoms3r-amplitude-control-v46al-r2-stable",
-      "target": "repository:reaction-wheel-v58-experiment-firmware",
-      "type": "related_to",
-      "weight": 9.8,
-      "shared": {
-        "technology": [
-          "C++",
-          "Arduino",
-          "M5Unified",
-          "PlatformIO"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "ロボティクス・制御",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:atoms3r-amplitude-control-development|repository:reaction-wheel-v58-experiment-firmware",
-      "source": "repository:atoms3r-amplitude-control-development",
-      "target": "repository:reaction-wheel-v58-experiment-firmware",
-      "type": "related_to",
-      "weight": 9.8,
-      "shared": {
-        "technology": [
-          "C++",
-          "Arduino",
-          "M5Unified",
-          "PlatformIO"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "ロボティクス・制御",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:atoms3r-camera-webui-oneshot-stable|repository:reaction-wheel-v58-experiment-firmware",
-      "source": "repository:atoms3r-camera-webui-oneshot-stable",
-      "target": "repository:reaction-wheel-v58-experiment-firmware",
-      "type": "related_to",
-      "weight": 7.2,
-      "shared": {
-        "technology": [
-          "C++",
-          "Arduino",
-          "M5Unified"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "ロボティクス・制御"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:atoms3r-foot-angle-tracker|repository:reaction-wheel-v58-experiment-firmware",
-      "source": "repository:atoms3r-foot-angle-tracker",
-      "target": "repository:reaction-wheel-v58-experiment-firmware",
-      "type": "related_to",
-      "weight": 7.2,
-      "shared": {
-        "technology": [
-          "C++",
-          "Arduino",
-          "M5Unified"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
       "id": "related_to|repository:cores3-lite-goplus2-touchless|repository:m5stackcores3i2cdemouwb",
       "source": "repository:m5stackcores3i2cdemouwb",
       "target": "repository:cores3-lite-goplus2-touchless",
@@ -10866,88 +11274,6 @@
         "theme": [
           "組み込み・ファームウェア",
           "航法・位置推定"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_8_12|repository:cores3-lite-goplus2-touchless",
-      "source": "repository:cores3-lite-goplus2-touchless",
-      "target": "repository:2026_8_12",
-      "type": "related_to",
-      "weight": 9.2,
-      "shared": {
-        "technology": [
-          "C++",
-          "PlatformIO",
-          "I2C",
-          "UART"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "航法・位置推定"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_8_12|repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
-      "source": "repository:2026_8_12",
-      "target": "repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
-      "type": "related_to",
-      "weight": 10.6,
-      "shared": {
-        "technology": [
-          "C++",
-          "PlatformIO",
-          "CSV",
-          "UART"
-        ],
-        "hardware": [
-          "M5Stack CoreS3"
-        ],
-        "theme": [
-          "組み込み・ファームウェア"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_8_12|repository:m5stackcores3i2cdemouwb",
-      "source": "repository:m5stackcores3i2cdemouwb",
-      "target": "repository:2026_8_12",
-      "type": "related_to",
-      "weight": 9.2,
-      "shared": {
-        "technology": [
-          "PlatformIO",
-          "I2C",
-          "UART"
-        ],
-        "hardware": [
-          "M5Stack CoreS3"
-        ],
-        "theme": [
-          "組み込み・ファームウェア",
-          "航法・位置推定"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_8_12|repository:cores3-android-dualsense-bridge-web",
-      "source": "repository:2026_8_12",
-      "target": "repository:cores3-android-dualsense-bridge-web",
-      "type": "related_to",
-      "weight": 8.6,
-      "shared": {
-        "technology": [
-          "PlatformIO",
-          "UART",
-          "I2C"
-        ],
-        "hardware": [
-          "M5Stack CoreS3"
-        ],
-        "theme": [
-          "組み込み・ファームウェア"
         ]
       }
     },
@@ -11408,64 +11734,6 @@
           "C++",
           "Arduino",
           "PlatformIO"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:cores3-xiao-esp32s3-sense-uart-sd-logger|repository:m5stackcores3i2cdemouwb",
-      "source": "repository:m5stackcores3i2cdemouwb",
-      "target": "repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
-      "type": "related_to",
-      "weight": 7.2,
-      "shared": {
-        "technology": [
-          "PlatformIO",
-          "UART"
-        ],
-        "hardware": [
-          "M5Stack CoreS3"
-        ],
-        "theme": [
-          "組み込み・ファームウェア",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:cores3-lite-goplus2-touchless|repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
-      "source": "repository:cores3-lite-goplus2-touchless",
-      "target": "repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
-      "type": "related_to",
-      "weight": 7.2,
-      "shared": {
-        "technology": [
-          "C++",
-          "PlatformIO",
-          "UART"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "データ解析・計測"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_8_6|repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
-      "source": "repository:2026_8_6",
-      "target": "repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
-      "type": "related_to",
-      "weight": 7.2,
-      "shared": {
-        "technology": [
-          "C++",
-          "PlatformIO",
-          "UART"
         ],
         "hardware": [],
         "theme": [
@@ -12091,77 +12359,6 @@
       }
     },
     {
-      "id": "related_to|repository:atoms3r-6dof-mekf|repository:atoms3r-m12-vio",
-      "source": "repository:atoms3r-m12-vio",
-      "target": "repository:atoms3r-6dof-mekf",
-      "type": "related_to",
-      "weight": 5.2,
-      "shared": {
-        "technology": [
-          "ESP32-S3"
-        ],
-        "hardware": [
-          "M5Stack AtomS3R-M12"
-        ],
-        "theme": [
-          "組み込み・ファームウェア",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:atoms3r-foot-angle-tracker|repository:atoms3r-m12-vio",
-      "source": "repository:atoms3r-foot-angle-tracker",
-      "target": "repository:atoms3r-m12-vio",
-      "type": "related_to",
-      "weight": 3.8,
-      "shared": {
-        "technology": [
-          "BMI270 IMU"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "画像処理・コンピュータビジョン",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:atoms3r-m12-vio|repository:atoms3r-visual-pose-tracker",
-      "source": "repository:atoms3r-visual-pose-tracker",
-      "target": "repository:atoms3r-m12-vio",
-      "type": "related_to",
-      "weight": 3.2,
-      "shared": {
-        "technology": [
-          "ESP32-S3"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "画像処理・コンピュータビジョン"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:atoms3r-amplitude-control-v46ak-stable|repository:atoms3r-m12-vio",
-      "source": "repository:atoms3r-amplitude-control-v46ak-stable",
-      "target": "repository:atoms3r-m12-vio",
-      "type": "related_to",
-      "weight": 3.2,
-      "shared": {
-        "technology": [
-          "BMI270 IMU"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
       "id": "related_to|repository:acrobot-swingup-hybrid-control|repository:reaction-wheel-v58-experiment-firmware",
       "source": "repository:reaction-wheel-v58-experiment-firmware",
       "target": "repository:acrobot-swingup-hybrid-control",
@@ -12206,84 +12403,6 @@
         "hardware": [],
         "theme": [
           "ロボティクス・制御"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:cores3-android-dualsense-bridge-web|repository:xiao-cores3-imu-uart-web-bridge",
-      "source": "repository:cores3-android-dualsense-bridge-web",
-      "target": "repository:xiao-cores3-imu-uart-web-bridge",
-      "type": "related_to",
-      "weight": 7.2,
-      "shared": {
-        "technology": [
-          "Wi-Fiアクセスポイント",
-          "UART"
-        ],
-        "hardware": [
-          "M5Stack CoreS3"
-        ],
-        "theme": [
-          "組み込み・ファームウェア",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:cores3-android-dualsense-bridge|repository:xiao-cores3-imu-uart-web-bridge",
-      "source": "repository:cores3-android-dualsense-bridge",
-      "target": "repository:xiao-cores3-imu-uart-web-bridge",
-      "type": "related_to",
-      "weight": 7.2,
-      "shared": {
-        "technology": [
-          "Wi-Fiアクセスポイント",
-          "UART"
-        ],
-        "hardware": [
-          "M5Stack CoreS3"
-        ],
-        "theme": [
-          "組み込み・ファームウェア",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:m5stackcores3i2cdemouwb|repository:xiao-cores3-imu-uart-web-bridge",
-      "source": "repository:m5stackcores3i2cdemouwb",
-      "target": "repository:xiao-cores3-imu-uart-web-bridge",
-      "type": "related_to",
-      "weight": 5.2,
-      "shared": {
-        "technology": [
-          "UART"
-        ],
-        "hardware": [
-          "M5Stack CoreS3"
-        ],
-        "theme": [
-          "組み込み・ファームウェア",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:cores3-xiao-esp32s3-sense-uart-sd-logger|repository:xiao-cores3-imu-uart-web-bridge",
-      "source": "repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
-      "target": "repository:xiao-cores3-imu-uart-web-bridge",
-      "type": "related_to",
-      "weight": 5.2,
-      "shared": {
-        "technology": [
-          "UART"
-        ],
-        "hardware": [
-          "M5Stack CoreS3"
-        ],
-        "theme": [
-          "組み込み・ファームウェア",
-          "Web・開発ツール"
         ]
       }
     },
@@ -12467,23 +12586,6 @@
         "hardware": [],
         "theme": [
           "組み込み・ファームウェア"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_05_21_flutter_gsi_gnss_offline_map_monitor|repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
-      "source": "repository:2026_05_21_flutter_gsi_gnss_offline_map_monitor",
-      "target": "repository:cores3-xiao-esp32s3-sense-uart-sd-logger",
-      "type": "related_to",
-      "weight": 3.2,
-      "shared": {
-        "technology": [
-          "JSON"
-        ],
-        "hardware": [],
-        "theme": [
-          "組み込み・ファームウェア",
-          "Web・開発ツール"
         ]
       }
     },
