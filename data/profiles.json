@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-05T23:50:33.879Z",
+  "generated_at": "2026-11-06T23:27:51.052Z",
   "owner": "temesotejam",
   "repository_count": 111,
   "profiles": {
@@ -305,7 +305,7 @@
     "temesotejam/github-tavern": {
       "url": "https://github.com/temesotejam/github-tavern",
       "default_branch": "main",
-      "pushed_at": "2026-11-05T20:06:51Z",
+      "pushed_at": "2026-11-06T19:32:18Z",
       "available_paths": [
         ".github",
         ".github/agents",
@@ -334,24 +334,24 @@
       ],
       "recent_commits": [
         {
+          "sha": "317938e5",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
+          "sha": "d3e5a175",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
           "sha": "02a3f178",
-          "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "d8fc9b83",
-          "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "349173c8",
           "message": "chore: refresh tavern summaries"
         }
       ],
       "archived": false,
-      "fingerprint": "dcd1b521bb9f6c2207f1a181a170791abd4c1cc885e5cb74c3221ac0ba896175",
-      "analyzed_at": "2026-11-05T23:46:03.736Z",
+      "fingerprint": "fc23bb5469592f4f78ee6e17a00285c1d2246d251feea6587b7e6e6bdbc616d9",
+      "analyzed_at": "2026-11-06T23:22:44.670Z",
       "profile": {
-        "purpose": "公開GitHubリポジトリを検索・分類し、詳細や説明を閲覧する静的ポータル。",
-        "architecture": "GitHub Pages上のブラウザーUIがGitHub APIから公開リポジトリを取得し、JSONキャッシュの説明を表示する構成。READMEによれば、GitHub ActionsとCopilot CLIで説明データを更新する。",
+        "purpose": "公開GitHubリポジトリを検索・分類し、詳細や説明を閲覧する個人向けWebポータル。",
+        "architecture": "静的HTML/CSS/JavaScriptのブラウザアプリをGitHub Pagesで公開する構成。app.jsが画面状態や分類を扱い、補助クライアントがREADMEの短縮表示やJSONキャッシュを連携する。説明データの自動更新用スクリプトとGitHub Actionsも配置されている。",
         "technologies": [
           "JavaScript",
           "HTML",
@@ -362,61 +362,61 @@
           "Copilot CLI"
         ],
         "algorithms": [
-          "キーワードの先頭一致順によるリポジトリ分類",
-          "READMEのMarkdownを整形し、短いプレビュー文を抽出",
-          "最大6件の並行処理キュー",
-          "MutationObserverによるDOM変更検知"
+          "キーワード規則によるリポジトリ分類",
+          "Markdownの除去・文抽出によるREADME短縮表示",
+          "同時実行数を制限したREADME取得キュー（最大6件）",
+          "日本語説明文の規則ベース変換"
         ],
         "hardware": [],
         "interfaces": [
-          "GitHub API（api.github.com）",
-          "raw.githubusercontent.com",
-          "data/summaries.json",
-          "data/public-pages.json",
-          "ブラウザー上の検索・分類・詳細表示UI"
+          "ブラウザUI",
+          "公開GitHub API",
+          "raw.githubusercontent.com上のREADME",
+          "data/summaries.jsonおよびdata/public-pages.json"
         ],
         "reusable_components": [
           {
             "name": "card-enricher.js の cleanMarkdown / shortPreview",
-            "purpose": "READMEから装飾やノイズを除いてカード向けの短い説明を作る。",
+            "purpose": "READMEのMarkdown装飾やノイズを除去し、リポジトリカード向けの短い説明を抽出する。",
             "evidence": [
               "card-enricher.js"
             ]
           },
           {
-            "name": "card-enricher.js のキュー処理",
-            "purpose": "カードのREADME取得を重複排除し、最大6件まで並行実行する。",
+            "name": "card-enricher.js の取得キュー",
+            "purpose": "README取得を重複排除し、並列数を6件に制限してカード表示を補完する。",
             "evidence": [
               "card-enricher.js"
             ]
           },
           {
-            "name": "app.js の categoryOf / RULES",
-            "purpose": "リポジトリ情報と要約をキーワードで簡易分類する。",
-            "evidence": [
-              "app.js"
-            ]
-          },
-          {
-            "name": "app.js の esc / withTimeout",
-            "purpose": "HTML出力向けの文字エスケープと、AbortControllerを用いたfetchのタイムアウト制御を提供する。",
+            "name": "app.js の RULES / categoryOf",
+            "purpose": "リポジトリ名・説明・言語・トピック・要約に含まれる語から技術領域を分類する。",
             "evidence": [
               "app.js"
             ]
           },
           {
             "name": "public-pages-client.js の validEntry",
-            "purpose": "公開ページURLを解析し、HTTPまたはHTTPSのみを有効なリンクとして扱う。",
+            "purpose": "公開ページURLを解析し、HTTP/HTTPS以外のスキームを除外してリンク表示を制御する。",
             "evidence": [
               "public-pages-client.js"
+            ]
+          },
+          {
+            "name": "spoken-overview-client.js の spokenize",
+            "purpose": "日本語の説明文を規則ベースで口語調に変換する純粋関数。グローバル公開によるCI利用も意図されている。",
+            "evidence": [
+              "spoken-overview-client.js"
             ]
           }
         ],
         "constraints": [
-          "所有者名と対象リポジトリ名がクライアントコードに固定されている。",
-          "README記載では対象は公開リポジトリのみ。",
-          "提供されたソース抜粋は一部に限られるため、全体の動作やエラー処理は未確認。",
-          "自動要約ワークフローの詳細な実装は提示された抜粋から確認できない。"
+          "対象オーナー名がクライアントコードに固定されている。",
+          "READMEの取得候補はmain/masterと一般的なREADMEファイル名に限られる。",
+          "READMEには公開リポジトリのみを扱い書き込み操作をしない旨が記載されている。",
+          "自動更新スクリプトやワークフローの実装内容、およびJSONデータの具体的な内容は提示された抜粋から確認できない。",
+          "app.jsの抜粋は一部のみのため、全画面挙動やAPIエラー処理の詳細は不明。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
@@ -426,16 +426,15 @@
           "card-enricher.js",
           "public-pages-client.js",
           "spoken-overview-client.js",
-          ".github/workflows/copilot-summaries.yml",
           "scripts/update-summaries.mjs",
-          "data/summaries.json"
+          ".github/workflows/copilot-summaries.yml"
         ]
       }
     },
     "temesotejam/2026_10_24": {
       "url": "https://github.com/temesotejam/2026_10_24",
       "default_branch": "main",
-      "pushed_at": "2026-11-05T19:53:50Z",
+      "pushed_at": "2026-11-06T19:21:06Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -452,90 +451,78 @@
       ],
       "recent_commits": [
         {
+          "sha": "ad99d06d",
+          "message": "Update automatic news feed"
+        },
+        {
+          "sha": "df8b0997",
+          "message": "Update automatic news feed"
+        },
+        {
           "sha": "d6cb1229",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "f6515ef7",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "2375cf85",
           "message": "Update automatic news feed"
         }
       ],
       "archived": false,
-      "fingerprint": "d596ae5055932ed56d50318ecc47b3cad4572cadd2ebb87d45a537d09d43fd0e",
-      "analyzed_at": "2026-11-05T23:46:19.154Z",
+      "fingerprint": "1411028a4c9e0926e8af2b364d8d68fd59deb0846c6cdc1887d0d77a99d4bc1b",
+      "analyzed_at": "2026-11-06T23:23:01.390Z",
       "profile": {
-        "purpose": "公開ニュースの見出しを迷宮のテーマやゲーム内地点に反映する、一人用の探索ゲーム。",
-        "architecture": "ブラウザー上の静的アプリで、app.jsがゲーム状態とCanvas描画を扱う構成とみられる。READMEによれば、GitHub Actionsが公開RSSを取得してdata/news.jsonを更新し、ゲームがそのデータを読み込む。スクリプトやワークフローの実装詳細は提示されていない。",
+        "purpose": "公開ニュースやユーザー入力をゲーム内の現象・探索地点に結びつける、一人用のターン制ダンジョンゲームです。",
+        "architecture": "ブラウザー上のJavaScriptがCanvas描画とゲーム状態を扱い、HTML・CSSが画面を構成します。ニュースJSONを読み込んで選択候補を表示し、選ばれた記事をゲーム開始時のシードとして利用します。GitHub Actionsによるニュース収集とGitHub Pagesでの公開がREADMEに記載されています。",
         "technologies": [
           "JavaScript",
-          "HTML",
-          "CSS",
-          "Canvas API",
+          "HTML Canvas",
           "ブラウザーFetch API",
           "localStorage",
           "GitHub Actions",
-          "RSS",
-          "JSON"
+          "GitHub Pages"
         ],
         "algorithms": [
-          "乱数を使った迷宮生成・探索（READMEに記載。生成処理の詳細は未確認）",
-          "日付を使ったニュース項目の選択と乱数による選択",
-          "見出しのキーワード除外とURLスキーム検査"
+          "ターン制の行動進行（プレイヤーの行動後に仲間と敵が行動する旨をREADMEに記載）",
+          "日付の数値とニュース件数の剰余による既定ニュース選択",
+          "ニュース見出しのキーワード除外とURLのHTTP/HTTPS検証"
         ],
         "hardware": [],
         "interfaces": [
-          "キーボード（矢印キー/WASD）と画面上の方向ボタン",
-          "Canvasによるゲーム表示",
-          "data/news.jsonのニュースデータ",
-          "ニュース出典へのHTTP/HTTPSリンク",
-          "ブラウザーlocalStorageへの調査テーマ保存"
+          "ブラウザー画面、Canvas、キーボード・画面上の方向ボタン",
+          "data/news.json形式のニュースデータ",
+          "記事へのHTTP/HTTPS出典リンク",
+          "localStorageのreality-dungeon-seedキー"
         ],
         "reusable_components": [
           {
-            "name": "safeHttpUrl(value)",
-            "purpose": "URLを解析し、HTTP/HTTPS以外のスキームを拒否して安全なリンク表示に利用する。",
+            "name": "safeHttpUrl",
+            "purpose": "URLを解析し、HTTPまたはHTTPSの場合だけURL文字列を返す。ニュース出典や保存データのURL検証に再利用できます。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "loadAutomaticNews()",
-            "purpose": "ニュースJSONを取得し、カテゴリ・見出し・出典などを検査・整形してゲーム用データにする。見出しの除外語や出典の除外条件も含む。",
+            "name": "loadAutomaticNews",
+            "purpose": "ニュースJSONを取得し、カテゴリ・見出し・配信元・URLを検査してゲーム用の候補に整形します。取得失敗時は候補を空にします。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "savedSeed()",
-            "purpose": "localStorageから保存済みテーマを読み込み、出典URLが有効な場合にゲーム用テーマとして返す。",
+            "name": "renderAutomaticNews",
+            "purpose": "ニュース候補をDOM要素として表示し、選択時にゲーム開始へつなぎます。表示文字列にはtextContentを使用しています。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "esc(v)",
-            "purpose": "HTMLで特別な意味を持つ文字をエスケープする。",
-            "evidence": [
-              "app.js"
-            ]
-          },
-          {
-            "name": "カテゴリ別テーマ定義",
-            "purpose": "地域・環境・交通・科学のカテゴリを迷宮の色や出現現象に対応づける。",
+            "name": "savedSeed",
+            "purpose": "localStorageから保存データを読み込み、出典URLが有効な場合にユーザー入力シードとして返します。",
             "evidence": [
               "app.js"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋はapp.jsの一部のみで、迷宮生成・ターン処理・描画の実装詳細は確認できない。",
-          "ニュースは見出し等を扱い、記事本文を確認済みとは表示しないとREADMEに記載されている。",
-          "ニュースのキーワード除外は見出しによる判定であり、記事内容の事実確認を示すものではない。",
-          "RSS取得や更新失敗時の保持動作はREADMEの説明に基づき、ワークフロー実装自体は未確認。"
+          "提示されたソース抜粋はapp.jsの一部のため、ゲーム生成・戦闘・描画の具体的な実装詳細は確認できません。",
+          "ニュース収集ワークフローの実装やRSS処理は提示されておらず、READMEとファイル一覧から存在が分かる範囲に限られます。",
+          "見出しの除外はコード上ではキーワード判定であり、記事本文の検証を示すものではありません。READMEも本文を確認済みとは表示しないと記載しています。"
         ],
         "maturity": "試作",
         "confidence": "medium",
@@ -544,9 +531,10 @@
           "app.js",
           "data/news.json",
           ".github/workflows/news.yml",
-          "scripts/fetch-news.mjs",
+          ".github/workflows/pages.yml",
           "index.html",
-          "styles.css"
+          "styles.css",
+          "scripts/fetch-news.mjs"
         ]
       }
     },
