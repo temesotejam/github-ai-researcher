@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-06T23:27:51.048Z",
+  "generated_at": "2026-11-07T22:15:32.954Z",
   "owner": "temesotejam",
   "stats": {
     "repository_count": 111,
     "node_count": 221,
-    "edge_count": 1158,
+    "edge_count": 1157,
     "related_repository_pairs": 255
   },
   "nodes": [
@@ -24,12 +24,12 @@
       "repo": "temesotejam/github-tavern",
       "url": "https://github.com/temesotejam/github-tavern",
       "description": "",
-      "purpose": "公開GitHubリポジトリを検索・分類し、詳細や説明を閲覧する個人向けWebポータル。",
+      "purpose": "公開GitHubリポジトリを検索・分類し、詳細や要約を閲覧する個人向け静的ポータル。",
       "language": "JavaScript",
       "confidence": "medium",
       "archived": false,
-      "pushed_at": "2026-11-06T19:32:18Z",
-      "degree": 26
+      "pushed_at": "2026-11-07T21:59:49Z",
+      "degree": 27
     },
     {
       "id": "technology:javascript",
@@ -50,21 +50,21 @@
       "type": "technology",
       "label": "CSS",
       "repoCount": 1,
-      "degree": 5
-    },
-    {
-      "id": "technology:github%20pages",
-      "type": "technology",
-      "label": "GitHub Pages",
-      "repoCount": 1,
-      "degree": 18
+      "degree": 6
     },
     {
       "id": "technology:github%20actions",
       "type": "technology",
       "label": "GitHub Actions",
       "repoCount": 1,
-      "degree": 22
+      "degree": 21
+    },
+    {
+      "id": "technology:github%20pages",
+      "type": "technology",
+      "label": "GitHub Pages",
+      "repoCount": 1,
+      "degree": 17
     },
     {
       "id": "theme:web%E3%83%BB%E9%96%8B%E7%99%BA%E3%83%84%E3%83%BC%E3%83%AB",
@@ -81,11 +81,11 @@
       "degree": 47
     },
     {
-      "id": "theme:ai%E3%83%BB%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92",
+      "id": "theme:%E3%82%B2%E3%83%BC%E3%83%A0%E3%83%BB%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%A9%E3%82%AF%E3%83%86%E3%82%A3%E3%83%96",
       "type": "theme",
-      "label": "AI・機械学習",
+      "label": "ゲーム・インタラクティブ",
       "repoCount": 1,
-      "degree": 3
+      "degree": 6
     },
     {
       "id": "language:javascript",
@@ -101,12 +101,12 @@
       "repo": "temesotejam/2026_10_24",
       "url": "https://github.com/temesotejam/2026_10_24",
       "description": "",
-      "purpose": "公開ニュースやユーザー入力をゲーム内の現象・探索地点に結びつける、一人用のターン制ダンジョンゲームです。",
+      "purpose": "ニュース見出しを題材に、現象を仲間にして探索する一人用のターン制ダンジョンゲーム。",
       "language": "JavaScript",
       "confidence": "medium",
       "archived": false,
-      "pushed_at": "2026-11-06T19:21:06Z",
-      "degree": 24
+      "pushed_at": "2026-11-07T21:45:57Z",
+      "degree": 16
     },
     {
       "id": "technology:html%20canvas",
@@ -116,18 +116,11 @@
       "degree": 2
     },
     {
-      "id": "technology:localstorage",
+      "id": "technology:github%20actions(readme%E8%A8%98%E8%BC%89)",
       "type": "technology",
-      "label": "localStorage",
+      "label": "GitHub Actions（README記載）",
       "repoCount": 1,
       "degree": 2
-    },
-    {
-      "id": "theme:%E3%82%B2%E3%83%BC%E3%83%A0%E3%83%BB%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%A9%E3%82%AF%E3%83%86%E3%82%A3%E3%83%96",
-      "type": "theme",
-      "label": "ゲーム・インタラクティブ",
-      "repoCount": 1,
-      "degree": 5
     },
     {
       "id": "repository:strata",
@@ -260,7 +253,7 @@
       "confidence": "medium",
       "archived": false,
       "pushed_at": "2026-11-03T05:38:03Z",
-      "degree": 10
+      "degree": 9
     },
     {
       "id": "technology:canvas%202d",
@@ -393,7 +386,7 @@
       "confidence": "medium",
       "archived": false,
       "pushed_at": "2026-10-29T04:57:50Z",
-      "degree": 22
+      "degree": 23
     },
     {
       "id": "technology:c",
@@ -512,7 +505,7 @@
       "confidence": "medium",
       "archived": false,
       "pushed_at": "2026-10-24T03:46:48Z",
-      "degree": 16
+      "degree": 17
     },
     {
       "id": "language:html",
@@ -673,7 +666,7 @@
       "confidence": "medium",
       "archived": false,
       "pushed_at": "2026-09-29T11:50:43Z",
-      "degree": 15
+      "degree": 16
     },
     {
       "id": "technology:cloudflare%20workers",
@@ -736,7 +729,7 @@
       "confidence": "medium",
       "archived": false,
       "pushed_at": "2026-09-25T11:47:01Z",
-      "degree": 22
+      "degree": 23
     },
     {
       "id": "repository:realsense-web-viewer",
@@ -1352,7 +1345,7 @@
       "confidence": "low",
       "archived": false,
       "pushed_at": "2026-08-21T06:37:37Z",
-      "degree": 22
+      "degree": 23
     },
     {
       "id": "repository:spike-rt-hub-dumper",
@@ -1418,6 +1411,13 @@
       "degree": 7
     },
     {
+      "id": "theme:ai%E3%83%BB%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92",
+      "type": "theme",
+      "label": "AI・機械学習",
+      "repoCount": 1,
+      "degree": 2
+    },
+    {
       "id": "repository:rl-cartpole-swingup-ppo",
       "type": "repository",
       "label": "rl-cartpole-swingup-ppo",
@@ -1429,7 +1429,7 @@
       "confidence": "low",
       "archived": false,
       "pushed_at": "2026-08-20T02:20:56Z",
-      "degree": 10
+      "degree": 12
     },
     {
       "id": "repository:rl-cartpole-ppo",
@@ -2362,15 +2362,15 @@
       "type": "uses"
     },
     {
-      "id": "repository:github-tavern|technology:github%20pages|uses",
-      "source": "repository:github-tavern",
-      "target": "technology:github%20pages",
-      "type": "uses"
-    },
-    {
       "id": "repository:github-tavern|technology:github%20actions|uses",
       "source": "repository:github-tavern",
       "target": "technology:github%20actions",
+      "type": "uses"
+    },
+    {
+      "id": "repository:github-tavern|technology:github%20pages|uses",
+      "source": "repository:github-tavern",
+      "target": "technology:github%20pages",
       "type": "uses"
     },
     {
@@ -2386,9 +2386,9 @@
       "type": "belongs_to"
     },
     {
-      "id": "belongs_to|repository:github-tavern|theme:ai%E3%83%BB%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92",
+      "id": "belongs_to|repository:github-tavern|theme:%E3%82%B2%E3%83%BC%E3%83%A0%E3%83%BB%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%A9%E3%82%AF%E3%83%86%E3%82%A3%E3%83%96",
       "source": "repository:github-tavern",
-      "target": "theme:ai%E3%83%BB%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92",
+      "target": "theme:%E3%82%B2%E3%83%BC%E3%83%A0%E3%83%BB%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%A9%E3%82%AF%E3%83%86%E3%82%A3%E3%83%96",
       "type": "belongs_to"
     },
     {
@@ -2417,21 +2417,15 @@
       "type": "uses"
     },
     {
-      "id": "repository:2026_10_24|technology:localstorage|uses",
+      "id": "repository:2026_10_24|technology:css|uses",
       "source": "repository:2026_10_24",
-      "target": "technology:localstorage",
+      "target": "technology:css",
       "type": "uses"
     },
     {
-      "id": "repository:2026_10_24|technology:github%20actions|uses",
+      "id": "repository:2026_10_24|technology:github%20actions(readme%E8%A8%98%E8%BC%89)|uses",
       "source": "repository:2026_10_24",
-      "target": "technology:github%20actions",
-      "type": "uses"
-    },
-    {
-      "id": "repository:2026_10_24|technology:github%20pages|uses",
-      "source": "repository:2026_10_24",
-      "target": "technology:github%20pages",
+      "target": "technology:github%20actions(readme%E8%A8%98%E8%BC%89)",
       "type": "uses"
     },
     {
@@ -2591,12 +2585,6 @@
       "id": "repository:personal-browser-os|technology:canvas%202d|uses",
       "source": "repository:personal-browser-os",
       "target": "technology:canvas%202d",
-      "type": "uses"
-    },
-    {
-      "id": "repository:personal-browser-os|technology:localstorage|uses",
-      "source": "repository:personal-browser-os",
-      "target": "technology:localstorage",
       "type": "uses"
     },
     {
@@ -5510,6 +5498,12 @@
       "type": "uses"
     },
     {
+      "id": "repository:rl-cartpole-swingup-ppo|technology:github%20actions(readme%E8%A8%98%E8%BC%89)|uses",
+      "source": "repository:rl-cartpole-swingup-ppo",
+      "target": "technology:github%20actions(readme%E8%A8%98%E8%BC%89)",
+      "type": "uses"
+    },
+    {
       "id": "repository:rl-cartpole-swingup-ppo|technology:github%20pages(readme%E8%A8%98%E8%BC%89)|uses",
       "source": "repository:rl-cartpole-swingup-ppo",
       "target": "technology:github%20pages(readme%E8%A8%98%E8%BC%89)",
@@ -7876,8 +7870,8 @@
           "JavaScript",
           "HTML",
           "CSS",
-          "GitHub Pages",
-          "GitHub Actions"
+          "GitHub Actions",
+          "GitHub Pages"
         ],
         "hardware": [],
         "theme": [
@@ -7896,31 +7890,12 @@
           "JavaScript",
           "HTML",
           "CSS",
-          "GitHub Pages",
-          "GitHub Actions"
+          "GitHub Actions",
+          "GitHub Pages"
         ],
         "hardware": [],
         "theme": [
           "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24|repository:github-tavern",
-      "source": "repository:github-tavern",
-      "target": "repository:2026_10_24",
-      "type": "related_to",
-      "weight": 7.2,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "GitHub Pages",
-          "GitHub Actions"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール",
-          "データ解析・計測"
         ]
       }
     },
@@ -7944,8 +7919,8 @@
       }
     },
     {
-      "id": "related_to|repository:2026_10_24|repository:marker-angle-recorder",
-      "source": "repository:2026_10_24",
+      "id": "related_to|repository:github-tavern|repository:marker-angle-recorder",
+      "source": "repository:github-tavern",
       "target": "repository:marker-angle-recorder",
       "type": "related_to",
       "weight": 7.2,
@@ -7963,16 +7938,34 @@
       }
     },
     {
-      "id": "related_to|repository:2026_10_24|repository:spike-rt-web-project",
-      "source": "repository:2026_10_24",
-      "target": "repository:spike-rt-web-project",
+      "id": "related_to|repository:2026_10_24|repository:github-tavern",
+      "source": "repository:github-tavern",
+      "target": "repository:2026_10_24",
       "type": "related_to",
-      "weight": 7.2,
+      "weight": 5.8,
       "shared": {
         "technology": [
           "JavaScript",
-          "GitHub Actions",
-          "GitHub Pages"
+          "CSS"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール",
+          "データ解析・計測",
+          "ゲーム・インタラクティブ"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_10_22|repository:2026_10_24",
+      "source": "repository:2026_10_24",
+      "target": "repository:2026_10_22",
+      "type": "related_to",
+      "weight": 5.2,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "CSS"
         ],
         "hardware": [],
         "theme": [
@@ -7982,21 +7975,37 @@
       }
     },
     {
-      "id": "related_to|repository:2026_10_24|repository:wheel-terrain-sim",
+      "id": "related_to|repository:2026_10_24|repository:smart-annotator",
       "source": "repository:2026_10_24",
-      "target": "repository:wheel-terrain-sim",
+      "target": "repository:smart-annotator",
       "type": "related_to",
-      "weight": 7.2,
+      "weight": 5.2,
       "shared": {
         "technology": [
           "JavaScript",
-          "GitHub Actions",
-          "GitHub Pages"
+          "HTML Canvas"
         ],
         "hardware": [],
         "theme": [
           "Web・開発ツール",
           "データ解析・計測"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_10_24|repository:research-break-arcade",
+      "source": "repository:2026_10_24",
+      "target": "repository:research-break-arcade",
+      "type": "related_to",
+      "weight": 4.6,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "CSS"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール"
         ]
       }
     },
@@ -8069,23 +8078,6 @@
       }
     },
     {
-      "id": "related_to|repository:2026_10_24|repository:personal-browser-os",
-      "source": "repository:2026_10_24",
-      "target": "repository:personal-browser-os",
-      "type": "related_to",
-      "weight": 4.6,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "localStorage"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
       "id": "related_to|repository:personal-browser-os|repository:research-break-arcade",
       "source": "repository:personal-browser-os",
       "target": "repository:research-break-arcade",
@@ -8119,6 +8111,22 @@
       }
     },
     {
+      "id": "related_to|repository:2026_10_24|repository:personal-browser-os",
+      "source": "repository:2026_10_24",
+      "target": "repository:personal-browser-os",
+      "type": "related_to",
+      "weight": 2.6,
+      "shared": {
+        "technology": [
+          "JavaScript"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
       "id": "related_to|repository:personal-browser-os|repository:strata",
       "source": "repository:strata",
       "target": "repository:personal-browser-os",
@@ -8135,8 +8143,8 @@
       }
     },
     {
-      "id": "related_to|repository:2026_10_24|repository:2026_10_24_2",
-      "source": "repository:2026_10_24",
+      "id": "related_to|repository:2026_10_24_2|repository:github-tavern",
+      "source": "repository:github-tavern",
       "target": "repository:2026_10_24_2",
       "type": "related_to",
       "weight": 3.2,
@@ -8169,22 +8177,6 @@
       }
     },
     {
-      "id": "related_to|repository:2026_10_24_2|repository:github-tavern",
-      "source": "repository:github-tavern",
-      "target": "repository:2026_10_24_2",
-      "type": "related_to",
-      "weight": 2.6,
-      "shared": {
-        "technology": [
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
       "id": "related_to|repository:2026_10_24_2|repository:strata",
       "source": "repository:strata",
       "target": "repository:2026_10_24_2",
@@ -8193,6 +8185,22 @@
       "shared": {
         "technology": [
           "TypeScript"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_10_24_2|repository:spike-rt-web-toolkit",
+      "source": "repository:2026_10_24_2",
+      "target": "repository:spike-rt-web-toolkit",
+      "type": "related_to",
+      "weight": 2.6,
+      "shared": {
+        "technology": [
+          "GitHub Pages"
         ],
         "hardware": [],
         "theme": [
@@ -8337,9 +8345,9 @@
       }
     },
     {
-      "id": "related_to|repository:2026_10_24|repository:uno-r3-4esc-dshot300",
-      "source": "repository:2026_10_24",
-      "target": "repository:uno-r3-4esc-dshot300",
+      "id": "related_to|repository:uno-r3-4esc-dshot300|repository:youtube-video-fetcher",
+      "source": "repository:uno-r3-4esc-dshot300",
+      "target": "repository:youtube-video-fetcher",
       "type": "related_to",
       "weight": 4.6,
       "shared": {
@@ -8458,42 +8466,6 @@
         "hardware": [],
         "theme": [
           "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_22|repository:video-rwlog-angle-analyzer",
-      "source": "repository:2026_10_22",
-      "target": "repository:video-rwlog-angle-analyzer",
-      "type": "related_to",
-      "weight": 5.2,
-      "shared": {
-        "technology": [
-          "HTML",
-          "CSS"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール",
-          "データ解析・計測"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24|repository:smart-annotator",
-      "source": "repository:2026_10_24",
-      "target": "repository:smart-annotator",
-      "type": "related_to",
-      "weight": 5.2,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "HTML Canvas"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール",
-          "データ解析・計測"
         ]
       }
     },
@@ -8639,24 +8611,6 @@
       }
     },
     {
-      "id": "related_to|repository:2026_10_24|repository:youtube-video-fetcher",
-      "source": "repository:2026_10_24",
-      "target": "repository:youtube-video-fetcher",
-      "type": "related_to",
-      "weight": 5.2,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "GitHub Actions"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール",
-          "データ解析・計測"
-        ]
-      }
-    },
-    {
       "id": "related_to|repository:realsense-web-viewer|repository:youtube-video-fetcher",
       "source": "repository:youtube-video-fetcher",
       "target": "repository:realsense-web-viewer",
@@ -8678,6 +8632,24 @@
       "id": "related_to|repository:marker-angle-recorder|repository:youtube-video-fetcher",
       "source": "repository:youtube-video-fetcher",
       "target": "repository:marker-angle-recorder",
+      "type": "related_to",
+      "weight": 5.2,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "GitHub Actions"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール",
+          "データ解析・計測"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:spike-rt-web-project|repository:youtube-video-fetcher",
+      "source": "repository:youtube-video-fetcher",
+      "target": "repository:spike-rt-web-project",
       "type": "related_to",
       "weight": 5.2,
       "shared": {
@@ -8781,24 +8753,6 @@
         "hardware": [],
         "theme": [
           "シミュレーション・数値モデル",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24|repository:research-break-arcade",
-      "source": "repository:2026_10_24",
-      "target": "repository:research-break-arcade",
-      "type": "related_to",
-      "weight": 6.6,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "GitHub Actions",
-          "GitHub Pages"
-        ],
-        "hardware": [],
-        "theme": [
           "Web・開発ツール"
         ]
       }
@@ -9071,25 +9025,6 @@
       }
     },
     {
-      "id": "related_to|repository:github-tavern|repository:marker-angle-recorder",
-      "source": "repository:github-tavern",
-      "target": "repository:marker-angle-recorder",
-      "type": "related_to",
-      "weight": 7.2,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "GitHub Pages",
-          "GitHub Actions"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール",
-          "データ解析・計測"
-        ]
-      }
-    },
-    {
       "id": "related_to|repository:marker-angle-recorder|repository:spike-rt-web-project",
       "source": "repository:marker-angle-recorder",
       "target": "repository:spike-rt-web-project",
@@ -9124,6 +9059,25 @@
         "theme": [
           "Web・開発ツール",
           "データ解析・計測"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:marker-angle-recorder|repository:mediapipe-hand-demo",
+      "source": "repository:marker-angle-recorder",
+      "target": "repository:mediapipe-hand-demo",
+      "type": "related_to",
+      "weight": 7.2,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "GitHub Pages",
+          "GitHub Actions"
+        ],
+        "hardware": [],
+        "theme": [
+          "画像処理・コンピュータビジョン",
+          "Web・開発ツール"
         ]
       }
     },
@@ -9377,8 +9331,8 @@
       "shared": {
         "technology": [
           "JavaScript",
-          "GitHub Pages",
-          "GitHub Actions"
+          "GitHub Actions",
+          "GitHub Pages"
         ],
         "hardware": [],
         "theme": [
@@ -9416,8 +9370,8 @@
       "shared": {
         "technology": [
           "JavaScript",
-          "GitHub Pages",
-          "GitHub Actions"
+          "GitHub Actions",
+          "GitHub Pages"
         ],
         "hardware": [],
         "theme": [
@@ -9453,8 +9407,27 @@
       "shared": {
         "technology": [
           "JavaScript",
-          "GitHub Pages",
-          "GitHub Actions"
+          "GitHub Actions",
+          "GitHub Pages"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール",
+          "データ解析・計測"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:spike-rt-web-project|repository:wheel-terrain-sim",
+      "source": "repository:spike-rt-web-project",
+      "target": "repository:wheel-terrain-sim",
+      "type": "related_to",
+      "weight": 7.2,
+      "shared": {
+        "technology": [
+          "JavaScript",
+          "GitHub Actions",
+          "GitHub Pages"
         ],
         "hardware": [],
         "theme": [
@@ -9505,23 +9478,6 @@
       "source": "repository:github-tavern",
       "target": "repository:rl-pendulum-ppo",
       "type": "related_to",
-      "weight": 3.2,
-      "shared": {
-        "technology": [
-          "GitHub Actions"
-        ],
-        "hardware": [],
-        "theme": [
-          "データ解析・計測",
-          "AI・機械学習"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:2026_10_24|repository:rl-pendulum-ppo",
-      "source": "repository:2026_10_24",
-      "target": "repository:rl-pendulum-ppo",
-      "type": "related_to",
       "weight": 2.6,
       "shared": {
         "technology": [
@@ -9566,8 +9522,42 @@
       }
     },
     {
+      "id": "related_to|repository:research-break-arcade|repository:rl-pendulum-ppo",
+      "source": "repository:research-break-arcade",
+      "target": "repository:rl-pendulum-ppo",
+      "type": "related_to",
+      "weight": 2.6,
+      "shared": {
+        "technology": [
+          "GitHub Actions"
+        ],
+        "hardware": [],
+        "theme": [
+          "ロボティクス・制御"
+        ]
+      }
+    },
+    {
       "id": "related_to|repository:github-tavern|repository:video-rwlog-angle-analyzer",
       "source": "repository:github-tavern",
+      "target": "repository:video-rwlog-angle-analyzer",
+      "type": "related_to",
+      "weight": 5.2,
+      "shared": {
+        "technology": [
+          "HTML",
+          "CSS"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール",
+          "データ解析・計測"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_10_22|repository:video-rwlog-angle-analyzer",
+      "source": "repository:2026_10_22",
       "target": "repository:video-rwlog-angle-analyzer",
       "type": "related_to",
       "weight": 5.2,
@@ -9821,8 +9811,8 @@
       }
     },
     {
-      "id": "related_to|repository:2026_10_24|repository:dualsense-input-inspector",
-      "source": "repository:2026_10_24",
+      "id": "related_to|repository:dualsense-input-inspector|repository:marker-angle-recorder",
+      "source": "repository:marker-angle-recorder",
       "target": "repository:dualsense-input-inspector",
       "type": "related_to",
       "weight": 4.6,
@@ -9838,8 +9828,8 @@
       }
     },
     {
-      "id": "related_to|repository:2026_10_24|repository:controller-web-demo",
-      "source": "repository:2026_10_24",
+      "id": "related_to|repository:controller-web-demo|repository:github-tavern",
+      "source": "repository:github-tavern",
       "target": "repository:controller-web-demo",
       "type": "related_to",
       "weight": 5.2,
@@ -9892,25 +9882,6 @@
       }
     },
     {
-      "id": "related_to|repository:marker-angle-recorder|repository:mediapipe-hand-demo",
-      "source": "repository:marker-angle-recorder",
-      "target": "repository:mediapipe-hand-demo",
-      "type": "related_to",
-      "weight": 7.2,
-      "shared": {
-        "technology": [
-          "JavaScript",
-          "GitHub Pages",
-          "GitHub Actions"
-        ],
-        "hardware": [],
-        "theme": [
-          "画像処理・コンピュータビジョン",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
       "id": "related_to|repository:pico-uf2-web-builder|repository:spike-rt-web-toolkit",
       "source": "repository:spike-rt-web-toolkit",
       "target": "repository:pico-uf2-web-builder",
@@ -9943,6 +9914,73 @@
         "theme": [
           "組み込み・ファームウェア",
           "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:2026_10_24|repository:rl-cartpole-swingup-ppo",
+      "source": "repository:2026_10_24",
+      "target": "repository:rl-cartpole-swingup-ppo",
+      "type": "related_to",
+      "weight": 3.2,
+      "shared": {
+        "technology": [
+          "GitHub Actions（README記載）"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール",
+          "データ解析・計測"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:rl-cartpole-swingup-ppo|repository:smart-annotator",
+      "source": "repository:smart-annotator",
+      "target": "repository:rl-cartpole-swingup-ppo",
+      "type": "related_to",
+      "weight": 3.2,
+      "shared": {
+        "technology": [
+          "GitHub Pages（README記載）"
+        ],
+        "hardware": [],
+        "theme": [
+          "Web・開発ツール",
+          "データ解析・計測"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:rl-cartpole-swingup-ppo|repository:rl-cartpole-swingup-td3",
+      "source": "repository:rl-cartpole-swingup-td3",
+      "target": "repository:rl-cartpole-swingup-ppo",
+      "type": "related_to",
+      "weight": 3.2,
+      "shared": {
+        "technology": [
+          "Python（リポジトリ情報）"
+        ],
+        "hardware": [],
+        "theme": [
+          "ロボティクス・制御",
+          "Web・開発ツール"
+        ]
+      }
+    },
+    {
+      "id": "related_to|repository:rl-cartpole-swingup-ppo|repository:rl-cartpole-swingup-sac",
+      "source": "repository:rl-cartpole-swingup-sac",
+      "target": "repository:rl-cartpole-swingup-ppo",
+      "type": "related_to",
+      "weight": 2.6,
+      "shared": {
+        "technology": [
+          "Python（リポジトリ情報）"
+        ],
+        "hardware": [],
+        "theme": [
+          "ロボティクス・制御"
         ]
       }
     },
@@ -12295,56 +12333,6 @@
         "hardware": [],
         "theme": [
           "組み込み・ファームウェア"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:rl-cartpole-swingup-ppo|repository:smart-annotator",
-      "source": "repository:smart-annotator",
-      "target": "repository:rl-cartpole-swingup-ppo",
-      "type": "related_to",
-      "weight": 3.2,
-      "shared": {
-        "technology": [
-          "GitHub Pages（README記載）"
-        ],
-        "hardware": [],
-        "theme": [
-          "Web・開発ツール",
-          "データ解析・計測"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:rl-cartpole-swingup-ppo|repository:rl-cartpole-swingup-td3",
-      "source": "repository:rl-cartpole-swingup-td3",
-      "target": "repository:rl-cartpole-swingup-ppo",
-      "type": "related_to",
-      "weight": 3.2,
-      "shared": {
-        "technology": [
-          "Python（リポジトリ情報）"
-        ],
-        "hardware": [],
-        "theme": [
-          "ロボティクス・制御",
-          "Web・開発ツール"
-        ]
-      }
-    },
-    {
-      "id": "related_to|repository:rl-cartpole-swingup-ppo|repository:rl-cartpole-swingup-sac",
-      "source": "repository:rl-cartpole-swingup-sac",
-      "target": "repository:rl-cartpole-swingup-ppo",
-      "type": "related_to",
-      "weight": 2.6,
-      "shared": {
-        "technology": [
-          "Python（リポジトリ情報）"
-        ],
-        "hardware": [],
-        "theme": [
-          "ロボティクス・制御"
         ]
       }
     },
