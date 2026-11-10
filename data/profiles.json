@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-08T22:25:20.628Z",
+  "generated_at": "2026-11-10T01:47:04.793Z",
   "owner": "temesotejam",
-  "repository_count": 111,
+  "repository_count": 112,
   "profiles": {
     "temesotejam/atoms3r-lateral-energy-control": {
       "url": "https://github.com/temesotejam/atoms3r-lateral-energy-control",
       "default_branch": "main",
-      "pushed_at": "2026-11-08T12:10:55Z",
+      "pushed_at": "2026-11-09T07:39:50Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -212,35 +212,36 @@
       ],
       "recent_commits": [
         {
-          "sha": "439395be",
-          "message": "Merge pull request #28 from temesotejam/research/pin-validation-runner"
+          "sha": "ec5faa49",
+          "message": "Merge pull request #37 from temesotejam/feature/angle-rate-early-flasher"
         },
         {
-          "sha": "c49483f7",
-          "message": "Pin CI runner to previously validated Ubuntu release"
+          "sha": "f2aa089d",
+          "message": "Pin corrected trial test script"
         },
         {
-          "sha": "ec571f92",
-          "message": "Merge pull request #26 from temesotejam/feature/camera-web-diagnostics"
+          "sha": "0efa0c29",
+          "message": "Add isolated angle early input flash page"
         }
       ],
       "archived": false,
-      "fingerprint": "1192e3f7067cf7db98fdac8d23a34c8771826efa56cbfb16115cd5fb8f76c4fb",
-      "analyzed_at": "2026-11-08T22:20:48.290Z",
+      "fingerprint": "bdbc638d577c6df2564f2fdf6afc633fa6537a3cd232e8ae9fa55906a63f59ac",
+      "analyzed_at": "2026-11-10T01:43:22.794Z",
       "profile": {
-        "purpose": "AtomS3Rとリアクションホイールを使い、左右揺動のピーク角を目標に近づける制御と実機測定を行うファームウェア。制御方式の比較やログ解析も含む。",
-        "architecture": "C++ファームウェア、実機Web画面・ログ解析用サイト、測定手順や結果を記録するドキュメントで構成される。提示されたコード抜粋では、パルス後の位相制御と制御遅延計測の各モジュールを確認できる。詳細な呼び出し関係や全体構成は抜粋だけでは不明。",
+        "purpose": "AtomS3Rとリアクションホイールを使った左右揺動の制御・実機測定用ファームウェア。ピーク角を目標に近づける入力を行い、実験ログを解析する。",
+        "architecture": "Arduino系C++ファームウェアが姿勢推定・入力制御・測定ログを担い、Web画面から実験を操作する構成。ログ解析用のWebページと、制御方式・実験結果を記録した文書も含む。個々のモジュール間の全体的な呼び出し関係は、提示された抜粋だけでは確認できない。",
         "technologies": [
           "C++",
           "Arduino",
           "FreeRTOS",
-          "MEKF姿勢推定（README記載）",
-          "ブラウザー上のJavaScript解析ページ（ファイル一覧・README記載）"
+          "MEKF姿勢推定",
+          "HTML/CSS/JavaScript（ファイル一覧で確認）"
         ],
         "algorithms": [
-          "MEKF推定角からピークとZEROクロスを検出し、次のピークの目標エネルギーに基づいて入力を決める方式（README記載）",
-          "位相・角速度の符号反転を用いるパルス後の旋回判定と、beta値の復帰制御",
-          "ポーリング、I/O、キュー配送から制御処理までの経過時間・超過を集計する遅延計測"
+          "MEKFの角度・角速度を用いたピークおよびZEROクロス検出",
+          "位置エネルギー目標と暫定応答式からのリアクションホイール入力計算",
+          "パルス後の角速度反転検出に基づく動的β制御",
+          "制御処理・I/O・キュー配送の遅延計測"
         ],
         "hardware": [
           "M5Stack AtomS3R",
@@ -248,28 +249,28 @@
           "リアクションホイール"
         ],
         "interfaces": [
-          "AtomS3R上のWeb画面による測定操作（README記載）",
-          "RWLOGによる実機状態・指令・測定値の記録（README記載）",
-          "JSON形式の制御遅延プロファイル出力"
+          "Web画面からの測定開始・制御設定",
+          "RWLOG形式の測定記録",
+          "ブラウザ上のwheel-work解析ページとCSV出力"
         ],
         "reusable_components": [
           {
             "name": "BetaPhaseController",
-            "purpose": "入力保護中は判定を保留し、角速度の反転を旋回として検出する。帰還位相に応じて指数型のbeta上限を計算する。",
+            "purpose": "パルス開始後の角速度積分、旋回検出、復帰進行度に基づくβ上限を計算する。",
             "evidence": [
               "src/beta_phase_controller.h"
             ]
           },
           {
             "name": "BetaTurnFastController",
-            "purpose": "パルス後の角速度反転を複数サンプルで確認し、確認後またはタイムアウト後にsmoothstepでbetaを復帰させる。",
+            "purpose": "入力保護中の誤検出を避けて運動の反転を確認し、smoothstepでβを復帰させる。反転未確認時の時間ベースの復帰も備える。",
             "evidence": [
               "src/beta_turn_fast_controller.h"
             ]
           },
           {
             "name": "control_latency::Profile",
-            "purpose": "処理段階ごとのサンプル経過時間、ポーリング・I/Oの重なり、キュー配送時間、予算超過を固定容量で記録し、JSON出力する。",
+            "purpose": "サンプル受信から制御完了までの段階別遅延、I/O重複時間、キュー配送時間、予算超過を有界な記録領域で集計しJSON出力する。",
             "evidence": [
               "src/control_latency.h",
               "src/control_latency.cpp"
@@ -277,19 +278,18 @@
           },
           {
             "name": "control_angle_reference::origin",
-            "purpose": "work_modeに応じて重力基準の角度原点または保存姿勢を返す。抜粋上ではwork_mode時に保存姿勢を使わない。",
+            "purpose": "制御モードに応じて重力基準角または保存姿勢を角度原点として選択する。",
             "evidence": [
               "src/control_angle_reference.h"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋は一部であり、各制御器が製品制御ループでどう使われるかは確認できない。",
-          "READMEではエネルギー係数を暫定値とし、逆入力の効果は独立して同定できていないと説明している。",
-          "READMEによると、実機の閉ループ性能は自動試験だけでは確認できない。",
-          "遅延プロファイルのI/O・ポーリング時間は割り込み等を含む壁時計時間であり、純粋なCPU時間ではない（src/control_latency.h）。"
+          "READMEではエネルギー係数を暫定値とし、逆入力の効果を独立に同定できていないと説明している。",
+          "READMEでは実機の閉ループ性能は自動試験だけでは確認できないとしている。",
+          "提供されたソース抜粋は一部モジュールに限られるため、ファームウェア全体の構成や各機能の実装状況は確認できない。"
         ],
-        "maturity": "実験",
+        "maturity": "試作",
         "confidence": "medium",
         "evidence": [
           "README.md",
@@ -297,14 +297,16 @@
           "src/beta_turn_fast_controller.h",
           "src/control_angle_reference.h",
           "src/control_latency.h",
-          "src/control_latency.cpp"
+          "src/control_latency.cpp",
+          "site/wheel-work.html",
+          "site/wheel-work.js"
         ]
       }
     },
     "temesotejam/github-tavern": {
       "url": "https://github.com/temesotejam/github-tavern",
       "default_branch": "main",
-      "pushed_at": "2026-11-08T22:16:07Z",
+      "pushed_at": "2026-11-09T22:44:34Z",
       "available_paths": [
         ".github",
         ".github/agents",
@@ -333,87 +335,90 @@
       ],
       "recent_commits": [
         {
-          "sha": "4d0cac45",
+          "sha": "d119e342",
+          "message": "chore: refresh verified public pages"
+        },
+        {
+          "sha": "3a23eef3",
           "message": "chore: refresh tavern summaries"
         },
         {
-          "sha": "eb5b71b9",
-          "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "c24c5a80",
+          "sha": "98825c93",
           "message": "chore: refresh tavern summaries"
         }
       ],
       "archived": false,
-      "fingerprint": "ba51bc9e6a8c576379cf8651c3bb22eb83448343ff9af87ae956425e70112cbe",
-      "analyzed_at": "2026-11-08T22:20:18.359Z",
+      "fingerprint": "66da9c4f7d704e5a0160c53fb16ece38c90e3471896121cf799425ec1ac82890",
+      "analyzed_at": "2026-11-10T01:42:40.672Z",
       "profile": {
-        "purpose": "公開GitHubリポジトリを検索・分類・閲覧する、GitHub Pages対応の個人向けポータル。",
-        "architecture": "静的フロントエンドがGitHub APIから公開リポジトリ情報を取得し、検索・分類・詳細表示を行う。Copilot要約などのJSONデータを利用し、README記載ではGitHub Actionsから定期更新する構成。",
+        "purpose": "所有者の公開GitHubリポジトリを検索・分類し、概要を閲覧する個人向けの静的ポータル。",
+        "architecture": "ブラウザー側のJavaScriptがGitHub APIから公開リポジトリを取得し、検索・分類・詳細表示を行う構成。説明文や公開ページ情報はJSONファイルから読み込む。READMEによれば、GitHub ActionsとCopilot CLIで説明データを更新する仕組みもあるが、そのワークフローや更新スクリプトの実装詳細は提示された抜粋から確認できない。",
         "technologies": [
           "JavaScript",
           "HTML",
           "CSS",
           "GitHub API",
           "GitHub Pages",
-          "GitHub Actions",
-          "GitHub Copilot CLI"
+          "GitHub Actions（READMEで説明）",
+          "Copilot CLI（READMEで説明）"
         ],
         "algorithms": [
-          "キーワード規則によるリポジトリ分類",
-          "Markdownの正規表現ベースの除去と先頭文抽出",
-          "最大6件の並行処理キュー",
-          "MutationObserverによるDOM変更検出"
+          "リポジトリ名・説明・言語・Topics・要約などを結合した部分文字列検索",
+          "キーワード規則を順に適用するカテゴリ分類",
+          "同時実行数を6件に制限したREADME取得キュー",
+          "正規表現によるMarkdownの除去と短いプレビュー文の抽出",
+          "日本語の説明文を口語調に変換する文字列置換"
         ],
         "hardware": [],
         "interfaces": [
-          "GitHub REST API",
-          "raw.githubusercontent.com上のREADME",
-          "summaries.jsonおよびpublic-pages.json",
-          "ブラウザー上の検索・分類・詳細UI"
+          "GitHub REST APIからの公開リポジトリ取得",
+          "静的JSONデータ（data/summaries.json、data/public-pages.json）",
+          "GitHub Pages上のブラウザーUI",
+          "raw.githubusercontent.comからのREADME取得"
         ],
         "reusable_components": [
           {
-            "name": "app.jsのtextFor / categoryOf",
-            "purpose": "リポジトリ名・説明・言語・Topics・要約を検索用テキストにまとめ、語句規則でカテゴリを割り当てる。",
+            "name": "READMEプレビュー生成（cleanMarkdown、shortPreview）",
+            "purpose": "Markdownのコード・画像・リンクなどを除去し、見出しやノイズらしい先頭文を避けて短い説明を抽出する。",
+            "evidence": [
+              "card-enricher.js"
+            ]
+          },
+          {
+            "name": "README取得キュー",
+            "purpose": "取得済み結果のキャッシュ、重複登録の抑止、同時実行数制限を組み合わせてREADMEを取得し、該当カードを更新する。",
+            "evidence": [
+              "card-enricher.js"
+            ]
+          },
+          {
+            "name": "キーワード分類・検索テキスト構築（textFor、categoryOf）",
+            "purpose": "リポジトリ情報と要約を検索対象にし、キーワード規則に基づいてカテゴリを決める。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "card-enricher.jsのcleanMarkdown / shortPreview",
-            "purpose": "READMEからコードブロックや画像などを除去し、短い説明文を抽出する。",
-            "evidence": [
-              "card-enricher.js"
-            ]
-          },
-          {
-            "name": "card-enricher.jsのpump / enqueueCards",
-            "purpose": "カードのREADME取得を重複排除し、並行数を6件に制限して処理する。",
-            "evidence": [
-              "card-enricher.js"
-            ]
-          },
-          {
-            "name": "public-pages-client.jsのvalidEntry",
-            "purpose": "公開ページURLを解析し、HTTP/HTTPS以外のスキームを除外する。",
+            "name": "公開ページURL検証（validEntry）",
+            "purpose": "URLを解析し、HTTPまたはHTTPSのエントリーだけをリンク表示に使う。",
             "evidence": [
               "public-pages-client.js"
             ]
           },
           {
-            "name": "spoken-overview-client.jsのspokenize",
-            "purpose": "日本語の技術説明を口語調へ変換する純粋変換関数。",
+            "name": "説明文の口語化（spokenize）",
+            "purpose": "日本語の説明文に対する置換処理を純粋関数として公開し、ブラウザー外からもテストできるようにする。",
             "evidence": [
               "spoken-overview-client.js"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋は一部に限られるため、全体の動作やエラー処理は確認できない。",
-          "READMEによれば対象は所有者の公開リポジトリで、Private Repositoryや書き込み操作は対象外。",
-          "自動要約ワークフローや更新スクリプトの実装詳細は、提示された抜粋から確認できない。"
+          "提示された情報ではapp.jsの抜粋が一部のみで、取得・検索・詳細表示の全フローは確認できない。",
+          "Copilotによる説明データ更新の詳細はREADMEの記述のみで、ワークフローや更新スクリプトの実装は確認できない。",
+          "READMEでは公開リポジトリのみを対象とし、サイトから書き込み操作を行わない方針が説明されている。",
+          "カテゴリ分類は提示されたキーワード規則によるため、分類精度や網羅性は確認できない。",
+          "READMEプレビュー取得はmain/masterなど定義済みのブランチ名・ファイル名を試す実装で、他の配置への対応は確認できない。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
@@ -424,15 +429,17 @@
           "public-pages-client.js",
           "spoken-overview-client.js",
           "keeper-closing-client.js",
-          "scripts/update-summaries.mjs",
-          ".github/workflows/copilot-summaries.yml"
+          "data/public-pages.json",
+          "data/summaries.json",
+          ".github/workflows/copilot-summaries.yml",
+          "scripts/update-summaries.mjs"
         ]
       }
     },
     "temesotejam/2026_10_24": {
       "url": "https://github.com/temesotejam/2026_10_24",
       "default_branch": "main",
-      "pushed_at": "2026-11-08T21:59:30Z",
+      "pushed_at": "2026-11-09T22:17:43Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -449,99 +456,91 @@
       ],
       "recent_commits": [
         {
+          "sha": "16c2bce7",
+          "message": "Update automatic news feed"
+        },
+        {
+          "sha": "0ec30ee8",
+          "message": "Update automatic news feed"
+        },
+        {
           "sha": "920a80a5",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "08958f13",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "c3ee91c0",
           "message": "Update automatic news feed"
         }
       ],
       "archived": false,
-      "fingerprint": "fab9a608ca416faee3207b9a3a53e386bf1b1d3e2b95501478f505e4ff89dbde",
-      "analyzed_at": "2026-11-08T22:20:31.411Z",
+      "fingerprint": "574b68f7e6e589372b7b1e51be1006d32f4f74c69b782585daf88278ae56671f",
+      "analyzed_at": "2026-11-10T01:42:53.909Z",
       "profile": {
-        "purpose": "ニュース見出しなどの現象を題材に、ニュースデータを迷宮へ反映するブラウザー向け一人用探索ゲーム。",
-        "architecture": "index.html・styles.css・app.jsで構成されるクライアント側ゲーム。app.jsはCanvas描画とゲーム状態を扱い、data/news.jsonを読み込む。READMEによればGitHub Actionsが公開RSSからニュースデータを更新する。",
+        "purpose": "ニュース見出しや入力した現実の出来事を題材に、迷宮を探索する一人用ゲーム。",
+        "architecture": "ブラウザー上のJavaScriptゲーム。app.jsがゲーム状態とCanvas描画を扱い、data/news.jsonのニュースを読み込む構成とREADMEに記載されています。GitHub Actionsによるニュース更新とGitHub Pagesでの公開も記載されていますが、ワークフローや取得スクリプトの実装詳細は提示資料から確認できません。",
         "technologies": [
           "JavaScript",
-          "HTML",
-          "CSS",
-          "Canvas 2D",
-          "Fetch API",
-          "localStorage",
-          "GitHub Actions",
-          "RSS（READMEに記載）"
+          "HTML Canvas",
+          "ブラウザーAPI（fetch、localStorage、URL）",
+          "GitHub Pages（README記載）",
+          "GitHub Actions（README記載）"
         ],
         "algorithms": [
-          "マンハッタン距離による距離計算（app.jsのdist）",
-          "乱数による選択（app.jsのrand）",
-          "日付を使ったニュース種の選択（app.jsのstartGame）",
-          "ニュース見出しの正規表現による除外と、HTTP(S) URLの検証"
+          "プレイヤーの行動ごとに仲間と敵も行動するターン制（README記載）",
+          "ランダム生成を含む探索ゲーム（README記載。生成処理の詳細は未確認）",
+          "ニュース見出しのキーワードによる除外とURLプロトコル検査（app.js抜粋）"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザー上のCanvasゲーム画面",
-          "data/news.jsonのJSONデータ",
-          "公開ニュース記事へのHTTP(S)リンク",
-          "キーボード・画面ボタンによる操作（READMEに記載）"
+          "Canvasによるゲーム画面",
+          "矢印キー・WASD・画面方向ボタンによる移動（README記載）",
+          "data/news.jsonからのニュース取得",
+          "ローカルストレージのreality-dungeon-seedによる入力ニュース保存",
+          "GitHub Pagesでの公開（README記載）"
         ],
         "reusable_components": [
           {
-            "name": "safeHttpUrl",
-            "purpose": "URLを解析し、HTTPまたはHTTPSのみを許可する。",
+            "name": "safeHttpUrl(value)",
+            "purpose": "URLを解析し、HTTPまたはHTTPSのみ許可して正規化URLを返す。その他や不正な値は空文字にする。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "esc",
-            "purpose": "文字列中のHTML特殊文字をエスケープする。",
+            "name": "savedSeed()",
+            "purpose": "ローカルストレージからニュース種を読み込み、出典URLを検証して利用可能な場合に返す。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "loadAutomaticNews",
-            "purpose": "ニュースJSONを取得し、カテゴリ・見出し・配信元を検査してゲーム用データへ整形する。記事情報の事実確認は行わない設計。",
+            "name": "loadAutomaticNews()",
+            "purpose": "ニュースJSONを取得し、見出しのキーワード除外、出典除外、カテゴリ制限、文字数制限、URL検証を適用する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "savedSeed",
-            "purpose": "localStorageから保存データを読み込み、出典URLを検証する。",
+            "name": "renderAutomaticNews()",
+            "purpose": "ニュース一覧をDOM要素として構築し、選択時にゲーム開始へつなぐ。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "categoryThemes",
-            "purpose": "カテゴリごとの配色、敵タイプ、表示ラベルをまとめる。",
+            "name": "dist(a, b)",
+            "purpose": "座標間のマンハッタン距離を計算する。",
             "evidence": [
               "app.js"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋はapp.jsの一部のみで、迷宮生成・ターン進行・描画の詳細は確認できない。",
-          "ニュース取得失敗時の表示や前回データ保持はREADMEの説明に基づき、実装コードは提示されていない。",
-          "フィードの入力形式やRSS取得・除外処理の実装詳細は未確認。",
-          "記事本文の検証はせず、提示情報では見出し等をゲーム内に利用する。"
+          "提示されたapp.jsは一部抜粋のため、迷宮生成・戦闘・描画の全実装や各関数の呼び出し関係は確認できません。",
+          "ニュース見出しの除外は提示範囲ではキーワード判定であり、記事本文の検証を示すものではありません。READMEにも記事本文を確認済みとは表示しない旨があります。",
+          "ニュース取得に失敗した場合、提示範囲では自動ニュース一覧を空にします。"
         ],
         "maturity": "試作",
         "confidence": "medium",
         "evidence": [
           "README.md",
-          "app.js",
-          "index.html",
-          "styles.css",
-          "data/news.json",
-          ".github/workflows/news.yml"
+          "app.js"
         ]
       }
     },
@@ -11700,6 +11699,306 @@
           "apps/host/src/lib/model-icons.ts",
           "apps/desktop/src-tauri/src/main.rs",
           "CMakeLists.txt"
+        ]
+      }
+    },
+    "temesotejam/rw-walker-motion-control": {
+      "url": "https://github.com/temesotejam/rw-walker-motion-control",
+      "default_branch": "main",
+      "pushed_at": "2026-11-09T11:39:35Z",
+      "available_paths": [
+        ".gitattributes",
+        ".gitignore",
+        "CURRENT_STATUS_20261109.md",
+        "HANDOFF_VSCODE.md",
+        "README.md",
+        "THIRD_PARTY_BMM150_LICENSE.txt",
+        "build-smooth-web.cmd",
+        "flasher",
+        "flasher/flasher-completion.js",
+        "flasher/index.html",
+        "flasher/manifest.json",
+        "flasher/soft-boot.js",
+        "open-flasher.cmd",
+        "platformio.ini",
+        "src",
+        "src/adaptive_lateral_cg.h",
+        "src/autonomous_brake_limit.h",
+        "src/autonomous_input_current.h",
+        "src/autonomous_input_percent.h",
+        "src/autonomous_target.h",
+        "src/beta_phase_controller.h",
+        "src/beta_turn_fast_controller.h",
+        "src/bmi270_timing_reader.h",
+        "src/bounded_web_server.cpp",
+        "src/bounded_web_server.h",
+        "src/camera_coexistence.cpp",
+        "src/camera_coexistence.h",
+        "src/camera_lifecycle.h",
+        "src/camera_serial_debug.cpp",
+        "src/camera_serial_debug.h",
+        "src/camera_task_priority_patch.cpp",
+        "src/camera_task_priority_patch.h",
+        "src/compact_json_table.h",
+        "src/config.h",
+        "src/control_angle_reference.h",
+        "src/control_latency.cpp",
+        "src/control_latency.h",
+        "src/control_math_cache.h",
+        "src/control_work_profile.cpp",
+        "src/control_work_profile.h",
+        "src/diagnostic_journal.h",
+        "src/direct_q_solver.h",
+        "src/early_clock.h",
+        "src/early_geometry_diagnostics.h",
+        "src/early_motion_gate.h",
+        "src/experiment_runner.cpp",
+        "src/experiment_runner.h",
+        "src/experiment_status.h",
+        "src/export_protocol.h",
+        "src/foot_angle_estimator.cpp",
+        "src/foot_angle_estimator.h",
+        "src/foot_balance_adaptive.h",
+        "src/foot_calibration_diagnostics.h",
+        "src/foot_calibration_table.h",
+        "src/foot_energy_balance.h",
+        "src/foot_fullstride_observer.h",
+        "src/foot_gap_trend.h",
+        "src/foot_geometry_async.h",
+        "src/foot_geometry_worker.h",
+        "src/foot_observer.cpp",
+        "src/foot_observer.h",
+        "src/foot_phase_cap.h",
+        "src/foot_phase_observer.h",
+        "src/foot_range_diagnostics.h",
+        "src/foot_span_candidate.h",
+        "src/foot_span_control.h",
+        "src/foot_stroke_observer.h",
+        "src/foot_tracking_config.h",
+        "src/foot_trend.h",
+        "src/foot_zero.h",
+        "src/gradual_start.h",
+        "src/gyro_heading_diagnostic.cpp",
+        "src/gyro_heading_diagnostic.h",
+        "src/gyro_steering.h",
+        "src/immutable_export.cpp",
+        "src/immutable_export.h",
+        "src/imu_acquisition_audit.h",
+        "src/imu_i2c_transport.cpp",
+        "src/imu_i2c_transport.h",
+        "src/imu_manager.cpp",
+        "src/imu_manager.h",
+        "src/imu_poll_profile.h",
+        "src/imu_poll_timer.h",
+        "src/imu_startup_boundary.h",
+        "src/lateral_cg_energy.h",
+        "src/lateral_cg_store.cpp",
+        "src/lateral_energy_control.h",
+        "src/log_quantization.cpp",
+        "src/log_quantization.h",
+        "src/log_sample_encoder.cpp",
+        "src/log_sample_encoder.h",
+        "src/log_types.h",
+        "src/long_foot_balance.h",
+        "src/low_peak_energy.h",
+        "src/madgwick_pitch.h",
+        "src/main.cpp",
+        "src/marker_identity_policy.h",
+        "src/mekf6.cpp",
+        "src/mekf6.hpp",
+        "src/mekf_attitude_diagnostics.cpp",
+        "src/mekf_attitude_diagnostics.h",
+        "src/negative_cap_recovery.h",
+        "src/negative_probe_batch.h",
+        "src/negative_probe_extended_batch.h",
+        "src/negative_weak_probe.h",
+        "src/offline_run_session.h",
+        "src/one_peak_energy_inverse.h",
+        "src/peak_error_adaptation.h",
+        "src/peak_mpc.h",
+        "src/positive_current_batch.h",
+        "src/positive_left_boost.h",
+        "src/positive_sway_probe.h",
+        "src/previous_peak_control_correction.h",
+        "src/psram_logger.cpp",
+        "src/psram_logger.h",
+        "src/psram_string.h",
+        "src/rate_baseline_correction.h",
+        "src/realtime_code.h",
+        "src/roller485_manager.cpp",
+        "src/roller485_manager.h",
+        "src/run_control_worker.h",
+        "src/runtime_diagnostics.cpp",
+        "src/runtime_diagnostics.h",
+        "src/runtime_web.h",
+        "src/rwlog_download_diag.cpp",
+        "src/rwlog_download_diag.h",
+        "src/side_energy_feedback.h",
+        "src/solver_audit.h",
+        "src/stack_scan_policy.h",
+        "src/stall_rescue.h",
+        "src/target12_state_work.h",
+        "src/tcp_transport_debug.cpp",
+        "src/tcp_transport_debug.h",
+        "src/tilt_priority.h",
+        "src/tilt_stop.h",
+        "src/timing_deadline.h",
+        "src/unmodeled_walk_coast.h",
+        "src/upright_pose_guide.h",
+        "src/upright_reference.h",
+        "src/upright_reference_store.cpp",
+        "src/upright_reference_store.h",
+        "src/usb_diag_control.h",
+        "src/walking_energy_loss.h",
+        "src/walking_positive_cap.h",
+        "src/weak_side_assist.h",
+        "src/web_ui.cpp",
+        "src/web_ui.h",
+        "src/wheel_cycle_guard.h",
+        "src/wheel_speed_balance.h",
+        "src/wheel_work_energy_control.h",
+        "src/white_marker_tracker.cpp",
+        "src/white_marker_tracker.h",
+        "src/work_start_policy.h",
+        "src/work_target_policy.h",
+        "test",
+        "test/test_long_foot_balance.cpp",
+        "test/test_negative_cap_recovery.cpp",
+        "test/test_negative_weak_probe.cpp",
+        "test/test_positive_sway_probe.cpp",
+        "test/test_tapered_amplitude_recovery.cpp",
+        "tools",
+        "tools/analyze_energy_validation.py",
+        "tools/analyze_phase_pair_variation.py",
+        "tools/analyze_v46_attitude_validation.py",
+        "tools/analyze_v46al_counterfactual.py",
+        "tools/analyze_v46q_acquisition.py",
+        "tools/analyze_wheel_work.js",
+        "tools/apply_v46d_video_calibration_patch.py",
+        "tools/apply_v46e_proper_frame_patch.py",
+        "tools/apply_v46f_gyro_calibration_patch.py",
+        "tools/apply_v46g_filter_patch.py",
+        "tools/apply_v46g_imu_patch.py",
+        "tools/apply_v46g_meta_patch.py",
+        "tools/apply_v46h_timing_patch.py",
+        "tools/apply_v46i_task_split_patch.py",
+        "tools/apply_v46j_retry_init_patch.py",
+        "tools/apply_v46j_roller_ready_patch.py",
+        "tools/apply_v46k_timing_probe_patch.py",
+        "tools/apply_v46l_fast_solver_shadow.py",
+        "tools/apply_v46r_fast_solver_control.py",
+        "tools/apply_v46s_solver_audit.py",
+        "tools/apply_v46t_current_observation.py",
+        "tools/apply_v46u_timing.py",
+        "tools/check_observation_sampling.py",
+        "tools/check_v46u_deadlines.py",
+        "tools/convert_rwlog_to_csv.py",
+        "tools/embed_runtime_web.py",
+        "tools/finalize_v46e_proper_frame_patch.py",
+        "tools/finalize_v46s_storage.py",
+        "tools/fit_adaptive_lateral_cg.py",
+        "tools/fit_broad_negative_work.py",
+        "tools/fit_full_charge_negative.py",
+        "tools/fit_lateral_energy_seed.py",
+        "tools/fit_pooled_negative_work.py",
+        "tools/fit_positive_work_expanded.py",
+        "tools/fix_v46f_guard.py",
+        "tools/fix_v46i_snapshot_guard.py",
+        "tools/fix_v46k_timing_probe_postpatch.py",
+        "tools/fix_v46l_metadata_float_helper.py",
+        "tools/fixtures"
+      ],
+      "recent_commits": [
+        {
+          "sha": "bda1ddd4",
+          "message": "Record v9 walking trial observations"
+        },
+        {
+          "sha": "a0649bfb",
+          "message": "Add fast crossing shadow comparison"
+        },
+        {
+          "sha": "ad06d689",
+          "message": "Record v8 walking trial observations"
+        }
+      ],
+      "archived": false,
+      "fingerprint": "e3c6237631e601211b33575c8ba2574953e6b84d9a3c93a64bf6ddd5896225dd",
+      "analyzed_at": "2026-11-10T01:43:09.233Z",
+      "profile": {
+        "purpose": "リアクションホイール歩行器向けのモーション制御プログラム。実機書き込みはPCで行い、GitHub更新による自動ビルド・デプロイは行わないとREADMEに記載されています。",
+        "architecture": "C++の制御モジュール群をPlatformIOでビルドする構成です。提示されたソースでは、パルス後の動作に応じたβ制御と、制御処理・I/Oのレイテンシ計測を確認できます。main.cppなどとの接続関係や全体の実行構成は、抜粋だけでは確認できません。",
+        "technologies": [
+          "C++",
+          "Arduino",
+          "FreeRTOS",
+          "PlatformIO"
+        ],
+        "algorithms": [
+          "ジャイロ積分によるパルス相対位相・旋回検出",
+          "旋回確認後のsmoothstep補間によるβ回復",
+          "復帰進捗に応じた指数関数型β上限補間",
+          "制御処理・I/Oの時間計測と超過記録"
+        ],
+        "hardware": [
+          "リアクションホイール歩行器（README記載）",
+          "BMI270（ファイル名から利用を示唆。実装詳細は未確認）",
+          "BMM150（ライセンスファイル名から関連を示唆。利用詳細は未確認）"
+        ],
+        "interfaces": [
+          "BetaPhaseController: reset(), beginPulse(), update(), betaCeiling()",
+          "BetaTurnFastController: reset(), beginPulse(), update(), betaTarget()",
+          "control_latency名前空間: pollBegin/End(), ioBegin/End(), mark(), Profileによる計測データのJSON出力",
+          "PlatformIOビルド環境。README記載の試験ビルドではFOOT_EARLY_TRIAL=1とANGLE_EARLY_TRIAL=1を指定"
+        ],
+        "reusable_components": [
+          {
+            "name": "BetaTurnFastController",
+            "purpose": "入力保護中は旋回判定を保留し、複数サンプルでの逆向きレート確認、またはタイムアウト後にβを滑らかに回復する状態機械。歩行パルス後の制御に移植可能です。",
+            "evidence": [
+              "src/beta_turn_fast_controller.h"
+            ]
+          },
+          {
+            "name": "BetaPhaseController",
+            "purpose": "バイアス補正済み角速度の積分から折り返し後の復帰進捗を求め、指数補間でβ上限を設定します。動作イベントを基準とする位相制御の参考になります。",
+            "evidence": [
+              "src/beta_phase_controller.h"
+            ]
+          },
+          {
+            "name": "control_latency::Profile",
+            "purpose": "サンプル受信から処理段階ごとの経過時間、ポーリング・I/Oとの重なり、キュー配送時間を集計し、上限付きで超過行を記録します。実時間処理の観測に再利用できます。",
+            "evidence": [
+              "src/control_latency.h",
+              "src/control_latency.cpp"
+            ]
+          },
+          {
+            "name": "control_angle_reference::origin",
+            "purpose": "作業モードでは重力基準のピッチを原点とし、それ以外では保存済みピッチを使い分けます。",
+            "evidence": [
+              "src/control_angle_reference.h"
+            ]
+          }
+        ],
+        "constraints": [
+          "β制御の時間・角速度閾値はConfig定数に依存します。移植先では調整と実機検証が必要です。",
+          "BetaPhaseControllerとBetaTurnFastControllerは0より大きく0.1秒未満のdtだけを積分対象とします。",
+          "レイテンシ値は割り込み等を含むホスト壁時計時間であり、純粋なCPU時間やプリエンプション時間ではありません。",
+          "Profileは1秒単位32バケット、超過詳細64件の上限付き記録です。",
+          "READMEによると初期データは別試験版を基準に移行されており、当該README時点のログ由来改善は未反映です。"
+        ],
+        "maturity": "実験",
+        "confidence": "medium",
+        "evidence": [
+          "README.md",
+          "src/beta_phase_controller.h",
+          "src/beta_turn_fast_controller.h",
+          "src/control_angle_reference.h",
+          "src/control_latency.h",
+          "src/control_latency.cpp",
+          "platformio.ini"
         ]
       }
     }
