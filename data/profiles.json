@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-12T23:50:25.783Z",
+  "generated_at": "2026-11-13T23:52:52.059Z",
   "owner": "temesotejam",
-  "repository_count": 113,
+  "repository_count": 114,
   "profiles": {
     "temesotejam/atoms3r-lateral-energy-control": {
       "url": "https://github.com/temesotejam/atoms3r-lateral-energy-control",
@@ -306,7 +306,7 @@
     "temesotejam/github-tavern": {
       "url": "https://github.com/temesotejam/github-tavern",
       "default_branch": "main",
-      "pushed_at": "2026-11-12T20:07:04Z",
+      "pushed_at": "2026-11-13T20:06:00Z",
       "available_paths": [
         ".github",
         ".github/agents",
@@ -335,82 +335,87 @@
       ],
       "recent_commits": [
         {
-          "sha": "36d1ff81",
-          "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "e9c7b394",
-          "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "469c862c",
+          "sha": "6834ceb0",
           "message": "chore: refresh verified public pages"
+        },
+        {
+          "sha": "4ee7534b",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
+          "sha": "3b65d7cf",
+          "message": "chore: refresh tavern summaries"
         }
       ],
       "archived": false,
-      "fingerprint": "04e3400ae2f676d0d5656c3986871e9197cbf143bf05c762b97e20c68389c69b",
-      "analyzed_at": "2026-11-12T23:45:31.217Z",
+      "fingerprint": "881d2065abc07e9a928e9e3beba419b7f7dfc21b636921c7eddd46f3dea75242",
+      "analyzed_at": "2026-11-13T23:47:15.268Z",
       "profile": {
-        "purpose": "公開リポジトリを検索・分類し、概要や公開ページへのリンクを閲覧する個人向け静的ポータル。",
-        "architecture": "ブラウザー側のJavaScriptがGitHub APIから公開リポジトリを取得し、検索・分類・詳細表示を行う。要約と公開ページ情報はJSONファイルから読み込む。GitHub ActionsとCopilot CLIによる要約更新もREADMEに記載されている。",
+        "purpose": "公開GitHubリポジトリを検索・閲覧する個人向けポータル。READMEでは、一覧表示に加えてCopilot生成の説明を提供すると記載されている。",
+        "architecture": "静的なHTML/CSS/JavaScriptのクライアントとJSONデータを中心とする構成。app.jsが画面状態や分類を扱い、補助クライアントがREADMEの短縮表示、公開ページリンク、説明文の調整などを担う。READMEにはGitHub Actionsによるデータ更新も記載されているが、該当ワークフローやスクリプトの内容は提示されていない。",
         "technologies": [
           "JavaScript",
-          "GitHub REST API",
-          "Fetch API",
-          "DOM API",
-          "MutationObserver",
-          "GitHub Pages",
-          "GitHub Actions",
-          "GitHub Copilot CLI"
+          "HTML/CSS（ファイル構成から確認）",
+          "ブラウザーDOM、MutationObserver、Fetch API",
+          "GitHub REST APIとraw.githubusercontent.com（コード内のURLから確認）",
+          "GitHub Pages（READMEに記載）"
         ],
         "algorithms": [
-          "キーワード規則による技術領域の分類",
-          "READMEのMarkdown除去と先頭文抽出によるカード用プレビュー生成",
-          "最大6件の並行取得キュー"
+          "リポジトリ名・説明・言語・Topics・要約などへのキーワード照合による簡易分類",
+          "READMEのMarkdown記法やノイズを除去し、短いプレビュー文を抽出",
+          "カードのREADME取得をキューで処理し、同時実行数を6に制限",
+          "正規表現による日本語説明文の口語調変換",
+          "MutationObserverで画面変更を監視し、対応する表示を更新"
         ],
         "hardware": [],
         "interfaces": [
-          "GitHub REST API",
-          "raw.githubusercontent.com上のREADME",
-          "data/summaries.json",
-          "data/public-pages.json",
-          "ブラウザーUI",
-          "GitHub Pages"
+          "ブラウザー上の検索・分類・詳細表示UI（READMEに記載）",
+          "GitHub APIおよびraw.githubusercontent.comへのHTTPリクエスト",
+          "data/summaries.jsonおよびdata/public-pages.jsonのJSONデータ",
+          "GitHub Pagesによる静的公開（READMEに記載）"
         ],
         "reusable_components": [
           {
-            "name": "READMEプレビュー生成と取得キュー",
-            "purpose": "Markdownから短い説明文を抽出し、キャッシュと並行数制限付きキューでカードに反映する。",
+            "name": "cleanMarkdown / shortPreview",
+            "purpose": "READMEから画像・コードブロック・リンク等を除去し、カード向けの短い説明文を生成する。",
             "evidence": [
               "card-enricher.js"
             ]
           },
           {
-            "name": "キーワード分類規則",
-            "purpose": "リポジトリ名・説明・言語・Topics・要約を規則語と照合し、技術領域に分類する。",
+            "name": "README取得キュー",
+            "purpose": "READMEの複数ブランチ・ファイル名を順に試し、キャッシュと同時実行数制限を用いて取得する。",
+            "evidence": [
+              "card-enricher.js"
+            ]
+          },
+          {
+            "name": "categoryOf / RULES",
+            "purpose": "説明やTopicsなどをキーワード規則と照合してリポジトリを分類する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "公開ページURLの検証と表示制御",
-            "purpose": "HTTPまたはHTTPSのURLだけを許可し、選択中のリポジトリに応じてリンクを表示する。",
+            "name": "spokenize",
+            "purpose": "日本語の技術説明文を規則ベースで口語調に変換する。純粋変換関数としてCIから利用できるよう公開する実装も含む。",
             "evidence": [
-              "public-pages-client.js"
+              "spoken-overview-client.js"
             ]
           },
           {
-            "name": "日本語説明文の口語変換",
-            "purpose": "説明文の定型表現を置換する純粋変換関数を提供する。",
+            "name": "public-pages-client.jsのURL検証と表示制御",
+            "purpose": "登録されたURLをHTTP/HTTPSに制限して検証し、詳細表示中のリポジトリに応じてリンクを切り替える。",
             "evidence": [
-              "spoken-overview-client.js"
+              "public-pages-client.js"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋は一部のみで、全体の実装やエラー処理は確認できない。",
-          "READMEによると対象は所有者の公開リポジトリで、書き込み操作は行わない。",
-          "要約生成ワークフローの詳細設定やJSONデータの内容は提示情報から確認できない。"
+          "提示されたapp.jsは一部抜粋のため、全体の検索・描画・GitHub API処理の詳細は確認できない。",
+          "scripts/update-public-pages.mjs、scripts/update-summaries.mjs、ワークフローの内容は提示されていないため、自動更新の実装や権限設定はREADMEの記述以上に検証できない。",
+          "dataファイルの内容は提示されていないため、形式・網羅性・更新状態は不明。",
+          "READMEでは公開リポジトリのみを対象とし、書き込み操作を行わないと説明されている。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
@@ -418,18 +423,20 @@
           "README.md",
           "app.js",
           "card-enricher.js",
+          "keeper-closing-client.js",
           "public-pages-client.js",
           "spoken-overview-client.js",
-          "keeper-closing-client.js",
-          "scripts/update-summaries.mjs",
-          ".github/workflows/copilot-summaries.yml"
+          "index.html",
+          "styles.css",
+          "data/summaries.json",
+          "data/public-pages.json"
         ]
       }
     },
     "temesotejam/2026_10_24": {
       "url": "https://github.com/temesotejam/2026_10_24",
       "default_branch": "main",
-      "pushed_at": "2026-11-12T23:34:33Z",
+      "pushed_at": "2026-11-13T19:37:35Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -446,85 +453,89 @@
       ],
       "recent_commits": [
         {
+          "sha": "737ce032",
+          "message": "Update automatic news feed"
+        },
+        {
+          "sha": "cfb370cb",
+          "message": "Update automatic news feed"
+        },
+        {
           "sha": "6ad66c11",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "e617a61d",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "e54507a6",
           "message": "Update automatic news feed"
         }
       ],
       "archived": false,
-      "fingerprint": "32452e1e14c8b2b51d6d327666bacc461ae1e5a879a14965a5ae6ead25b6a642",
-      "analyzed_at": "2026-11-12T23:44:54.439Z",
+      "fingerprint": "bbd5da24cbe435fa274aaae932d06db6460ac113dae571c0cdde81b5fab7e80d",
+      "analyzed_at": "2026-11-13T23:47:31.540Z",
       "profile": {
-        "purpose": "ニュースや入力した出来事を題材に、迷宮を探索する一人用ブラウザーゲーム。",
-        "architecture": "静的なHTML/CSS/JavaScriptアプリ。app.jsがCanvas描画とゲーム状態を扱い、data/news.jsonを読み込んでニュースを選択可能にする構成。.github/workflows/news.ymlが公開RSSを取得してニュースデータを更新する設計とREADMEに記載されています。ゲーム進行やニュース収集の全実装は提示されていません。",
+        "purpose": "ニュースや入力した現実の出来事をゲーム内のテーマ・敵・観測情報に反映する、一人用の探索ゲーム。GitHub Pagesでの公開を想定している。",
+        "architecture": "ブラウザー側のゲーム処理をapp.js、画面をindex.htmlとstyles.css、自動ニュースデータをdata/news.jsonで構成する。READMEではscripts/fetch-news.mjsとGitHub Actionsによるニュース更新を説明しているが、その実装詳細は提示された証拠からは確認できない。",
         "technologies": [
           "JavaScript",
           "HTML Canvas",
-          "GitHub Actions",
-          "RSS"
+          "ブラウザーのlocalStorageとFetch API",
+          "GitHub Pages",
+          "GitHub Actions（READMEに記載）",
+          "RSS（READMEに記載）"
         ],
         "algorithms": [
-          "マンハッタン距離によるグリッド距離計算（dist）",
-          "乱数による選択（rand）",
-          "日付からニュース項目を選ぶ決定的なインデックス選択（startGame）"
+          "自動ニュースをカテゴリ・見出しの除外条件・HTTP(S) URLで絞り込む処理",
+          "日付を使ったニュース選択と、ランダムなニュース選択",
+          "マンハッタン距離を返すdist関数"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザーのCanvas表示",
-          "矢印キー・WASD・画面上の方向ボタン（README記載）",
-          "data/news.json形式のニュースデータ",
-          "公開RSS（README記載）",
-          "localStorageによるユーザー入力シード保存"
+          "Canvasベースのゲーム画面",
+          "キーボード（矢印キー/WASD）と画面上の方向ボタン",
+          "data/news.jsonからのJSON取得",
+          "localStorageへの調査データ保存",
+          "README記載の公開RSS入力"
         ],
         "reusable_components": [
           {
             "name": "safeHttpUrl",
-            "purpose": "URLを解析し、HTTP/HTTPS以外のスキームを除外して安全なURL文字列を返す。",
+            "purpose": "URLを解析し、HTTPまたはHTTPSの場合だけURL文字列を返す。ニュースリンクなどの入力検証に再利用できる。",
             "evidence": [
               "app.js"
             ]
           },
           {
             "name": "loadAutomaticNews",
-            "purpose": "ニュースJSONを取得し、カテゴリ・見出し・配信元などを整形し、URLや見出しによるフィルタリングを行う。取得失敗時は自動ニュース一覧を空にする。",
+            "purpose": "ニュースJSONの取得、カテゴリ制限、見出し・配信元の除外、表示用フィールドの整形を行う。取得失敗時は自動ニュース一覧を空にする。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "renderAutomaticNews",
-            "purpose": "自動収集ニュースをDOM要素として一覧表示し、選択時にゲームの調査対象として設定する。",
+            "name": "savedSeed",
+            "purpose": "localStorageから保存データを読み込み、出典URLがHTTP(S)であることを確認して利用可能な調査データを返す。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "startGame",
-            "purpose": "ユーザー指定または自動収集ニュースをシードとしてゲーム状態を初期化する。自動選択では日付を使って項目を選ぶ。",
+            "name": "syncAppHeight",
+            "purpose": "ウィンドウやvisualViewportの高さをCSSカスタムプロパティに反映し、画面サイズ変化に追従する。",
             "evidence": [
               "app.js"
             ]
           }
         ],
         "constraints": [
-          "提示されたapp.js抜粋は一部のみで、迷宮生成・戦闘・描画の具体的な実装詳細は確認できません。",
-          "自動ニュースの本文内容を確認済みとは扱わない旨がREADMEに記載されています。",
-          "ニュースの見出しフィルターは提示コード上の文字列パターンに基づくため、除外の網羅性は確認できません。"
+          "提示されたapp.js抜粋は一部のみのため、迷宮生成・ターン進行などの詳細な実装方式は確認できない。",
+          "scripts/fetch-news.mjs、各GitHub Actionsワークフロー、index.html、styles.css、data/news.jsonの内容は提示されていないため、その仕様や動作は未検証。",
+          "READMEは記事本文を保持せず、記事本文を確認済みとは表示しないと説明している。"
         ],
         "maturity": "試作",
         "confidence": "medium",
         "evidence": [
           "README.md",
           "app.js",
-          "data/news.json",
           ".github/workflows/news.yml",
+          ".github/workflows/pages.yml",
+          "scripts/fetch-news.mjs",
+          "data/news.json",
           "index.html",
           "styles.css"
         ]
@@ -11691,7 +11702,7 @@
     "temesotejam/rw-walker-motion-control": {
       "url": "https://github.com/temesotejam/rw-walker-motion-control",
       "default_branch": "main",
-      "pushed_at": "2026-11-12T04:21:32Z",
+      "pushed_at": "2026-11-13T09:44:30Z",
       "available_paths": [
         ".gitattributes",
         ".gitignore",
@@ -11709,11 +11720,47 @@
         "analysis/2026-11-11-walking/foot_support_assist_v11_final.md",
         "analysis/2026-11-11-walking/v10_2試行の結果.md",
         "analysis/2026-11-11-walking/v11_build_verification.json",
+        "analysis/2026-11-13-walking",
+        "analysis/2026-11-13-walking/141282685",
+        "analysis/2026-11-13-walking/141282685/audit_review.md",
+        "analysis/2026-11-13-walking/141282685/failure_review.md",
+        "analysis/2026-11-13-walking/141282685/failure_review_replay.py",
+        "analysis/2026-11-13-walking/141282685/prediction_review.md",
+        "analysis/2026-11-13-walking/141282685/review_prediction.py",
+        "analysis/2026-11-13-walking/analyze_trial.py",
+        "analysis/2026-11-13-walking/analyze_v12_trial.py",
+        "analysis/2026-11-13-walking/compare_v12_video.py",
+        "analysis/2026-11-13-walking/v11実機試験_141282685.md",
+        "analysis/2026-11-13-walking/v12_build_verification.json",
+        "analysis/2026-11-13-walking/v12_causal_latency_sensitivity.md",
+        "analysis/2026-11-13-walking/v12_causal_replay.md",
+        "analysis/2026-11-13-walking/v12実機試験_43750941.md",
+        "analysis/2026-11-13-walking/v12実機試験_611622951.md",
+        "analysis/2026-11-13-walking/v13_build_verification.json",
+        "analysis/2026-11-13-walking/v13_replay.md",
+        "analysis/2026-11-13-walking/v13実機2試行_97855607_241508524.md",
+        "analysis/2026-11-13-walking/v14_build_verification.json",
+        "analysis/2026-11-13-walking/v14_energy_snapshot_replay.md",
+        "analysis/2026-11-13-walking/v14_passive_energy_audit.md",
+        "analysis/2026-11-13-walking/v14実機2試行_172594684_294107213.md",
+        "analysis/2026-11-13-walking/v15_build_verification.json",
+        "analysis/2026-11-13-walking/v15実機2試行_59727228_192259301.md",
+        "analysis/2026-11-13-walking/v16_build_verification.json",
         "build-smooth-web.cmd",
         "docs",
         "docs/CAD_SUPPORT_SHADOW.md",
+        "docs/EARLY_ENERGY_MAIN_V15.md",
+        "docs/EARLY_ENERGY_MAIN_V15_REVIEW.md",
+        "docs/ENERGY_CONTROL_V14.md",
+        "docs/ENERGY_CONTROL_V14_REVIEW.md",
+        "docs/ENERGY_NEUTRAL_V14.md",
+        "docs/ENERGY_PULSE_LIFECYCLE_V16.md",
+        "docs/ENERGY_PULSE_LIFECYCLE_V16_REVIEW.md",
         "docs/FOOT_SUPPORT_ASSIST_DESIGN.md",
         "docs/FOOT_SUPPORT_ASSIST_V11.md",
+        "docs/FOOT_SUPPORT_ASSIST_V12_DESIGN.md",
+        "docs/FOOT_SUPPORT_LOCAL_V12.md",
+        "docs/FOOT_SUPPORT_TRANSFER_V13.md",
         "flasher",
         "flasher/flasher-completion.js",
         "flasher/index.html",
@@ -11754,6 +11801,7 @@
         "src/early_clock.h",
         "src/early_geometry_diagnostics.h",
         "src/early_motion_gate.h",
+        "src/energy_pulse_completion.h",
         "src/experiment_runner.cpp",
         "src/experiment_runner.h",
         "src/experiment_status.h",
@@ -11768,6 +11816,7 @@
         "src/foot_gap_trend.h",
         "src/foot_geometry_async.h",
         "src/foot_geometry_worker.h",
+        "src/foot_local_prediction.h",
         "src/foot_observer.cpp",
         "src/foot_observer.h",
         "src/foot_phase_cap.h",
@@ -11779,7 +11828,12 @@
         "src/foot_span_control.h",
         "src/foot_stroke_observer.h",
         "src/foot_support_assist.h",
+        "src/foot_support_assist_v12.h",
+        "src/foot_support_assist_v13.h",
         "src/foot_support_deceleration.h",
+        "src/foot_support_policy.h",
+        "src/foot_support_pose.h",
+        "src/foot_support_start.h",
         "src/foot_tracking_config.h",
         "src/foot_trend.h",
         "src/foot_zero.h",
@@ -11849,128 +11903,90 @@
         "src/tilt_priority.h",
         "src/tilt_stop.h",
         "src/timing_deadline.h",
-        "src/unmodeled_walk_coast.h",
-        "src/upright_pose_guide.h",
-        "src/upright_reference.h",
-        "src/upright_reference_store.cpp",
-        "src/upright_reference_store.h",
-        "src/usb_diag_control.h",
-        "src/walking_energy_loss.h",
-        "src/walking_positive_cap.h",
-        "src/weak_side_assist.h",
-        "src/web_ui.cpp",
-        "src/web_ui.h",
-        "src/wheel_cycle_guard.h",
-        "src/wheel_speed_balance.h",
-        "src/wheel_work_energy_control.h",
-        "src/white_marker_tracker.cpp",
-        "src/white_marker_tracker.h",
-        "src/work_start_policy.h",
-        "src/work_target_policy.h",
-        "test",
-        "test/test_long_foot_balance.cpp",
-        "test/test_negative_cap_recovery.cpp",
-        "test/test_negative_weak_probe.cpp",
-        "test/test_positive_sway_probe.cpp",
-        "test/test_tapered_amplitude_recovery.cpp",
-        "tools",
-        "tools/analyze_energy_validation.py",
-        "tools/analyze_phase_pair_variation.py",
-        "tools/analyze_v46_attitude_validation.py",
-        "tools/analyze_v46al_counterfactual.py",
-        "tools/analyze_v46q_acquisition.py",
-        "tools/analyze_wheel_work.js",
-        "tools/apply_v46d_video_calibration_patch.py",
-        "tools/apply_v46e_proper_frame_patch.py",
-        "tools/apply_v46f_gyro_calibration_patch.py",
-        "tools/apply_v46g_filter_patch.py",
-        "tools/apply_v46g_imu_patch.py",
-        "tools/apply_v46g_meta_patch.py",
-        "tools/apply_v46h_timing_patch.py",
-        "tools/apply_v46i_task_split_patch.py",
-        "tools/apply_v46j_retry_init_patch.py",
-        "tools/apply_v46j_roller_ready_patch.py",
-        "tools/apply_v46k_timing_probe_patch.py",
-        "tools/apply_v46l_fast_solver_shadow.py",
-        "tools/apply_v46r_fast_solver_control.py"
+        "src/unmodeled_walk_coast.h"
       ],
       "recent_commits": [
         {
-          "sha": "16d6c14a",
-          "message": "Add delayed foot prediction and bounded support assist trial"
+          "sha": "3492e042",
+          "message": "Fix stale-clock pulse expiry and audit completed energy input"
         },
         {
-          "sha": "8bc20632",
-          "message": "Record approved GitHub synchronization"
+          "sha": "2d6a88f4",
+          "message": "Size early main inputs to cover modeled energy demand"
         },
         {
-          "sha": "6d34a32e",
-          "message": "Record automatic sync approval block"
+          "sha": "7266d393",
+          "message": "Analyze two v14 walking trials and identify early pulse preemption"
         }
       ],
       "archived": false,
-      "fingerprint": "20c54f96be5f99aea90887e6d11864f158a0e2eceec9587f8c783188f1a062ff",
-      "analyzed_at": "2026-11-12T23:45:50.302Z",
+      "fingerprint": "5544818208467af92a97e1a9f09406341892b7eca321ea0f48f202e034746025",
+      "analyzed_at": "2026-11-13T23:47:48.845Z",
       "profile": {
-        "purpose": "リアクションホイール歩行器のモーション制御ファームウェアを保存・開発するリポジトリです。READMEでは、ログに基づく改善がまだ含まれていない初期データを基準とし、早期入力試験を通常ビルドと区別しています。",
-        "architecture": "C++の制御ファームウェアをsrc/に機能別モジュールとして配置し、analysis/とtools/に試行ログやCAD・制御分析用の資料・スクリプトを置く構成です。PlatformIOでビルドし、実機への書き込みはPCで行うとされています。制御処理の全体的な呼び出し関係は、提示された抜粋だけでは確認できません。",
+        "purpose": "リアクションホイール歩行器向けの組み込みモーション制御プログラム。実機書き込みはPCで行い、GitHub更新による自動ビルド・デプロイは行わないとREADMEに記載されています。",
+        "architecture": "PlatformIO設定の下で動作するC++制御ソフトウェアです。IMU取得・姿勢推定、歩行や足部支持に関する制御、ローラー通信、実験実行、診断・ログ・Web関連のモジュールがツリー上にあります。詳細な呼び出し関係や全体の実行構成は、提示された抜粋だけでは確認できません。",
         "technologies": [
           "C++",
-          "Arduino API",
           "PlatformIO",
+          "Arduino API",
           "FreeRTOS",
           "JSON形式の診断出力"
         ],
         "algorithms": [
-          "ジャイロ角速度を積分し、入力保護中の判定を避けて運動の反転を検出する位相制御",
-          "反転確認後、またはタイムアウト後にsmoothstepで制御値を回復する方式",
-          "サンプル受信から制御完了までの経過時間・I/O重複時間を集計するレイテンシ計測"
+          "パルス開始後のジャイロ積分角と回転方向反転を用いる位相判定（beta_phase_controller.h）",
+          "反転確認またはタイムアウト後にsmoothstepで制御値を復帰させる方式（beta_turn_fast_controller.h）",
+          "MEKF姿勢推定およびMadgwick pitch関連モジュールが存在するが、適用範囲や設定は未確認",
+          "制御処理の各段階・キュー配送・I/O時間を記録するレイテンシ計測"
         ],
         "hardware": [
-          "リアクションホイール歩行器（README記載。具体的なボードやセンサー構成は提示情報から確定できません）"
+          "リアクションホイール歩行器（README記載）",
+          "atoms3cam環境がPlatformIO設定例に記載されているが、実機構成や基板の詳細は未確認",
+          "BMI270関連のタイミング読み取りモジュールが存在する",
+          "BMM150ライセンスファイルが存在するが、実際の使用は未確認"
         ],
         "interfaces": [
-          "BetaPhaseControllerのbeginPulse、update、betaCeiling",
-          "BetaTurnFastControllerのbeginPulse、update、betaTarget",
-          "control_latencyの計測APIとappendJsonによるJSON出力",
-          "PlatformIOの通常ビルド環境と試験用ビルド環境"
+          "PlatformIOビルド環境と試験用ビルドフラグ（platformio.ini、README.md）",
+          "ローラー管理モジュール（src/roller485_manager.h、src/roller485_manager.cpp）",
+          "IMUのI2C転送モジュール（src/imu_i2c_transport.h、src/imu_i2c_transport.cpp）",
+          "レイテンシ診断のJSON出力（src/control_latency.cpp）",
+          "Web・ログ出力関連のモジュール（src/runtime_web.h、src/export_protocol.h）"
         ],
         "reusable_components": [
           {
             "name": "BetaPhaseController",
-            "purpose": "入力保護を考慮しながらパルス中の角度と反転後の進捗を追跡し、進捗に応じたbeta上限を算出します。",
+            "purpose": "パルス中のバイアス補正済み角速度を積分し、入力保護中は判定を抑止しながら、旋回後の進捗に基づくbeta上限を計算します。",
             "evidence": [
               "src/beta_phase_controller.h"
             ]
           },
           {
             "name": "BetaTurnFastController",
-            "purpose": "複数サンプルでの反転確認とタイムアウト時の代替経路を備え、smoothstepでbeta目標値を回復します。",
+            "purpose": "出力方向の反転を複数サンプルで確認するか、規定時間経過後にbetaを滑らかに復帰させます。",
             "evidence": [
               "src/beta_turn_fast_controller.h"
             ]
           },
           {
-            "name": "control_latency計測",
-            "purpose": "制御段階ごとの経過時間、キュー配送時間、I/O呼び出しを固定容量の構造体に集計し、JSONとして出力します。",
+            "name": "control_latency::Profile",
+            "purpose": "制御段階ごとのサンプル年齢、キュー配送時間、I/Oとの時間重複、予算超過を固定容量で記録し、JSONに出力します。",
             "evidence": [
               "src/control_latency.h",
               "src/control_latency.cpp"
             ]
           },
           {
-            "name": "制御角度基準の選択",
-            "purpose": "work_modeに応じて重力基準のゼロ角または保存済みピッチを選択します。",
+            "name": "control_angle_reference::origin",
+            "purpose": "work modeでは推定器の重力基準角を使い、それ以外では保存角を基準にする選択関数です。",
             "evidence": [
               "src/control_angle_reference.h"
             ]
           }
         ],
         "constraints": [
-          "提供されたソース抜粋は一部に限られるため、各モジュールの実際の呼び出し箇所やファームウェア全体での有効化状態は不明です。",
-          "レイテンシ計測の時間はホスト壁時計上の値であり、CPU実行時間そのものではないとコードに明記されています。",
-          "READMEは試験用ビルドフラグを通常ビルドと区別するよう記載しています。",
-          "実機試験の定量結果や、具体的なボード・センサー・モーター構成は提示情報から確認できません。"
+          "提供されたソース抜粋は一部に限られるため、列挙したモジュール間の接続や制御全体の挙動は確定できません。",
+          "README記載の試験ビルドにはFOOT_EARLY_TRIAL=1とANGLE_EARLY_TRIAL=1が必要で、通常版と区別する必要があります。",
+          "実機試験・ビルド検証ファイルはツリーにありますが、内容が提示されていないため結果は確認できません。",
+          "センサー・基板の正確な搭載構成、制御性能、安全性は提示情報から判断できません。"
         ],
         "maturity": "試作",
         "confidence": "medium",
@@ -11979,18 +11995,19 @@
           "platformio.ini",
           "src/beta_phase_controller.h",
           "src/beta_turn_fast_controller.h",
-          "src/control_angle_reference.h",
           "src/control_latency.h",
           "src/control_latency.cpp",
-          "analysis/2026-11-11-walking",
-          "test"
+          "src/control_angle_reference.h",
+          "src/imu_manager.h",
+          "src/mekf6.hpp",
+          "src/roller485_manager.h"
         ]
       }
     },
     "temesotejam/layer-workbench": {
       "url": "https://github.com/temesotejam/layer-workbench",
       "default_branch": "main",
-      "pushed_at": "2026-11-12T23:20:58Z",
+      "pushed_at": "2026-11-13T23:39:49Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -11999,9 +12016,12 @@
         ".github/workflows/build-wasm-candidate.yml",
         ".github/workflows/check-upstream.yml",
         ".github/workflows/pages.yml",
+        ".github/workflows/test-3mf-parity.yml",
         ".github/workflows/test-gcode-parity.yml",
         ".github/workflows/validate-browser-ui.yml",
+        ".github/workflows/verify-accepted-3mf-placements.yml",
         ".github/workflows/verify-engine-browser.yml",
+        ".github/workflows/verify-native-3mf-candidate.yml",
         ".github/workflows/verify-real-v250-profiles.yml",
         ".gitignore",
         "README.md",
@@ -12020,36 +12040,81 @@
         "index.html",
         "scripts",
         "scripts/adapt-orcawasm-v2.5.0.py",
+        "scripts/audit_3mf_scene.py",
         "scripts/build-assimp-wasm.sh",
         "scripts/build-draco-wasm.sh",
+        "scripts/check_3mf_stl_bounds.py",
+        "scripts/check_parity_pair.py",
+        "scripts/compare_3mf_metadata.py",
         "scripts/compare_gcode.py",
         "scripts/fetch-upstream-v250-fixture.py",
+        "scripts/fetch-upstream-v250-multi-vendor-fixture.py",
         "scripts/gcode-3d-preview.mjs",
         "scripts/gcode-layer-preview.mjs",
         "scripts/gcode-preview-parser.mjs",
+        "scripts/gcode-tool-colors.mjs",
+        "scripts/make_3mf_two_build_fixture.py",
+        "scripts/make_parity_manifest.py",
         "scripts/multi-stl.mjs",
+        "scripts/native-manifest-edit.mjs",
+        "scripts/orca-config-array-semantics.mjs",
+        "scripts/orca-filament-material-inspection.mjs",
+        "scripts/orca-filament-routing.mjs",
+        "scripts/orca-full-profile.mjs",
+        "scripts/orca-multimaterial-gcode-audit.mjs",
         "scripts/orca-profile-collection.mjs",
+        "scripts/orca-variant-input-inspection.mjs",
+        "scripts/orca-variant-slot-resolver.mjs",
+        "scripts/orca-vendor-catalog.mjs",
         "scripts/orca-vendor-index.mjs",
+        "scripts/patch-orcawasm-3mf-object-export.py",
+        "scripts/patch-orcawasm-support-smoke.py",
         "scripts/prepare-engine-lab.mjs",
         "scripts/prepare-wasm-runner.sh",
         "scripts/probe-engine.mjs",
         "scripts/process-preset-inheritance.mjs",
         "scripts/serve-isolated.py",
         "scripts/slice-stl.mjs",
+        "scripts/test-3mf-viewport-items.mjs",
+        "scripts/test-browser-3mf-multiobject.mjs",
+        "scripts/test-browser-3mf-native-edit.mjs",
+        "scripts/test-browser-3mf-roundtrip.mjs",
         "scripts/test-browser-ui.mjs",
+        "scripts/test-candidate-browser-3mf.mjs",
         "scripts/test-engine-probe.mjs",
         "scripts/test-gcode-preview-parser.mjs",
         "scripts/test-hot-plate-bridge.mjs",
         "scripts/test-multi-stl.mjs",
+        "scripts/test-native-manifest-edit.mjs",
+        "scripts/test-orca-config-array-semantics.mjs",
+        "scripts/test-orca-filament-material-inspection.mjs",
+        "scripts/test-orca-filament-routing.mjs",
+        "scripts/test-orca-full-profile.mjs",
+        "scripts/test-orca-multimaterial-gcode-audit.mjs",
         "scripts/test-orca-profile-collection.mjs",
+        "scripts/test-orca-variant-input-inspection.mjs",
+        "scripts/test-orca-variant-slot-resolver.mjs",
+        "scripts/test-orca-vendor-catalog.mjs",
         "scripts/test-orca-vendor-index.mjs",
         "scripts/test-process-preset-inheritance.mjs",
         "scripts/test-process-profile-unit.mjs",
         "scripts/test-process-profile.mjs",
         "scripts/test-transform-matrix.mjs",
         "scripts/test-upstream-v250-creality.mjs",
+        "scripts/test-upstream-v250-multi-vendor.mjs",
         "scripts/test-upstream-v250-profiles.mjs",
+        "scripts/test-v250-native-multiobject-export.mjs",
+        "scripts/test_audit_3mf_scene.py",
+        "scripts/test_check_3mf_stl_bounds.py",
+        "scripts/test_check_parity_pair.py",
+        "scripts/test_compare_3mf_metadata.py",
         "scripts/test_compare_gcode.py",
+        "scripts/test_make_parity_manifest.py",
+        "scripts/test_patch_orcawasm_3mf_object_export.py",
+        "scripts/test_patch_orcawasm_support_smoke.py",
+        "scripts/test_three_mf_instance_expansion.py",
+        "scripts/three-mf-viewport-items.mjs",
+        "scripts/three_mf_instance_expansion.py",
         "scripts/transform-matrix.mjs",
         "styles.css",
         "upstream",
@@ -12057,93 +12122,169 @@
       ],
       "recent_commits": [
         {
-          "sha": "e67bd38b",
-          "message": "test(preview): update legacy R-semicircle assertion for supported arcs"
+          "sha": "c2b0d8dc",
+          "message": "docs: record passed isolated native manifest edit-and-reimport and initial Chrome harness fix"
         },
         {
-          "sha": "90343dfe",
-          "message": "feat(preview): safely tessellate G2/G3 signed-R XY arcs with regression coverage"
+          "sha": "d75083f3",
+          "message": "fix(test): run native-edit assertions inside isolated Chrome evaluation"
         },
         {
-          "sha": "03b1a0d8",
-          "message": "docs(profiles): record verified native flow-limit F rates and clarify local UI scope"
+          "sha": "b32ae8f5",
+          "message": "test(3mf): verify isolated native manifest instance edit and 3MF reimport without claiming lossless desktop editing"
         }
       ],
       "archived": false,
-      "fingerprint": "82f75282bb1daf6421bd058c5b89edad4ed95ff494fc6ec22204c98b845d699a",
-      "analyzed_at": "2026-11-12T23:45:16.800Z",
+      "fingerprint": "ea5267ff4a40f1d1535e33724d912c6f50c00b3f03fd8dd238ed25ef0e7679e6",
+      "analyzed_at": "2026-11-13T23:46:55.661Z",
       "profile": {
-        "purpose": "ブラウザーでの3Dプリント準備環境を試作し、OrcaSlicerの設定やスライス結果との互換性を検証するプロジェクト。READMEによれば、現状のUIはファイル一覧と表示を中心とした段階で、WASMエンジンとの接続やスライスは未実装。",
-        "architecture": "静的ブラウザーUIと、エンジン構築・互換性検証用スクリプトおよびGitHub Actionsワークフローで構成。READMEではOrcaSlicer v2.5.0のヘッドレスWASM候補について限定的な検証成功を記載する一方、ブラウザーUIからの呼び出しや公開環境での実行は未検証としている。",
+        "purpose": "OrcaSlicerの挙動やプロジェクト互換性を保つことを目指す、個人用のブラウザー型3Dプリント準備ワークスペース。現状はブラウザーUIとWASMエンジン候補の検証が中心で、公開UIからスライスはできない。",
+        "architecture": "Three.jsベースのブラウザーUIと、上流OrcaSlicerをWebAssembly化するためのビルド・適応スクリプト、3MF/G-codeの互換性検証ツール群で構成される。READMEによれば、エンジン候補の検証と公開UIの実装は別段階で、UIからエンジンは未接続。",
         "technologies": [
           "JavaScript",
-          "Three.js",
           "Python",
-          "WebGL",
-          "WebAssembly／Emscripten（README記載のエンジン候補）",
+          "Three.js",
+          "WebAssembly / Emscripten",
+          "Node.js",
           "GitHub Actions"
         ],
         "algorithms": [
-          "G-codeのコマンドを順序を保って比較し、空行・セミコロンコメントを除外、コマンドと数値パラメーターを正規化する方式",
-          "Three.jsのレイキャスティングによるビューポート上のオブジェクト選択",
-          "変換コントロールによるモデル操作"
+          "3MFの配置変換を適用したメッシュ頂点の境界比較。座標軸ごとのソート済み値も比較するが、トポロジー同等性の証明ではない。",
+          "3MFインスタンス展開と変換行列による配置ジオメトリ診断。",
+          "入力ファイルのSHA-256検証後に行う、ネイティブ版とWASM版のG-code比較ゲート。"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザーUI",
-          "ローカルのSTL・3MF・OBJファイル選択（READMEでは一覧表示までと説明）",
-          "G-codeファイルの比較用CLI引数とJSONレポート",
-          "pthread対応WASMのローカル検証用HTTPサーバー。COOP／COEP等のヘッダーを付与"
+          "ブラウザーUIでのSTL・3MF・OBJファイル選択と3Dビューポート表示",
+          "3MF ZIP/XMLの読み取り専用監査と、3MFから変換したSTLの診断比較",
+          "ネイティブ版・WASM版のフィクスチャマニフェストを用いる互換性検証"
         ],
         "reusable_components": [
           {
-            "name": "G-code正規化・比較関数 canonical / compare",
-            "purpose": "ネイティブ版とWASM版のG-codeをコマンド順で比較し、差分、件数、SHA-256をJSONで出力する。完全な機能同等性を証明するものではない。",
+            "name": "3MFシーン監査",
+            "purpose": "3MFモデル部品、単位、オブジェクト、メッシュ、配置変換を制限付きで検査し、配置ジオメトリを診断する。完全なプロジェクト互換性を保証するものではない。",
             "evidence": [
+              "scripts/audit_3mf_scene.py",
+              "scripts/three_mf_instance_expansion.py"
+            ]
+          },
+          {
+            "name": "3MF配置形状とSTLの比較",
+            "purpose": "3MF配置後の頂点と変換後STLの境界・座標軸サンプルを比較し、変換ずれを検出する。",
+            "evidence": [
+              "scripts/check_3mf_stl_bounds.py",
+              "scripts/audit_3mf_scene.py"
+            ]
+          },
+          {
+            "name": "ネイティブ/WASM G-code比較ゲート",
+            "purpose": "固定された上流リビジョン、入力ファイルのハッシュ、G-code比較を確認してフィクスチャの一致を判定する。マニフェストの自己申告だけでは生成元の真正性を証明しない。",
+            "evidence": [
+              "scripts/check_parity_pair.py",
               "scripts/compare_gcode.py"
             ]
           },
           {
-            "name": "クロスオリジン分離対応のローカル検証サーバー",
-            "purpose": "localhost限定でCOOP、COEP、CORPヘッダーを付け、pthread利用に必要なブラウザー環境の検証に使う。",
+            "name": "Three.jsモデルビューポート",
+            "purpose": "STL・OBJ・3MFのローダー、カメラ操作、変換コントロール、選択を組み合わせたブラウザー表示を提供する。README上、現状のUIはスライスエンジン未接続。",
             "evidence": [
-              "scripts/serve-isolated.py"
+              "app.js",
+              "scripts/three-mf-viewport-items.mjs",
+              "README.md"
             ]
           },
           {
-            "name": "Three.jsビューポート操作の実装パターン",
-            "purpose": "OrbitControls、TransformControls、レイキャスティングを組み合わせた3Dシーン表示・選択・変換の土台として再利用できる。",
+            "name": "上流WASMビルド適応スクリプト",
+            "purpose": "OrcaSlicer v2.5.0のソース構成に合わせ、ヘッドレスWASMビルド向けの既知の差分を検証しながら適用する。",
             "evidence": [
-              "app.js"
-            ]
-          },
-          {
-            "name": "ピン留めした上流プロファイルの取得処理",
-            "purpose": "固定コミットから限定したOrcaSlicerプロファイルを取得し、CIでの互換性検証用フィクスチャを作る。",
-            "evidence": [
-              "scripts/fetch-upstream-v250-fixture.py"
+              "scripts/adapt-orcawasm-v2.5.0.py"
             ]
           }
         ],
         "constraints": [
-          "READMEによれば、現在のUIはWASMエンジン、プロファイル読み込み、モデル形状の解析・描画、スライス処理に未接続。",
-          "READMEでは、SharedArrayBufferを要する候補エンジンのGitHub Pages上での実行とサービスワーカーによる分離対応は未検証としている。",
-          "README記載の既知の差分には、デスクトップGUI、プラグイン、テクスチャ関連機能、完全な3MF往復互換性、ネイティブ版とWASM版のG-code同等性が含まれる。",
-          "G-code比較は正規化後の順序比較であり、比較対象外の意味的差異や全機能の互換性は確認できない。",
-          "提供されたソース抜粋とファイル一覧の範囲では、各テストやワークフローの実行結果・網羅範囲は独立に確認できない。"
+          "READMEによれば、UIはモデル形状の読み込み・表示、プロファイル読み込み、WASMエンジン呼び出し、スライスに未対応。",
+          "デスクトップGUI、プラグイン、OpenCV依存のテクスチャ変換、完全な3MF意味論的往復、ネイティブ対WASMのG-code同等性は未対応または未検証。",
+          "候補エンジンはSharedArrayBufferとクロスオリジン分離を必要とするが、GitHub Pages上での実運用互換性は未検証。",
+          "提示された抜粋だけでは、監査・比較ツール群の全機能やテスト網羅性は確認できない。"
         ],
         "maturity": "試作",
-        "confidence": "medium",
+        "confidence": "high",
         "evidence": [
           "README.md",
           "app.js",
-          "scripts/compare_gcode.py",
-          "scripts/serve-isolated.py",
-          "scripts/fetch-upstream-v250-fixture.py",
-          "upstream/stable.json",
-          ".github/workflows/build-wasm-candidate.yml",
-          ".github/workflows/test-gcode-parity.yml",
-          ".github/workflows/verify-engine-browser.yml"
+          "scripts/adapt-orcawasm-v2.5.0.py",
+          "scripts/audit_3mf_scene.py",
+          "scripts/check_3mf_stl_bounds.py",
+          "scripts/check_parity_pair.py"
+        ]
+      }
+    },
+    "temesotejam/atoms3r-camera-pipeline": {
+      "url": "https://github.com/temesotejam/atoms3r-camera-pipeline",
+      "default_branch": "main",
+      "pushed_at": "2026-11-13T09:21:38Z",
+      "available_paths": [
+        ".github",
+        ".github/workflows",
+        ".github/workflows/import-production-baseline.yml",
+        ".github/workflows/pages.yml",
+        "README.md",
+        "docs",
+        "docs/BASELINE_SOURCE_MAP.md",
+        "docs/INVESTIGATION_PLAN.md"
+      ],
+      "recent_commits": [
+        {
+          "sha": "095c3e21",
+          "message": "Add Pages Web Serial flasher for unchanged production baseline"
+        },
+        {
+          "sha": "b279265a",
+          "message": "Preserve upstream workflow fixture for regression tests"
+        },
+        {
+          "sha": "5dc81d62",
+          "message": "Fix forced removal of upstream deployment workflows"
+        }
+      ],
+      "archived": false,
+      "fingerprint": "31c39f2a3bae7a5dc5bbcb390232b6af2cc2efd7bc742d16995a271b2a8fae63",
+      "analyzed_at": "2026-11-13T23:48:03.453Z",
+      "profile": {
+        "purpose": "AtomS3R-CAMの撮影から白色マーカー認識結果を制御側が利用するまでの遅延を、既存の歩行制御ファームウェアを変更せず調査・改善するための独立検証リポジトリです。",
+        "architecture": "READMEに記載された調査対象経路は、GC0308のフレーム生成・DMA、カメラドライバーのキューとcam_take()、FootObserverへのフレーム配送、白色マーカー検出、最新結果の公開、RunControlでの利用です。各段階の実装内容は確認できません。",
+        "technologies": [
+          "ESP32-S3",
+          "GC0308",
+          "DMA"
+        ],
+        "algorithms": [
+          "左右の白色マーカー検出（具体的な検出方式は不明）"
+        ],
+        "hardware": [
+          "AtomS3R-CAM",
+          "ESP32-S3",
+          "GC0308カメラ"
+        ],
+        "interfaces": [
+          "カメラドライバーのcam_take()",
+          "FootObserverへのフレーム配送",
+          "最新認識結果からRunControlへの受け渡し",
+          "RWLOG互換性の維持（形式の詳細は不明）"
+        ],
+        "reusable_components": [],
+        "constraints": [
+          "提示されたファイル一覧とREADMEにはソースコード抜粋がなく、再利用可能な具体的関数・モジュールの実装は確認できません。",
+          "docs/INVESTIGATION_PLAN.mdとdocs/BASELINE_SOURCE_MAP.mdの内容は提示されていないため、測定手順や本番コードとの対応関係は未確認です。",
+          "READMEは連続撮影の所有権とCore 0/1の分離、2.5 ms制御期限、マーカー有効性・較正・タイムスタンプ・RWLOG互換性の維持を制約として記載しています。",
+          "ホスト上のテストやビルドだけでは、実機の遅延改善を確認できません。"
+        ],
+        "maturity": "実験",
+        "confidence": "medium",
+        "evidence": [
+          "README.md",
+          "docs/INVESTIGATION_PLAN.md",
+          "docs/BASELINE_SOURCE_MAP.md"
         ]
       }
     }
