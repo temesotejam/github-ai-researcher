@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-18T01:13:44.955Z",
+  "generated_at": "2026-11-19T00:43:49.960Z",
   "owner": "temesotejam",
   "repository_count": 114,
   "profiles": {
@@ -306,7 +306,7 @@
     "temesotejam/github-tavern": {
       "url": "https://github.com/temesotejam/github-tavern",
       "default_branch": "main",
-      "pushed_at": "2026-11-17T21:05:26Z",
+      "pushed_at": "2026-11-18T20:42:20Z",
       "available_paths": [
         ".github",
         ".github/agents",
@@ -335,79 +335,85 @@
       ],
       "recent_commits": [
         {
+          "sha": "f31aeaa0",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
+          "sha": "2f48206d",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
           "sha": "55f3edd5",
-          "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "f99e5acb",
-          "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "33a669ec",
           "message": "chore: refresh tavern summaries"
         }
       ],
       "archived": false,
-      "fingerprint": "8ea6a44f6cf789d717c09b3248098701a13da8a29e4f4e2b9de81363d031cce4",
-      "analyzed_at": "2026-11-18T01:07:33.327Z",
+      "fingerprint": "6035697340a35392449b79502ab735fff29231465fb0b890cfbf041245ef0f57",
+      "analyzed_at": "2026-11-19T00:39:09.220Z",
       "profile": {
-        "purpose": "公開GitHubリポジトリを検索・分類し、詳細や説明を閲覧する静的ポータル。",
-        "architecture": "ブラウザー側のJavaScriptがGitHub APIからリポジトリ情報を取得し、検索・分類・表示する。Copilot要約と公開ページ情報はJSONファイルから読み込む構成。READMEによればGitHub Actionsで要約データを更新し、GitHub Pagesでホスティングする。",
+        "purpose": "公開GitHubリポジトリを検索・分類・閲覧する静的な個人ポータル。",
+        "architecture": "ブラウザー側のJavaScriptがGitHub APIから公開リポジトリを取得し、検索・分類・詳細表示を行う。要約や公開ページ情報はJSONファイルから読み込み、README要約の生成やCopilotによる説明更新には別のスクリプトとGitHub Actionsを使う構成。後半はREADMEの記述に基づく。",
         "technologies": [
           "JavaScript",
           "GitHub API",
           "GitHub Pages",
           "GitHub Actions",
-          "Fetch API",
-          "MutationObserver"
+          "Copilot CLI（READMEに記載）"
         ],
         "algorithms": [
-          "リポジトリ名・説明・言語・Topics・要約などに対するキーワード照合でカテゴリを決定（app.js）",
-          "READMEのMarkdown記法や画像・リンク等を除去し、短い紹介文を抽出（card-enricher.js）",
-          "最大6件の並行処理数を保つキューでREADME取得を実行（card-enricher.js）"
+          "リポジトリ名・説明・言語・Topics・要約に対するキーワード規則によるカテゴリ分類",
+          "READMEのMarkdown記法やノイズを除去し、短いプレビュー文を抽出",
+          "最大6件の並列処理に制限するキューによるREADME取得",
+          "MutationObserverによる画面要素の変更検知"
         ],
         "hardware": [],
         "interfaces": [
-          "GitHub REST APIからの公開リポジトリ情報取得",
-          "data/summaries.jsonおよびdata/public-pages.jsonのJSONデータ",
-          "ブラウザー上の検索・カテゴリ選択・詳細表示UI",
-          "GitHub Pages"
+          "ブラウザー上の検索・カテゴリ絞り込み・詳細表示UI",
+          "GitHub APIおよびraw.githubusercontent.comからの読み取り",
+          "data/summaries.json、data/public-pages.jsonのJSONデータ"
         ],
         "reusable_components": [
           {
-            "name": "README紹介文の抽出と並行取得キュー",
-            "purpose": "READMEのMarkdownを簡略化してカード用の短文を抽出し、最大6件ずつ取得・反映する。",
-            "evidence": [
-              "card-enricher.js"
-            ]
-          },
-          {
-            "name": "キーワードベースの分類・検索用テキスト生成",
-            "purpose": "リポジトリ情報と要約を検索対象にまとめ、語句ルールに基づいて最初に一致したカテゴリへ分類する。",
+            "name": "categoryOf",
+            "purpose": "リポジトリ情報と要約を規則ベースで分類する。キーワード群を別プロジェクトの分類要件に合わせて変更できる。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "公開URLの検証と表示制御",
-            "purpose": "URLを解析してHTTP/HTTPSのみを許可し、現在のリポジトリに対応する公開ページへのリンクを切り替える。",
+            "name": "cleanMarkdown / shortPreview",
+            "purpose": "READMEからコードブロック、画像、リンク等を除去して短い紹介文を作る。",
+            "evidence": [
+              "card-enricher.js"
+            ]
+          },
+          {
+            "name": "readReadme / pump",
+            "purpose": "一般的なブランチ名・README名を順に試し、キャッシュと並列数制限付きキューでREADMEを取得する。",
+            "evidence": [
+              "card-enricher.js"
+            ]
+          },
+          {
+            "name": "validEntry",
+            "purpose": "公開ページのURLを解析し、HTTP/HTTPS以外のスキームを除外する。",
             "evidence": [
               "public-pages-client.js"
             ]
           },
           {
-            "name": "日本語説明文の口語変換",
-            "purpose": "日本語の技術説明に含まれる定型表現を置換する純粋変換関数を提供する。",
+            "name": "spokenize",
+            "purpose": "日本語の説明文を口語調に変換する純粋関数。ブラウザー非依存で公開されている。",
             "evidence": [
               "spoken-overview-client.js"
             ]
           }
         ],
         "constraints": [
-          "READMEでは公開リポジトリのみを対象とし、書き込み操作を行わないと説明されている。",
-          "分類語句と所有者名はコード内に固定されており、他の用途では設定やルールの調整が必要。",
-          "README取得はmain/masterとREADMEの限られた大文字小文字の候補を試す実装で、他のブランチ名や配置は確認できない。",
-          "GitHub Actionsの具体的な権限・失敗時の挙動は、提示されたソース抜粋だけでは検証できない。"
+          "READMEによれば対象は所有者の公開リポジトリで、サイト側からの書き込み操作は行わない。",
+          "カテゴリ分類は明示されたキーワード規則に依存するため、語彙にない技術領域の分類精度は不明。",
+          "Copilot要約生成の具体的な実装詳細やテスト結果は、提示されたソース抜粋だけでは確認できない。",
+          "README取得は複数の一般的なブランチ名・ファイル名を試す方式で、他の配置への対応は確認できない。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
@@ -417,17 +423,17 @@
           "card-enricher.js",
           "public-pages-client.js",
           "spoken-overview-client.js",
-          "data/public-pages.json",
-          "data/summaries.json",
-          ".github/workflows/copilot-summaries.yml",
-          ".github/workflows/public-pages.yml"
+          "keeper-closing-client.js",
+          "scripts/update-summaries.mjs",
+          "scripts/update-public-pages.mjs",
+          ".github/workflows/copilot-summaries.yml"
         ]
       }
     },
     "temesotejam/2026_10_24": {
       "url": "https://github.com/temesotejam/2026_10_24",
       "default_branch": "main",
-      "pushed_at": "2026-11-17T20:51:54Z",
+      "pushed_at": "2026-11-18T20:26:53Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -444,97 +450,94 @@
       ],
       "recent_commits": [
         {
+          "sha": "dc64124c",
+          "message": "Update automatic news feed"
+        },
+        {
+          "sha": "2cde3765",
+          "message": "Update automatic news feed"
+        },
+        {
           "sha": "b74be398",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "c9e1430b",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "e148019a",
           "message": "Update automatic news feed"
         }
       ],
       "archived": false,
-      "fingerprint": "3e5fd394ad304728e510a0d51ac35617b9a8f8114a3c6c6a23b50e9b60f4558f",
-      "analyzed_at": "2026-11-18T01:07:48.164Z",
+      "fingerprint": "b23916dcc6004f25426db1434f0989076114015fd0ac86fffc0144beb48ae808",
+      "analyzed_at": "2026-11-19T00:39:23.908Z",
       "profile": {
-        "purpose": "ニュース見出しや入力した現実の出来事を迷宮探索ゲームに反映する、ブラウザー向け一人用ゲーム。",
-        "architecture": "index.html・styles.css・app.jsで構成される静的Webアプリ。app.jsがCanvas描画とゲーム状態を扱い、data/news.jsonのニュースを読み込む。scripts/fetch-news.mjsと.github/workflows/news.ymlはニュース収集・更新に関係するとREADMEに記載されているが、実装詳細は未確認。",
+        "purpose": "ニュース見出しや入力した現実の出来事を題材に、迷宮探索と現象の観測を行う一人用ブラウザーゲームです。",
+        "architecture": "静的なHTML・CSS・JavaScriptのゲーム本体と、GitHub Actionsで公開RSSからニュースデータを更新する仕組みで構成されています。ゲーム本体はJSONのニュースを読み込み、記事情報を探索要素に反映します。迷宮生成やゲーム進行の詳細は、提示されたソース抜粋だけでは確認できません。",
         "technologies": [
           "JavaScript",
           "HTML Canvas",
-          "ブラウザーのlocalStorage",
+          "CSS",
           "GitHub Actions",
           "RSS（README記載）"
         ],
         "algorithms": [
-          "プレイヤーの行動ごとに仲間と敵が行動するターン制（README記載）",
-          "乱数を使う迷宮生成（README記載、生成手法の詳細は未確認）",
-          "敵の方向へ移動した場合の通常攻撃（README記載）",
-          "ニュース見出しの危険語・配信元による除外と、カテゴリ・URLの検証"
+          "マンハッタン距離の計算（app.js）",
+          "ニュース見出しのキーワード・配信元フィルタリングとカテゴリ検証（app.js）",
+          "HTTP/HTTPS URLの検証（app.js）",
+          "日付とニュース件数から初期ニュースを選ぶ方式（app.js）",
+          "手続き型迷宮生成とターン制行動（README記載。実装詳細は未確認）"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザー画面：Canvas、キーボード、画面上の方向ボタン（README記載）",
-          "data/news.jsonのJSONニュースデータ",
-          "localStorageのreality-dungeon-seedキー",
-          "ニュース記事へのHTTP/HTTPSリンク"
+          "ブラウザー上のCanvas描画とキーボード・画面ボタン操作（README記載）",
+          "data/news.jsonを介したニュースデータ連携",
+          "RSS取得・GitHub Actionsによる定期更新（README記載）",
+          "localStorageへの調査対象の保存（app.js）"
         ],
         "reusable_components": [
           {
             "name": "safeHttpUrl",
-            "purpose": "URLを解析し、HTTP/HTTPS以外を拒否して安全なリンク候補を返す。",
+            "purpose": "入力値をURLとして解析し、HTTPまたはHTTPS以外を除外する。",
             "evidence": [
               "app.js"
             ]
           },
           {
             "name": "loadAutomaticNews",
-            "purpose": "ニュースJSONを取得し、カテゴリ・見出し・配信元・URLを検査してゲーム用データへ整形する。",
+            "purpose": "ニュースJSONを読み込み、カテゴリ・見出し・配信元を検査してゲーム用データへ整形する。",
             "evidence": [
-              "app.js",
-              "data/news.json"
+              "app.js"
+            ]
+          },
+          {
+            "name": "renderAutomaticNews",
+            "purpose": "収集ニュースをDOM要素として一覧表示し、選択時にゲームを開始する。",
+            "evidence": [
+              "app.js"
             ]
           },
           {
             "name": "savedSeed",
-            "purpose": "localStorageから保存データを読み込み、記事URLを検証して利用可能なシードを返す。",
+            "purpose": "localStorageから保存済みの調査対象を復元し、出典URLを検証する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "esc",
-            "purpose": "文字列中のHTML特殊文字をエスケープする。",
-            "evidence": [
-              "app.js"
-            ]
-          },
-          {
-            "name": "syncAppHeight",
-            "purpose": "画面サイズ変更時にビューポート高をCSSカスタムプロパティへ反映する。",
+            "name": "dist",
+            "purpose": "グリッド上の2点間のマンハッタン距離を返す。",
             "evidence": [
               "app.js"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋はapp.jsの一部のみで、迷宮生成・戦闘・描画の具体的な実装詳細は確認できない。",
-          "ニュース見出しの除外はコード上のパターン照合であり、記事内容の検証ではない。READMEも本文を確認済みとは表示しないと説明している。",
-          "scripts/fetch-news.mjs、ワークフロー、HTML、CSSの内容は提示されていないため、収集元や失敗時の実装、画面構造の詳細は未確認。"
+          "提示されたapp.js抜粋は一部のみで、迷宮生成・敵AI・ターン処理の実装は確認できません。",
+          "ニュースの取得処理やRSSフィード、除外ルールの網羅性は、提示されたファイル内容からは検証できません。",
+          "記事本文ではなく見出し・日時・出典を扱い、記事本文を確認済みとは表示しない方針がREADMEに記載されています。"
         ],
         "maturity": "試作",
-        "confidence": "medium",
+        "confidence": "low",
         "evidence": [
           "README.md",
           "app.js",
-          "index.html",
-          "styles.css",
-          "scripts/fetch-news.mjs",
-          ".github/workflows/news.yml",
-          "data/news.json"
+          "data/news.json",
+          ".github/workflows/news.yml"
         ]
       }
     },
@@ -11699,7 +11702,7 @@
     "temesotejam/rw-walker-motion-control": {
       "url": "https://github.com/temesotejam/rw-walker-motion-control",
       "default_branch": "main",
-      "pushed_at": "2026-11-17T11:42:18Z",
+      "pushed_at": "2026-11-18T05:02:28Z",
       "available_paths": [
         ".gitattributes",
         ".gitignore",
@@ -11904,128 +11907,99 @@
       ],
       "recent_commits": [
         {
-          "sha": "06e261ad",
-          "message": "Audit v37 walking foot measurements and end-to-end operation"
+          "sha": "469f4013",
+          "message": "Record periodic sensing with both feet near 20 degrees"
         },
         {
-          "sha": "1299196a",
-          "message": "Raise foot observation cadence above 40Hz and measure valid update gaps"
+          "sha": "7c674ecc",
+          "message": "Record foot sensing at the relocated setup"
         },
         {
-          "sha": "fe65d2b7",
-          "message": "Reduce live status traffic while preserving full diagnostic snapshots"
+          "sha": "d92c007f",
+          "message": "Publish walking foot estimates at 40 Hz and show low-rate run telemetry"
         }
       ],
       "archived": false,
-      "fingerprint": "d361cb52e8ea1f00dbd56a69a65fda4ec6f84313960bca9d2b4116448cb53cae",
-      "analyzed_at": "2026-11-18T01:08:31.832Z",
+      "fingerprint": "21a3459d1e48f3768ff8bb1aa741c81a057206ce574fb20ef1f1c2e12609d895",
+      "analyzed_at": "2026-11-19T00:39:40.621Z",
       "profile": {
-        "purpose": "リアクションホイール歩行器の実機制御プログラムを保存し、歩行・支持脚・エネルギー制御とカメラ観測を統合する。",
-        "architecture": "PlatformIOでビルドされるC++/Arduino系の組込み制御リポジトリ。位相制御、ジャイロ姿勢推定、足部観測、カメラフレーム処理、エネルギー制御、遅延計測、Web診断・データエクスポートを独立ヘッダ/モジュールに分離している。",
+        "purpose": "リアクションホイール歩行器の制御ソフトウェアを保存・試験するリポジトリ。READMEでは、実機への書き込みはPCで行い、GitHub更新による自動ビルドやデプロイは行わないとしている。",
+        "architecture": "C++の制御モジュール群をPlatformIOでビルドする構成。歩行制御の位相・角度基準を扱うヘッダーに加え、制御遅延の計測・JSON出力を行う実装がある。カメラ、IMU、足部推定関連のファイルも存在するが、提示された抜粋だけでは全体の呼び出し関係や構成は確認できない。",
         "technologies": [
           "C++",
-          "Arduino",
-          "PlatformIO",
-          "ESP32系組込み環境",
+          "Arduino API",
           "FreeRTOS",
-          "I2C",
-          "PSRAM",
-          "JSON",
-          "カメラ映像処理"
+          "PlatformIO"
         ],
         "algorithms": [
-          "バイアス補正ジャイロ角速度の積分による相対位相角推定",
-          "往復運動の方向反転を連続サンプルで確認するターン検出",
-          "Smoothstepによる制御量のステップレス復帰",
-          "フォールバックタイムアウト付き運動フェーズ状態機械",
-          "指数的beta上限復帰",
-          "カメラ受信・制御段階・I/O重複のホスト壁時計遅延計測",
-          "足部位相・姿勢・支持脚トレンド推定",
-          "エネルギーアドミッションとパルスライフサイクル制御"
+          "バイアス補正済み角速度の積分によるパルス相対角度の推定",
+          "角速度の符号反転と閾値による旋回・反転判定",
+          "beta制御値の指数ランプおよびsmoothstep補間",
+          "制御処理の経過時間・区間別遅延の集計"
         ],
         "hardware": [
           "リアクションホイール歩行器",
-          "AtomS3系組込みボード",
-          "カメラ",
-          "ジャイロ/加速度センサ",
-          "I2Cセンサ"
+          "ジャイロまたはIMU入力を利用する構成（型番は未確認）"
         ],
         "interfaces": [
           "PlatformIOビルド環境",
-          "I2Cセンサ通信",
-          "FreeRTOSキュー",
-          "カメラDMA",
-          "シリアル診断",
-          "Webサーバー",
-          "JSON診断エクスポート",
-          "フラッシャー用Web UI"
+          "ArduinoおよびFreeRTOS API",
+          "制御遅延情報のJSON出力"
         ],
         "reusable_components": [
           {
-            "name": "BetaTurnFastController",
-            "purpose": "パルス開始後の外向き運動と方向反転を判定し、ターン確定またはタイムアウト後にSmoothstepでbetaを復帰させる。",
-            "evidence": [
-              "src/beta_turn_fast_controller.h"
-            ]
-          },
-          {
             "name": "BetaPhaseController",
-            "purpose": "ジャイロ角速度積分で位相角を追跡し、反転後の復帰進捗に応じた指数的beta上限を生成する。",
+            "purpose": "パルス開始後の角速度・角度から旋回後の戻り進捗を求め、beta上限を指数補間する状態機械。",
             "evidence": [
               "src/beta_phase_controller.h"
             ]
           },
           {
-            "name": "control_latency",
-            "purpose": "センサ受信、派生値、推定、制御準備、決定、完了時点の遅延と、ポーリング/I/O重複を固定容量で記録する。",
+            "name": "BetaTurnFastController",
+            "purpose": "入力保護中の誤判定を避けつつ、反転を複数サンプルで確認するか、時間経過でフォールバックし、smoothstepでbetaを回復する制御器。",
             "evidence": [
-              "src/control_latency.h",
-              "src/control_latency.cpp"
+              "src/beta_turn_fast_controller.h"
             ]
           },
           {
             "name": "control_angle_reference::origin",
-            "purpose": "作業モードでは重力基準推定値の原点を0に固定し、通常モードでは保存姿勢を原点として使い分ける。",
+            "purpose": "動作モードに応じて、重力基準の角度または保存済みピッチを制御原点として選択する小さな再利用関数。",
             "evidence": [
               "src/control_angle_reference.h"
             ]
           },
           {
-            "name": "bounded_web_server",
-            "purpose": "Webサーバーと診断エクスポートをメモリ・通信量の観点で制限する方式。",
+            "name": "control_latency::Profile",
+            "purpose": "制御処理の区間時間、キュー配送時間、予算超過などを上限付きで集計し、JSON形式で出力する計測基盤。",
             "evidence": [
-              "src/bounded_web_server.h",
-              "src/bounded_web_server.cpp"
+              "src/control_latency.h",
+              "src/control_latency.cpp"
             ]
           }
         ],
         "constraints": [
-          "提供されたソース抜粋はごく一部であり、全体のビルド依存関係や実装品質は未確認。",
-          "PlatformIO設定の内容は提示されていないため、ボード仕様とライブラリ依存関係はREADME/環境名からの限定的な確認のみ。",
-          "実機試験記録は多数あるが、抜粋したMarkdown本文の客観的再現手順と測定値は未確認。",
-          "再利用にはArduino/FreeRTOS依存の分離、設定値の移植、センサ座標系の再定義が必要な可能性がある。",
-          "カメラ最適化モジュールの有効性は対象SoC、解像度、DMA構成に依存するため汎用性は未確認。"
+          "制御器の閾値はConfig定数に依存するが、提示情報から具体値や他機体への適用条件は確認できない。",
+          "制御遅延の計測値はホスト壁時計時間であり、純粋なCPU実行時間やプリエンプション時間ではないと実装内で明記されている。",
+          "提示されたソース抜粋とファイル一覧だけでは、カメラ・足部推定・IMU各モジュールの詳細な実装や統合状況、テスト結果を確認できない。",
+          "READMEでは通常ビルドと早期入力試験ビルドのフラグを区別している。"
         ],
-        "maturity": "試作",
+        "maturity": "実験",
         "confidence": "medium",
         "evidence": [
           "README.md",
-          "CURRENT_STATUS_20261109.md",
-          "platformio.ini",
           "src/beta_phase_controller.h",
           "src/beta_turn_fast_controller.h",
           "src/control_angle_reference.h",
           "src/control_latency.h",
           "src/control_latency.cpp",
-          "src/foot_angle_estimator.h",
-          "src/foot_angle_estimator.cpp"
+          "platformio.ini"
         ]
       }
     },
     "temesotejam/layer-workbench": {
       "url": "https://github.com/temesotejam/layer-workbench",
       "default_branch": "main",
-      "pushed_at": "2026-11-18T01:04:25Z",
+      "pushed_at": "2026-11-18T23:40:34Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -12063,6 +12037,8 @@
         "scripts",
         "scripts/adapt-orcawasm-v2.5.0.py",
         "scripts/audit-native-wasm-profile-gap.mjs",
+        "scripts/audit-wasm-cube-deposition.mjs",
+        "scripts/audit-wasm-skirt-distance.mjs",
         "scripts/audit_3mf_scene.py",
         "scripts/audit_native_parity_cube_geometry.py",
         "scripts/bridge-arch-fixture.mjs",
@@ -12120,6 +12096,8 @@
         "scripts/support-sphere-fixture.mjs",
         "scripts/test-3mf-viewport-items.mjs",
         "scripts/test-audit-native-wasm-profile-gap.mjs",
+        "scripts/test-audit-wasm-cube-deposition.mjs",
+        "scripts/test-audit-wasm-skirt-distance.mjs",
         "scripts/test-bridge-arch-fixture.mjs",
         "scripts/test-bridge-feature-diagnostic.mjs",
         "scripts/test-browser-3mf-import-replacement-guard.mjs",
@@ -12208,97 +12186,107 @@
       ],
       "recent_commits": [
         {
-          "sha": "9b92fa49",
-          "message": "test: independently audit native shared-cube export triangle geometry (#77)"
+          "sha": "cbbeaf4f",
+          "message": "feat(profile): verify native infill_direction in isolated WASM (#99)"
         },
         {
-          "sha": "eefc44fd",
-          "message": "test: require verified scene witness in native-WASM parity fixtures (#76)"
+          "sha": "0befda5a",
+          "message": "audit(parity): compare numeric G1 footprints at shared deposited Z (#98)"
         },
         {
-          "sha": "8d37bd05",
-          "message": "test: verify support line width changes isolated WASM deposited filament E (PR #75)"
+          "sha": "6dbed89e",
+          "message": "audit(parity): measure one-sided Z-stratum G1 footprints from real G-code (#97)"
         }
       ],
       "archived": false,
-      "fingerprint": "d195db095b204482e831e7068ea694b5aad57270afe86e31ccfcb4e712f8d88c",
-      "analyzed_at": "2026-11-18T01:07:17.753Z",
+      "fingerprint": "1e24be918ec328bc4d617836caf567a75cf506d6bab6121d43b88a2ca5f044c3",
+      "analyzed_at": "2026-11-19T00:38:54.738Z",
       "profile": {
-        "purpose": "ブラウザー上で3Dプリント準備を行う個人用ワークスペース。現状のUIはモデル表示・操作の基盤で、スライス機能との接続は未完了です。",
-        "architecture": "app.jsがThree.jsベースのビューポートを構築し、STL・OBJ・3MFの読み込みや選択・変形操作を扱います。scripts以下には3MF/G-codeの解析・比較や、OrcaSlicerのWebAssembly候補を準備・検証するツール群があります。READMEによればエンジン候補の検証実績はありますが、ブラウザーUIからの呼び出しや実運用は未接続です。",
+        "purpose": "ブラウザーでの3Dプリント準備環境を開発し、OrcaSlicerとの互換性やスライス結果を検証する個人用プロジェクト。",
+        "architecture": "Three.jsベースのブラウザーUIと、ヘッドレスWebAssembly版OrcaSlicerの候補エンジンを分離。現行UIはモデルの表示・スライスをまだ実装しておらず、互換性監査やビルド検証は主に独立したスクリプトとGitHub Actionsで行う。",
         "technologies": [
           "JavaScript",
           "Python",
           "Three.js",
-          "OrcaSlicer v2.5.0のWebAssembly候補（Emscripten関連のビルド適応コードあり）",
-          "GitHub Actions"
+          "WebAssembly / Emscripten",
+          "OrcaSlicer v2.5.0",
+          "Node.js",
+          "3MF、STL、OBJ"
         ],
         "algorithms": [
-          "3MFのZIP/XML構造、単位、変換行列、メッシュ・配置要素を検査する監査",
-          "3MFの配置後形状と変換STLの三角形・頂点・境界を比較する検証",
-          "ネイティブSTL出力を、固定配置した基準立方体の三角形形状と照合する検証"
+          "3MFのモデル単位、メッシュ、ビルド配置を検証し、インスタンスを展開して配置済み形状を監査する。",
+          "3MFの行ベクトル変換と単位換算を適用し、STLの頂点・三角形と形状を比較する。",
+          "ネイティブ出力STLの三角形を面順序・頂点順序に依存しない形で照合する。",
+          "ビューポートでレイキャストを使い、クリック位置から選択オブジェクトを特定する。"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザーの3Dビューポート",
-          "STL・OBJ・3MFファイル入力",
-          "WebAssemblyエンジン候補。ただしUIからのスライス呼び出しは未接続"
+          "ブラウザーUIでのSTL・3MF・OBJファイル選択と3Dビューポート",
+          "監査・比較スクリプトのCLIとJSONレポート",
+          "3MF ZIP/XML、STL、G-code関連スクリプト",
+          "GitHub Actionsによるビルド・互換性検証"
         ],
         "reusable_components": [
           {
             "name": "3MFシーン監査",
-            "purpose": "3MFモデルの単位、ID、変換、頂点・三角形などを制限付きで検査し、配置情報を含む監査データを生成する。",
+            "purpose": "ZIP内モデル部品、XML、単位、ID、変換、メッシュ規模などを制限付きで検証する。別の3MF取込・検証ツールの入力検査に再利用できる。",
             "evidence": [
               "scripts/audit_3mf_scene.py",
-              "scripts/three_mf_instance_expansion.py"
+              "scripts/three_mf_instance_expansion.py",
+              "scripts/compare_3mf_metadata.py"
             ]
           },
           {
             "name": "3MF配置形状とSTLの比較",
-            "purpose": "3MFの配置後メッシュとSTL変換結果を境界や三角形サンプルで比較する。ネイティブ処理との同等性や印刷安全性までは保証しない。",
+            "purpose": "3MFの配置済み三角形と変換後STLの形状を比較する診断方式。形式変換の回帰テストへ応用できるが、ネイティブとの完全な互換性を示すものではない。",
             "evidence": [
               "scripts/check_3mf_stl_bounds.py",
               "scripts/audit_3mf_scene.py"
             ]
           },
           {
-            "name": "基準形状によるネイティブ出力監査",
-            "purpose": "固定された基準STLと配置を用い、ネイティブ出力の三角形形状・境界の差を許容誤差で検証する。",
+            "name": "ネイティブSTL幾何監査",
+            "purpose": "固定フィクスチャの三角形を配置込みで照合し、許容差内か判定する。エクスポーターの幾何回帰テストに再利用できる。",
             "evidence": [
-              "scripts/audit_native_parity_cube_geometry.py"
+              "scripts/audit_native_parity_cube_geometry.py",
+              "scripts/verify_native_exported_stl.py",
+              "scripts/wrap_parity_cube_3mf.py"
             ]
           },
           {
-            "name": "ブラウザー3Dモデル表示・操作",
-            "purpose": "Three.jsのローダー、軌道カメラ、変形コントロール、レイキャストを組み合わせ、モデルの表示・選択・変形を行う。",
+            "name": "Three.jsビューポート選択・変形操作",
+            "purpose": "OrbitControls、TransformControls、レイキャストを用いた3D表示・選択・変形UI。別のブラウザー3D編集画面の土台として参考になる。",
             "evidence": [
               "app.js",
               "scripts/three-mf-viewport-items.mjs"
             ]
           },
           {
-            "name": "OrcaSlicer WASMビルド適応",
-            "purpose": "v2.5.0向けに一時チェックアウトのパッチ適用とビルド条件を調整する。上流ソースをこのリポジトリに取り込むものではない。",
+            "name": "上流WASMビルド適応スクリプト",
+            "purpose": "OrcaWasmパッチをv2.5.0のソース構成に合わせ、想定箇所がない場合は停止する。上流更新時のビルド調整の参考になる。",
             "evidence": [
               "scripts/adapt-orcawasm-v2.5.0.py"
             ]
           }
         ],
         "constraints": [
-          "READMEでは、現在のUIは表示シェルであり、プロファイル読み込み、WASMエンジン呼び出し、スライスは未実装とされています。",
-          "READMEでは、完全な3MFラウンドトリップやネイティブ・WASM間のG-code同等性は未確認とされています。",
-          "マルチスレッド候補はSharedArrayBufferとクロスオリジン分離を要しますが、GitHub Pagesでの実現性・ブラウザー互換性は未検証です。",
-          "3MF/STLの監査スクリプトは限定された検査・診断用途であり、完全な形式互換性や印刷安全性を証明しません。"
+          "READMEによれば、現行の公開UIは表示用シェルで、モデル形状の読込・描画、プロファイル読込、WASMエンジン接続、スライスは未実装。",
+          "WASM候補の検証成功は記載されているが、デスクトップ機能全般の同等性やブラウザー公開環境での動作を示すものではない。",
+          "マルチスレッド候補はSharedArrayBufferとクロスオリジン分離を必要とし、GitHub Pagesでの実現性は未検証。",
+          "完全な3MFラウンドトリップやネイティブ対WASMのG-code同等性など、既知の機能・検証ギャップがある。",
+          "上流コード・依存関係を含む配布にはライセンスと通知の確認が必要。"
         ],
-        "maturity": "試作",
-        "confidence": "medium",
+        "maturity": "実験",
+        "confidence": "high",
         "evidence": [
           "README.md",
           "app.js",
           "scripts/adapt-orcawasm-v2.5.0.py",
           "scripts/audit_3mf_scene.py",
           "scripts/check_3mf_stl_bounds.py",
-          "scripts/audit_native_parity_cube_geometry.py"
+          "scripts/audit_native_parity_cube_geometry.py",
+          "docs/V250_PARITY_LEDGER.md",
+          "THIRD_PARTY_NOTICES.md"
         ]
       }
     },

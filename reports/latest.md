@@ -1,4 +1,4 @@
-# GitHub AI Researcher — 2026-11-18
+# GitHub AI Researcher — 2026-11-19
 
 > 調査対象はtemesotejam所有の公開リポジトリのみ。元リポジトリへの書き込みは行いません。
 
@@ -7,66 +7,95 @@
 - プロフィール生成エラー: 0
 - 横断分析に使ったプロフィール: 114（最大120件）
 
+# 公開リポジトリ横断レポート
+
 ## 1. 全体像
 
-分析対象は、提示された**109件のプロフィール**とバッチ1〜10の横断分析です。公開リポジトリ総数114件に対して、プロフィールが提示されていない5件は対象外です。プロフィールの確信度は多くが中〜低で、以下では根拠を「ソースで確認」「README等の記載」「仮説」に分けます。
+本レポートの対象は、提示された**109件のプロフィール**です。公開リポジトリ総数114件との差分5件はプロフィールが提示されていないため、分析対象外です。内容は、ソース抜粋で実装を確認できたもの、README等に記載されたもの、そこから導く仮説を区別して扱います。
 
-目立つ領域は、①AtomS3RやPicoを使った組み込み制御・センサー計測、②水上艇の航法・通信、③物理シミュレーションと強化学習、④ブラウザー上の可視化・開発ツールです。制御器だけでなく、遅延・データ品質・安全停止・ログを扱おうとする姿勢が複数領域に見られます。一方、リポジトリ名やREADMEだけで実装・実機動作まで確認できないものも多く、同名モジュールが複数あることはコード共有の証拠ではありません。
+技術領域では、**組み込み制御・ロボティクス、センサー計測、航法、制御シミュレーション**が目立ちます。特にAtomS3Rのリアクションホイール系、Picoの飛行制御、ESP32系のボート航法が複数のリポジトリにまたがっています。一方、ブラウザー上の開発・解析ツール、ゲーム、強化学習実験、SPIKE Hub向けビルド・書き込みツールもあります。
+
+設計上の共通傾向は、センサー取得と制御、通信と表示・記録を分けること、実機やプロトコルの状態をログ・診断で可視化すること、実験をシミュレーションや固定ベースラインと比較することです。ただし、共通のライブラリやデータ形式が横断的に確立されている証拠は限られます。プロフィールの確信度も多くがlow〜mediumであり、README記載を実装済みの機能や実機での動作実績とは見なしません。
 
 ## 2. 再利用できる技術資産
 
-- **歩行器・リアクションホイールの計測と制御** — `temesotejam/rw-walker-motion-control` の `src/control_latency.h`、`src/control_latency.cpp` は制御遅延計測の根拠として示されています。複数サンプルで角速度の反転を確認する `BetaTurnFastController` と位相に応じた `BetaPhaseController` は、`temesotejam/atoms3r-amplitude-control-development/src/beta_turn_fast_controller.h`、`src/beta_phase_controller.h` にあります。各ファームウェアでの有効化や同一コードかどうかは未確認です。
-- **IMU取得と監査の分離** — `temesotejam/atoms3r-amplitude-control-development/src/imu_manager.cpp`、`src/imu_manager.h`、`src/imu_acquisition_audit.h` には、取得・配信・監査の構成が示されています。同じパス名は `temesotejam/atoms3r-amplitude-control-v46al-r2-stable` と `temesotejam/atoms3r-mekf-dynamic-validation` にも挙げられています。共通の回帰試験候補ですが、コード同一性は未確認です。
-- **DShotとSBUSの部品** — `temesotejam/pico-copter-fc-esc-telemetry` にはDShot生成・双方向eRPMデコード・SBUS安全状態管理が挙げられています。`temesotejam/uno-r3-4esc-dshot300/UnoR3_Potentiometer_4ESC_DShot300/UnoR3_Potentiometer_4ESC_DShot300.ino` は4出力同時送信、`temesotejam/2026_10_28/arduino/UnoR3_UART_DShot300/UnoR3_UART_DShot300.ino` はSBUS由来入力の中継例として示されています。統合する場合はフレーム形式、タイミング、フェイルセーフを照合する必要があります。
-- **RealSenseの配信とSLAM処理** — `temesotejam/realsense-web-viewer/src/realsense-sensor-api.js` と `src/realsense-sensor-client.js` はブラウザー間データ共有の候補、`temesotejam/realsense-browser-slam/src/slam-worker.js` はDepth ICP追跡の候補です。既存の接続は確認されていません。
-- **実験結果の記録・比較** — `temesotejam/atoms3r-motor-inertia-test/src/main.cpp` と `tools/analyze_response.py` は時刻付き測定と応答解析の例として示されています。`temesotejam/video-rwlog-angle-analyzer/src/rwlog.js`、`src/analysis.js` は動画角度とRWLOGの比較に使う部品として挙げられています。
-- **ブラウザー内の実行基盤** — `temesotejam/personal-browser-os/c-ide/runtime-worker.js` と `python-ide/worker.js` はWASI・Pyodide実行の候補です。`temesotejam/layer-workbench` は3MF監査のスクリプトを持つとされますが、ユーザー向けUIとスライサー機能の接続は未完了との記載があります（`scripts/audit_3mf_scene.py`）。
+以下は、提示資料に具体的なパスがある資産です。**実装確認**と**README記載**を区別しています。
+
+| 資産 | 出典と状態 | 再利用時の要点 |
+|---|---|---|
+| 3MFの配置・メッシュ監査とSTL幾何比較 | `temesotejam/layer-workbench:scripts/audit_3mf_scene.py`、`scripts/audit_native_parity_cube_geometry.py`（実装確認） | モデル配置や単位変換を含めた形状検査に使える。入力形式・許容誤差を移植先に合わせる。 |
+| AtomS3Rの位相・旋回制御と遅延計測 | `temesotejam/atoms3r-zero-cross-fixed-100ms-test:src/beta_phase_controller.h`、`src/beta_turn_fast_controller.h`、`src/control_latency.h`。同系の部品が `temesotejam/atoms3r-free-foot-amplitude-control` にも記載（実装確認） | 共通テスト入力で状態遷移・遅延指標を比較してから共有化する。複数リポジトリにあることは、実装同一性の証明ではない。 |
+| IMU取得と制御消費側の分離 | `temesotejam/atoms3r-amplitude-control-development:src/imu_manager.cpp`、`src/imu_manager.h`、`src/imu_acquisition_audit.h`（実装確認） | タスク、キュー、タイムスタンプの契約を確認して、他の制御系や記録系につなぐ。 |
+| 画像・深度計測 | `temesotejam/atoms3r-visual-pose-tracker` の `src/white_marker_tracker.cpp`、`temesotejam/atoms3r-foot-angle-tracker` の `src/camera_driver.cpp`、`temesotejam/realsense-browser-slam:src/slam-worker.js`（実装確認） | いずれも入力・目的が異なる。マーカー位置、足角度、Depth ICPを同じ検出器と見なさず、座標系・時刻・品質指標を合わせる必要がある。 |
+| DShotとSBUSの処理 | `temesotejam/uno-r3-4esc-dshot300:UnoR3_Potentiometer_4ESC_DShot300/UnoR3_Potentiometer_4ESC_DShot300.ino`、`temesotejam/2026_10_28:pico/sbus_uart_bridge.cpp`、`arduino/UnoR3_UART_DShot300/UnoR3_UART_DShot300.ino`、`temesotejam/pico-copter-fc-esc-telemetry:firmware/pico_copter/dshot_bidir_decode.hpp`（実装確認） | フレーム生成、入力変換、フェイルセーフ、双方向テレメトリーは別々の責務。制御ループへ入れる前に停止時・通信断時の振る舞いを確認する。 |
+| UWB測距の通信診断 | `temesotejam/type2dk-uwb-uart:include/range_frame.h`、`include/range_stream.h`、`temesotejam/M5stackCORES3I2CdemoUWB:type2dk/README.md`（一部はREADME記載） | フレーム受信とデータ鮮度・連番・診断表示を組み合わせる候補。96バイト形式などの互換性は実機データで照合する。 |
+| 航法アルゴリズムの候補 | `temesotejam/2026_8_6_2:include/waypoint_nav.hpp`、`src/waypoint_nav.cpp`（プロフィールではREADME記載）、`temesotejam/weipointotuijyuu2_drift_los_sim`（README記載、根拠パス未提示） | Drift Vector LOS、ゲート生成、Dubins復帰などは比較候補。シミュレーターと実機コードが同じ方式・座標規約とは未確認。 |
+| シミュレーション・実験データ比較 | `temesotejam/reaction-wheel-rocker-baseline-sim:simulate.py`、`config/baseline_v1.json`、`temesotejam/video-rwlog-angle-analyzer:src/analysis.js`（前者はREADME記載） | 固定ベースライン、時系列出力、動画・ログ解析を接続する候補。CSV列や角度定義、同期方法の確認が必要。 |
+| ブラウザー内の隔離実行・画像アノテーション | `temesotejam/personal-browser-os:c-ide/runtime-worker.js`、`python-ide/worker.js`、`temesotejam/smart-annotator`（SAM2推論のプロフィール記載） | Workerによる処理分離やローカル処理の構成を参照できる。推論モデルの配布条件やブラウザー互換性は別途検証する。 |
+| SPIKE HubのDFU処理 | `temesotejam/spike-rt-web-project`（README記載）、`temesotejam/spike-rt-hub-dumper`（README記載） | ビルド・書き込みとバックアップ・復元は用途が違う。書き込み対象の識別や読み戻し検証を含む安全設計を維持する。 |
 
 ## 3. プロジェクト横断の組み合わせ
 
-以下はすべて**提案・仮説**であり、統合済みの機能ではありません。
+以下は**統合済みの機能ではなく、既存記載から導く仮説**です。
 
-| 移植元 → 移植先 | 接続方法・必要な改修 | 主なリスク |
+| 移植元 → 移植先 | 接続方法と必要な改修 | 主なリスク |
 |---|---|---|
-| `realsense-web-viewer` → `realsense-browser-slam` | Sensor Hubの配信をSLAM Workerの入力へ接続する。フレーム形式、深度スケール、時刻基準、欠落時処理を合わせる。 | 配信データとSLAM側の前提が一致する保証がない。遅延・欠落が推定を損なう可能性。 |
-| `atoms3r-6dof-mekf` → `atoms3r-m12-vio` | MEKFの姿勢・バイアス推定をVIOのIMU処理と比較し、座標系・時刻・更新APIを照合する。 | VIO側の実装パスが提示されておらず、接続可能性は未確認。センサー時刻同期と座標変換が必要。 |
-| `reaction-wheel-rocker-baseline-sim` → `reaction-wheel-rocking-sim` | 固定基準モデルを対照条件にしてQあり／なしの比較を行う。エネルギー定義、接触モード、積分条件を揃える。 | 方式やパラメータの同等性が未確認。異なるモデルを比較して誤った結論に至るリスク。 |
-| `2026_8_6_2` → `2026_8_6` または `2026_8_5_3` | `NavInput` / `navigator.update` を航法入力境界の候補として比較し、Drift Vector LOS・Dubins復帰を接続する。 | 移植元・先とも実機動作は未検証。座標系、更新周期、センサー入力、旋回制約の適合が必要。 |
-| `marker-angle-recorder` → `video-rwlog-angle-analyzer` | Session ZIPの動画・CSV・RWLOGを解析器へ渡し、同期イベントと角度系列を比較する。 | ZIP内形式や時刻基準の互換性は確認されていない。`marker-angle-recorder` の実装根拠はREADME中心。 |
-| `controller-input-diagnostics` / `dualsense-input-inspector` → `cores3-android-dualsense-bridge` | 診断結果から端末・接続方式別の入力プロファイルを作り、ブリッジへ反映する。 | 診断側の具体的APIが不足。端末差、通信断、誤入力に対する安全停止を個別に検証する必要がある。 |
+| `temesotejam/atoms3r-foot-angle-tracker` → `temesotejam/atoms3r-amplitude-control-v46al-r2-stable` | 足角度推定値をタイムスタンプ付きで制御側へ渡し、IMU推定角と共通の座標・単位へ変換する。まず記録再生で相関を確認する。 | カメラ遅延、マーカー見失い、校正ずれが制御入力を誤らせる可能性。カメラ経路と制御ループの同時動作は未確認。 |
+| `temesotejam/realsense-web-viewer` → `temesotejam/realsense-browser-slam` | SensorHubの深度データをSLAM Workerへ渡す。メッセージ形式、深度スケール、時刻基準、姿勢との対応付けが必要。 | 同一オリジン通信、フレーム欠落、同期ずれ、深度復元精度。現在の直接接続は確認されていない。 |
+| `temesotejam/2026_05_20_xiao_esp32s3_sense_gnss_bno08x_web_monitor` → `temesotejam/2026_05_21_flutter_gsi_gnss_offline_map_monitor` | GNSS状態APIをFlutter側の位置・軌跡表示へ接続する。JSONスキーマ、更新周期、無効値・通信断の表現を定義する。 | API・スキーマの一致、端末のネットワーク条件、地図と測位の座標系。プロフィール上の構想同士であり、接続実績はない。 |
+| `temesotejam/2026_8_6_2` → `temesotejam/2026_8_6` | Drift Vector LOSやDubins復帰を、通信・制御分離を説明する側に移す前に共通シミュレーターで比較する。航法入力・出力と座標系を共通化する。 | README記載を含み、コードや安全制約の適合性は未確認。実機へ直結する前に、故障・測位喪失時の挙動を検証する。 |
+| `temesotejam/reaction-wheel-rocker-baseline-sim` → `temesotejam/marker-angle-recorder`、`temesotejam/video-rwlog-angle-analyzer` | 実測角度・RWLOGを時系列CSVに合わせ、受動ベースラインと比較する。同期イベントと角度の符号・基準を定義する。 | 計測誤差、動画とログの時刻ずれ、シミュレーションモデルの仮定。ベースラインの詳細も主にREADME由来。 |
+| `temesotejam/acrobot-swingup-hybrid-control` ↔ `temesotejam/rl-acrobot-swingup-benchmark` | 同一の初期条件・捕捉判定・評価指標を用いて、モデルベース制御とPPO/SAC/TD3の結果を比較する。 | RL側・ハイブリッド制御側ともプロフィールの根拠が限定的。アルゴリズム、環境、評価指標の実装確認が先。 |
+| `temesotejam/2026_10_28` → `temesotejam/pico-copter-fc-esc-telemetry` | SBUS入力変換やDShot診断の境界を明示し、制御系へ組み込む前にフレーム再生テストを作る。 | 既存系の入力レンジ・停止値・フェイルセーフとの不一致、複数ESC動作の未検証。段階的にプロペラを外した試験から始める。 |
 
 ## 4. 過去と新しい実装の比較
 
-提示資料には、コミット履歴やファイル差分がほとんどありません。そのため、**実装の新旧、性能改善、継承関係を確定できる比較はありません**。
+提示資料にはコミット履歴や差分がほぼないため、**コードの進化や性能改善を根拠付きで断定できる比較はありません**。リポジトリ名や日付だけから新旧関係を推定しません。
 
-README上の版・段階の記載としては、`atoms3r-mekf-dynamic-validation` がV46ajの固定3 ms遅延補償段階、`atoms3r-amplitude-control-v46ak-stable` がV46ak / 0.46.36、`atoms3r-amplitude-control-v46al-r2-stable` がV46al-R2と説明されています。ただし、差分やコミット根拠がないため、変更内容や改善効果は比較不能です。また、`atoms3r-camera-webui-oneshot-stable` はリポジトリ名とプロフィール内の版説明に不一致があり、版の対応関係は要確認です。
+限定的に、READMEが示す版の関係はあります。`temesotejam/atoms3r-camera-webui-oneshot-stable` はV46ajを基準とするV46al-R2開発版と説明され、`temesotejam/atoms3r-mekf-dynamic-validation` はV46ajの固定3 ms遅延補償段階で凍結されたとされています。一方、`temesotejam/atoms3r-amplitude-control-v46al-r2-stable` はV46al-R2を現行版と説明しています。これは**プロフィール上の版・系譜の記述**であり、各版のコード差分、動作同等性、改善効果は確認できません。
 
-`hydrofoil-boat-control-archive` では1日目はBNO08X方位、2日目はGNSS位置変化から得る進行方向を使うと説明されています。これはREADME記載の差であり、制御性能や設計の優劣を示す比較ではありません。`M5-ProductExampleCodes` のメンテナンス停止も記載されていますが、他リポジトリとの後継関係は確認できません。
+同様に、PPO・SAC・TD3の各実験、ボートのLOSとDrift Vector LOS、複数のDShot実装は比較対象になり得ますが、共通条件の実験結果や履歴がないため、優劣・継承関係は比較不能です。
 
 ## 5. 新しい研究・開発テーマ
 
-1. **IMU取得・制御遅延の共通評価** — `ImuAcquisitionAudit` と `control_latency` の測定項目・単位を比較し、共通のログ形式で取得周期、欠落、処理遅延を記録する。最初の検証は、既存ファームウェアの固定時間試験で記録値と基準時刻を照合すること。
-2. **リアクションホイール制御の再現可能なベンチマーク** — `reaction-wheel-rocker-baseline-sim` の受動基準と `reaction-wheel-rocking-sim` の入力比較を、実機ログと照らせる同一の状態・エネルギー定義に揃える。まずモデル式・パラメータ・出力系列の差を確認する。
-3. **カメラ観測と制御の遅延予算** — `atoms3r-camera-pipeline` と歩行器制御側を結び、撮影・検出・制御利用時刻を記録する。最初に各時刻の取得箇所と同期可能な時計をソースで確認し、遅延分布を測定する。
-4. **航法シミュレーションの統一比較** — `weipointotuijyuu2`、`weipointotuijyuu2_drift_los_sim`、`2026_8_6_2` の旋回制約・外乱補正・復帰方式を共通シナリオで評価する。まず各実装の経路生成、入力、座標系を確認し、同じ外乱と初期条件を与える。
-5. **航行ファームウェアの通信故障注入** — `2026_8_12` のネイティブ検証構想とボート側の通信・制御分離を組み合わせる。遅延・重複・欠落コマンド時にACK、安全停止、復帰条件が仕様どおりか試験する。プロフィールに具体的な検証ファイルパスがないため、再利用前に実装確認が必要。
-6. **UWBのデータ品質・鮮度を揃えたログ仕様** — `type2dk-uwb-ranging`、`type2dk-uwb-uart`、`type2dk-uwb-uart2` の無効値、鮮度、局ID、通信診断を比較する。最初に既存フレームとログ形式を確認し、切断・復帰時の鮮度判定をテストする。
-7. **学習制御の再現性評価** — Cart-Pole・AcrobotのPPO/SAC/TD3プロフィールにあるカリキュラム、ノイズ、モーター遅れ、評価指標を共通条件で比較する。まず実装と設定ファイルを確認し、同じ環境・seed・評価条件で再実行できるかを検証する。プロフィールだけでは学習結果や実装の有無を確定できない。
+1. **AtomS3Rの視覚計測を制御へ安全に接続する**  
+   `atoms3r-foot-angle-tracker` の角度推定と `atoms3r-amplitude-control-v46al-r2-stable` の制御を組み合わせる。最初は同時制御ではなく、ログ上でIMU角・画像角・時刻のずれと欠測率を比較する。
+
+2. **RealSenseの取得経路を差し替え可能にする**  
+   `realsense-web-viewer` のHubと `realsense-browser-slam` のSLAM Workerを接続する。まず既知の深度フレームを再生し、単位・時刻・追跡結果が直接入力時と一致するか検証する。
+
+3. **ボート航法方式の共通ベンチマークを作る**  
+   `2026_8_6_2` と `weipointotuijyuu2_drift_los_sim` の方式を、風・潮流相当の外乱、測位ノイズ、測位欠落を含む同一条件で比較する。経路誤差、ゲート通過、復帰可否を事前に評価指標として定義する。
+
+4. **リアクションホイールの実測とシミュレーションを閉ループで照合する**  
+   `reaction-wheel-rocker-baseline-sim` と `marker-angle-recorder`／`video-rwlog-angle-analyzer` をつなぎ、実測・模擬データ双方で時刻同期と角度比較が再現するか確認する。まず受動減衰のデータでモデル差を評価する。
+
+5. **GNSS・IMU監視からオフライン地図までのデータ契約を定義する**  
+   XIAO監視側とFlutter地図側の間に、位置・時刻・測位品質・無効状態を含むスキーマを作る。固定サンプルのJSONで表示更新、通信断、古い測位値の扱いをテストする。
+
+6. **Acrobotのモデルベース制御と強化学習を同じ条件で比較する**  
+   `acrobot-swingup-hybrid-control` と `rl-acrobot-swingup-benchmark` を対象に、初期状態・捕捉判定・安定化時間を統一する。まず各実装の環境と評価コードが存在することを確認し、共通テスト環境で再現性を測る。
+
+7. **ファームウェアの入力・通信・制御境界を再生可能にする**  
+   SBUS/DShot系、Type2DK系、UART記録系のログを共通のオフライン再生テストに接続する。最初にフレーム境界、CRC、鮮度、通信断時の出力を記録済みデータで検査し、実機試験はその後に行う。
 
 ## 6. 優先順位付きロードマップ
 
-1. **既存ログ・計測部品を棚卸しする。** `control_latency`、`ImuAcquisitionAudit`、モーター応答解析のデータ項目と時刻基準をソースで照合する。差分が小さく、実測で価値を確認しやすいテーマです。
-2. **リアクションホイールの基準比較を再現する。** 受動モデルとQ入力モデルの式・パラメータを確認し、同一条件でシミュレーションを実行する。モデルが一致しなければ統合せず、差異を先に明示する。
-3. **カメラから制御までの時刻計測を設計する。** `atoms3r-camera-pipeline` と歩行器側の実ソースで時刻取得点を確定してから、遅延・欠落を測る。
-4. **RealSenseのデータ契約を確認して接続する。** Hub、Client、SLAM Workerの実際のメッセージ形式・時刻・深度単位が一致した場合に限り試作する。
-5. **航法シミュレータと組み込み航法を段階的に比較する。** まずオフラインの共通シナリオ、次にログ再生、最後に実機を検討する。座標系・更新周期・安全停止の適合確認を先行させる。
-6. **強化学習・UWB・コントローラ連携を実装確認後に着手する。** これらはプロフィールのREADME依存が大きく、コード、設定、テストの存在を確認してから評価条件を揃える。
+1. **低リスクの再現性確認:** DShot/SBUSのフレーム、UWBの受信データ、航法ログなど、既存ログを使ったオフライン試験を追加する。入力レンジや異常時動作を確認しやすく、実機への影響が小さい。
+2. **実験データ形式の統一:** AtomS3R・ロッカー・GNSS/IMU系で、タイムスタンプ、座標系、単位、欠測・鮮度を明記したログ形式を定義する。
+3. **受動ベースラインと計測器の接続:** ロッカーの固定ベースラインと動画・RWLOG解析を照合し、角度基準や同期誤差を把握する。
+4. **ブラウザー内センサー経路の接続:** RealSense HubからSLAM Workerへのデータ受け渡しを再生データで検証してから、実センサーで評価する。
+5. **航法シミュレーション比較:** LOS、Drift Vector LOS、経路復帰方式を同一条件で比較し、結果を確認してから実機移植を検討する。
+6. **視覚計測とリアルタイム制御の統合:** ログ比較で精度・遅延・欠測に目途が立った場合に限り、AtomS3Rの制御ループへの接続を進める。
+7. **RL・モデルベース制御の比較拡張:** 実装と評価条件をソースで確認し、共通環境・複数seedで再現可能な実験にする。
 
 ## 7. 分析の限界
 
-このレポートは提示されたプロフィールとバッチ分析に基づくもので、109件すべてのソースコードを独立に検査したものではありません。公開総数114件のうちプロフィール未提示の5件は分析できていません。さらに、プロフィール自体の確信度が低い項目が多く、README記載を実装済みの事実や動作実績として扱えないものがあります。
-
-明示したパスは、提示資料にあるものに限っています。パスのないリポジトリについては新たなファイル名を補っていません。次の段階では、特に仮説で挙げた各移植元・移植先の実ソース、ビルド・テスト設定、コミット履歴、ログ形式を確認する必要があります。実機性能、信頼性、学習結果、相互互換性について、提示資料から裏付けられる測定結果はありません。
+- 提供資料はプロフィールとバッチ分析が中心で、全リポジトリのソース、テスト、コミット履歴を独立に調査したものではありません。パスが示された場合でも、実装確認とREADME記載の両方があります。
+- 信頼度lowのプロフィールが多く、README上の機能・計画・アルゴリズムを、実装済み・動作済みとは扱えません。特にボート航法、RL、UWB複数局、外部センサー統合は、ソースや実験ログの確認が必要です。
+- 複数リポジトリに同名の部品や方式が現れても、コード同一性、同じ版からの派生、動作互換性は確認できません。
+- 実機性能、遅延、推定精度、制御成功率、ベンチマーク値は提示資料からは判断できません。試験条件、ログ、再現手順の確認が必要です。
+- 総数114件のうち、プロフィールのない5件については技術傾向・再利用性を評価できていません。
 
 
 
@@ -87,18 +116,15 @@ README上の版・段階の記載としては、`atoms3r-mekf-dynamic-validation
   - [card-enricher.js](https://github.com/temesotejam/github-tavern/blob/main/card-enricher.js)
   - [public-pages-client.js](https://github.com/temesotejam/github-tavern/blob/main/public-pages-client.js)
   - [spoken-overview-client.js](https://github.com/temesotejam/github-tavern/blob/main/spoken-overview-client.js)
-  - [data/public-pages.json](https://github.com/temesotejam/github-tavern/blob/main/data/public-pages.json)
-  - [data/summaries.json](https://github.com/temesotejam/github-tavern/blob/main/data/summaries.json)
+  - [keeper-closing-client.js](https://github.com/temesotejam/github-tavern/blob/main/keeper-closing-client.js)
+  - [scripts/update-summaries.mjs](https://github.com/temesotejam/github-tavern/blob/main/scripts/update-summaries.mjs)
+  - [scripts/update-public-pages.mjs](https://github.com/temesotejam/github-tavern/blob/main/scripts/update-public-pages.mjs)
   - [.github/workflows/copilot-summaries.yml](https://github.com/temesotejam/github-tavern/blob/main/.github/workflows/copilot-summaries.yml)
-  - [.github/workflows/public-pages.yml](https://github.com/temesotejam/github-tavern/blob/main/.github/workflows/public-pages.yml)
 - **temesotejam/2026_10_24** — [repository](https://github.com/temesotejam/2026_10_24)
   - [README.md](https://github.com/temesotejam/2026_10_24/blob/main/README.md)
   - [app.js](https://github.com/temesotejam/2026_10_24/blob/main/app.js)
-  - [index.html](https://github.com/temesotejam/2026_10_24/blob/main/index.html)
-  - [styles.css](https://github.com/temesotejam/2026_10_24/blob/main/styles.css)
-  - [scripts/fetch-news.mjs](https://github.com/temesotejam/2026_10_24/blob/main/scripts/fetch-news.mjs)
-  - [.github/workflows/news.yml](https://github.com/temesotejam/2026_10_24/blob/main/.github/workflows/news.yml)
   - [data/news.json](https://github.com/temesotejam/2026_10_24/blob/main/data/news.json)
+  - [.github/workflows/news.yml](https://github.com/temesotejam/2026_10_24/blob/main/.github/workflows/news.yml)
 - **temesotejam/2026_10_24_2** — [repository](https://github.com/temesotejam/2026_10_24_2)
   - [README.md](https://github.com/temesotejam/2026_10_24_2/blob/main/README.md)
   - [src/main.ts](https://github.com/temesotejam/2026_10_24_2/blob/main/src/main.ts)
@@ -370,17 +396,12 @@ README上の版・段階の記載としては、`atoms3r-mekf-dynamic-validation
   - [CMakeLists.txt](https://github.com/temesotejam/Strata/blob/main/CMakeLists.txt)
 - **temesotejam/rw-walker-motion-control** — [repository](https://github.com/temesotejam/rw-walker-motion-control)
   - [README.md](https://github.com/temesotejam/rw-walker-motion-control/blob/main/README.md)
-  - [CURRENT_STATUS_20261109.md](https://github.com/temesotejam/rw-walker-motion-control/blob/main/CURRENT_STATUS_20261109.md)
-  - [platformio.ini](https://github.com/temesotejam/rw-walker-motion-control/blob/main/platformio.ini)
   - [src/beta_phase_controller.h](https://github.com/temesotejam/rw-walker-motion-control/blob/main/src/beta_phase_controller.h)
   - [src/beta_turn_fast_controller.h](https://github.com/temesotejam/rw-walker-motion-control/blob/main/src/beta_turn_fast_controller.h)
   - [src/control_angle_reference.h](https://github.com/temesotejam/rw-walker-motion-control/blob/main/src/control_angle_reference.h)
   - [src/control_latency.h](https://github.com/temesotejam/rw-walker-motion-control/blob/main/src/control_latency.h)
   - [src/control_latency.cpp](https://github.com/temesotejam/rw-walker-motion-control/blob/main/src/control_latency.cpp)
-  - [src/foot_angle_estimator.h](https://github.com/temesotejam/rw-walker-motion-control/blob/main/src/foot_angle_estimator.h)
-  - [src/foot_angle_estimator.cpp](https://github.com/temesotejam/rw-walker-motion-control/blob/main/src/foot_angle_estimator.cpp)
-  - [src/bounded_web_server.h](https://github.com/temesotejam/rw-walker-motion-control/blob/main/src/bounded_web_server.h)
-  - [src/bounded_web_server.cpp](https://github.com/temesotejam/rw-walker-motion-control/blob/main/src/bounded_web_server.cpp)
+  - [platformio.ini](https://github.com/temesotejam/rw-walker-motion-control/blob/main/platformio.ini)
 - **temesotejam/layer-workbench** — [repository](https://github.com/temesotejam/layer-workbench)
   - [README.md](https://github.com/temesotejam/layer-workbench/blob/main/README.md)
   - [app.js](https://github.com/temesotejam/layer-workbench/blob/main/app.js)
@@ -388,7 +409,12 @@ README上の版・段階の記載としては、`atoms3r-mekf-dynamic-validation
   - [scripts/audit_3mf_scene.py](https://github.com/temesotejam/layer-workbench/blob/main/scripts/audit_3mf_scene.py)
   - [scripts/check_3mf_stl_bounds.py](https://github.com/temesotejam/layer-workbench/blob/main/scripts/check_3mf_stl_bounds.py)
   - [scripts/audit_native_parity_cube_geometry.py](https://github.com/temesotejam/layer-workbench/blob/main/scripts/audit_native_parity_cube_geometry.py)
+  - [docs/V250_PARITY_LEDGER.md](https://github.com/temesotejam/layer-workbench/blob/main/docs/V250_PARITY_LEDGER.md)
+  - [THIRD_PARTY_NOTICES.md](https://github.com/temesotejam/layer-workbench/blob/main/THIRD_PARTY_NOTICES.md)
   - [scripts/three_mf_instance_expansion.py](https://github.com/temesotejam/layer-workbench/blob/main/scripts/three_mf_instance_expansion.py)
+  - [scripts/compare_3mf_metadata.py](https://github.com/temesotejam/layer-workbench/blob/main/scripts/compare_3mf_metadata.py)
+  - [scripts/verify_native_exported_stl.py](https://github.com/temesotejam/layer-workbench/blob/main/scripts/verify_native_exported_stl.py)
+  - [scripts/wrap_parity_cube_3mf.py](https://github.com/temesotejam/layer-workbench/blob/main/scripts/wrap_parity_cube_3mf.py)
   - [scripts/three-mf-viewport-items.mjs](https://github.com/temesotejam/layer-workbench/blob/main/scripts/three-mf-viewport-items.mjs)
 - **temesotejam/atoms3r-camera-pipeline** — [repository](https://github.com/temesotejam/atoms3r-camera-pipeline)
   - [README.md](https://github.com/temesotejam/atoms3r-camera-pipeline/blob/main/README.md)
