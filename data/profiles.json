@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-19T00:43:49.960Z",
+  "generated_at": "2026-11-20T00:52:19.231Z",
   "owner": "temesotejam",
   "repository_count": 114,
   "profiles": {
@@ -306,7 +306,7 @@
     "temesotejam/github-tavern": {
       "url": "https://github.com/temesotejam/github-tavern",
       "default_branch": "main",
-      "pushed_at": "2026-11-18T20:42:20Z",
+      "pushed_at": "2026-11-19T20:48:41Z",
       "available_paths": [
         ".github",
         ".github/agents",
@@ -335,85 +335,88 @@
       ],
       "recent_commits": [
         {
+          "sha": "16f192b7",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
+          "sha": "bd028ff0",
+          "message": "chore: refresh tavern summaries"
+        },
+        {
           "sha": "f31aeaa0",
-          "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "2f48206d",
-          "message": "chore: refresh tavern summaries"
-        },
-        {
-          "sha": "55f3edd5",
           "message": "chore: refresh tavern summaries"
         }
       ],
       "archived": false,
-      "fingerprint": "6035697340a35392449b79502ab735fff29231465fb0b890cfbf041245ef0f57",
-      "analyzed_at": "2026-11-19T00:39:09.220Z",
+      "fingerprint": "3158f1567ab6b66720c48a89deec2b134e11f54dc91af4619de0765e811701fb",
+      "analyzed_at": "2026-11-20T00:46:36.920Z",
       "profile": {
-        "purpose": "公開GitHubリポジトリを検索・分類・閲覧する静的な個人ポータル。",
-        "architecture": "ブラウザー側のJavaScriptがGitHub APIから公開リポジトリを取得し、検索・分類・詳細表示を行う。要約や公開ページ情報はJSONファイルから読み込み、README要約の生成やCopilotによる説明更新には別のスクリプトとGitHub Actionsを使う構成。後半はREADMEの記述に基づく。",
+        "purpose": "公開GitHubリポジトリを検索・分類し、詳細や説明を閲覧する静的な個人ポータル。",
+        "architecture": "ブラウザー側のJavaScriptがGitHub APIからリポジトリを取得し、検索・分類・表示する。Copilot生成要約や公開ページ情報はJSONファイルとして別途保持し、GitHub Actionsのスクリプトが要約データを更新する構成とREADMEに記載されている。画面にはREADME由来の説明補完、詳細表示の補助クライアントもある。",
         "technologies": [
           "JavaScript",
-          "GitHub API",
+          "GitHub REST API",
           "GitHub Pages",
           "GitHub Actions",
-          "Copilot CLI（READMEに記載）"
+          "GitHub Copilot CLI（README記載）"
         ],
         "algorithms": [
-          "リポジトリ名・説明・言語・Topics・要約に対するキーワード規則によるカテゴリ分類",
-          "READMEのMarkdown記法やノイズを除去し、短いプレビュー文を抽出",
-          "最大6件の並列処理に制限するキューによるREADME取得",
-          "MutationObserverによる画面要素の変更検知"
+          "キーワード規則を順に照合するリポジトリ分類（最初に一致した分類を採用）",
+          "README Markdownを整形し、ノイズを避けて短いプレビュー文を抽出",
+          "README取得を最大6件まで並行処理するキュー",
+          "正規表現による日本語説明文の口語化"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザー上の検索・カテゴリ絞り込み・詳細表示UI",
-          "GitHub APIおよびraw.githubusercontent.comからの読み取り",
-          "data/summaries.json、data/public-pages.jsonのJSONデータ"
+          "GitHub REST APIからの公開リポジトリ取得",
+          "raw.githubusercontent.comからのREADME取得",
+          "data/summaries.jsonおよびdata/public-pages.jsonのJSONデータ",
+          "ブラウザー上の検索・カテゴリ絞り込み・詳細表示",
+          "GitHub Actionsによる要約更新"
         ],
         "reusable_components": [
           {
-            "name": "categoryOf",
-            "purpose": "リポジトリ情報と要約を規則ベースで分類する。キーワード群を別プロジェクトの分類要件に合わせて変更できる。",
+            "name": "categoryOf / textFor",
+            "purpose": "リポジトリ名、説明、言語、トピック、要約を合わせ、定義済みキーワード規則で分類する。",
             "evidence": [
               "app.js"
             ]
           },
           {
             "name": "cleanMarkdown / shortPreview",
-            "purpose": "READMEからコードブロック、画像、リンク等を除去して短い紹介文を作る。",
+            "purpose": "READMEのMarkdown記法や画像・コードなどを除去し、短い説明文を作る。",
             "evidence": [
               "card-enricher.js"
             ]
           },
           {
-            "name": "readReadme / pump",
-            "purpose": "一般的なブランチ名・README名を順に試し、キャッシュと並列数制限付きキューでREADMEを取得する。",
+            "name": "pump / enqueueCards",
+            "purpose": "表示カードのREADME補完を重複登録を避けながら並行数を制限して処理する。",
             "evidence": [
               "card-enricher.js"
             ]
           },
           {
             "name": "validEntry",
-            "purpose": "公開ページのURLを解析し、HTTP/HTTPS以外のスキームを除外する。",
+            "purpose": "公開ページのURLを解析し、HTTPまたはHTTPS以外のスキームを除外する。",
             "evidence": [
               "public-pages-client.js"
             ]
           },
           {
             "name": "spokenize",
-            "purpose": "日本語の説明文を口語調に変換する純粋関数。ブラウザー非依存で公開されている。",
+            "purpose": "日本語の技術説明文を規則ベースで口語表現に変換する純粋関数。",
             "evidence": [
               "spoken-overview-client.js"
             ]
           }
         ],
         "constraints": [
-          "READMEによれば対象は所有者の公開リポジトリで、サイト側からの書き込み操作は行わない。",
-          "カテゴリ分類は明示されたキーワード規則に依存するため、語彙にない技術領域の分類精度は不明。",
-          "Copilot要約生成の具体的な実装詳細やテスト結果は、提示されたソース抜粋だけでは確認できない。",
-          "README取得は複数の一般的なブランチ名・ファイル名を試す方式で、他の配置への対応は確認できない。"
+          "提示されたソース抜粋は一部に限られるため、アプリ全体の動作や更新スクリプト・ワークフローの実装詳細は確認できない。",
+          "READMEでは公開リポジトリのみを対象とし、書き込み操作を行わない方針としている。",
+          "README補完はmain/masterなど決め打ちのブランチ名とREADMEファイル名を試す方式で、その他の配置は確認できない。",
+          "分類はキーワード一致に依存する。分類精度や誤分類率の評価結果は提示されていない。",
+          "テストや運用実績、GitHub APIのレート制限への対処状況は提示情報から確認できない。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
@@ -424,16 +427,17 @@
           "public-pages-client.js",
           "spoken-overview-client.js",
           "keeper-closing-client.js",
-          "scripts/update-summaries.mjs",
           "scripts/update-public-pages.mjs",
-          ".github/workflows/copilot-summaries.yml"
+          "scripts/update-summaries.mjs",
+          ".github/workflows/copilot-summaries.yml",
+          ".github/workflows/js-syntax-check.yml"
         ]
       }
     },
     "temesotejam/2026_10_24": {
       "url": "https://github.com/temesotejam/2026_10_24",
       "default_branch": "main",
-      "pushed_at": "2026-11-18T20:26:53Z",
+      "pushed_at": "2026-11-19T20:30:05Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -450,86 +454,85 @@
       ],
       "recent_commits": [
         {
+          "sha": "714682ae",
+          "message": "Update automatic news feed"
+        },
+        {
+          "sha": "ee066c0a",
+          "message": "Update automatic news feed"
+        },
+        {
           "sha": "dc64124c",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "2cde3765",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "b74be398",
           "message": "Update automatic news feed"
         }
       ],
       "archived": false,
-      "fingerprint": "b23916dcc6004f25426db1434f0989076114015fd0ac86fffc0144beb48ae808",
-      "analyzed_at": "2026-11-19T00:39:23.908Z",
+      "fingerprint": "f88556bc82fd5453d81f2e092c32b082e57501df05876010a1eee341b040dbf6",
+      "analyzed_at": "2026-11-20T00:46:52.130Z",
       "profile": {
-        "purpose": "ニュース見出しや入力した現実の出来事を題材に、迷宮探索と現象の観測を行う一人用ブラウザーゲームです。",
-        "architecture": "静的なHTML・CSS・JavaScriptのゲーム本体と、GitHub Actionsで公開RSSからニュースデータを更新する仕組みで構成されています。ゲーム本体はJSONのニュースを読み込み、記事情報を探索要素に反映します。迷宮生成やゲーム進行の詳細は、提示されたソース抜粋だけでは確認できません。",
+        "purpose": "ニュース見出しや入力した現実の出来事を題材に、迷宮を探索する一人用ゲーム。",
+        "architecture": "ブラウザー上で動くJavaScriptゲーム。app.jsがCanvas描画とゲーム状態を扱い、data/news.jsonから自動収集ニュースを読み込む構成とREADMEに記載されています。GitHub Actionsによるニュース更新も記載されていますが、ワークフローの実装詳細は確認できません。",
         "technologies": [
           "JavaScript",
           "HTML Canvas",
-          "CSS",
-          "GitHub Actions",
-          "RSS（README記載）"
+          "ブラウザーのlocalStorage",
+          "JSON",
+          "GitHub Actions（README記載）"
         ],
         "algorithms": [
-          "マンハッタン距離の計算（app.js）",
-          "ニュース見出しのキーワード・配信元フィルタリングとカテゴリ検証（app.js）",
-          "HTTP/HTTPS URLの検証（app.js）",
-          "日付とニュース件数から初期ニュースを選ぶ方式（app.js）",
-          "手続き型迷宮生成とターン制行動（README記載。実装詳細は未確認）"
+          "ランダム生成を含む迷宮探索（README記載。生成手順の詳細は未確認）",
+          "記事タイトルによるニュース除外とHTTP(S) URL検証（app.js抜粋）"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザー上のCanvas描画とキーボード・画面ボタン操作（README記載）",
-          "data/news.jsonを介したニュースデータ連携",
-          "RSS取得・GitHub Actionsによる定期更新（README記載）",
-          "localStorageへの調査対象の保存（app.js）"
+          "キーボード（矢印キー/WASD）と画面上の方向ボタン",
+          "Canvas描画",
+          "data/news.jsonからのニュース取得",
+          "RSS収集・GitHub Pages公開（README記載）"
         ],
         "reusable_components": [
           {
-            "name": "safeHttpUrl",
-            "purpose": "入力値をURLとして解析し、HTTPまたはHTTPS以外を除外する。",
+            "name": "safeHttpUrl(value)",
+            "purpose": "URLを解析し、HTTPまたはHTTPSの場合のみ正規化したURLを返す。その他や不正なURLは空文字にする。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "loadAutomaticNews",
-            "purpose": "ニュースJSONを読み込み、カテゴリ・見出し・配信元を検査してゲーム用データへ整形する。",
+            "name": "loadAutomaticNews()",
+            "purpose": "ニュースJSONを取得し、カテゴリの許可リスト、タイトルの除外語、配信元フィルター、文字数制限を適用してゲーム用データに整形する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "renderAutomaticNews",
-            "purpose": "収集ニュースをDOM要素として一覧表示し、選択時にゲームを開始する。",
+            "name": "renderAutomaticNews()",
+            "purpose": "ニュース一覧をDOM要素として構築し、タイトル等をtextContentで表示する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "savedSeed",
-            "purpose": "localStorageから保存済みの調査対象を復元し、出典URLを検証する。",
+            "name": "savedSeed()",
+            "purpose": "localStorageから保存データを読み込み、出典URLがHTTP(S)であることを確認して返す。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "dist",
-            "purpose": "グリッド上の2点間のマンハッタン距離を返す。",
+            "name": "esc(v)",
+            "purpose": "HTMLの特殊文字をエスケープする小さな表示用ユーティリティ。抜粋中での呼び出し箇所は未確認。",
             "evidence": [
               "app.js"
             ]
           }
         ],
         "constraints": [
-          "提示されたapp.js抜粋は一部のみで、迷宮生成・敵AI・ターン処理の実装は確認できません。",
-          "ニュースの取得処理やRSSフィード、除外ルールの網羅性は、提示されたファイル内容からは検証できません。",
-          "記事本文ではなく見出し・日時・出典を扱い、記事本文を確認済みとは表示しない方針がREADMEに記載されています。"
+          "提示されたapp.js抜粋は途中で終わっており、迷宮生成・ターン進行・戦闘の実装詳細は確認できない。",
+          "ニュースのsummaryは本文確認済みとは扱わず、factVerifiedをfalseに設定する実装が確認できる。",
+          "READMEによると記事本文は保持せず、見出し・日時・出典リンクを保存する。",
+          "自動ニュース取得の失敗時は空配列にする実装だが、エラー詳細は表示されない。",
+          "ニュース除外は提示範囲ではタイトルと配信元に対するフィルターであり、記事内容の検証を示す証拠はない。"
         ],
         "maturity": "試作",
         "confidence": "low",
@@ -537,7 +540,11 @@
           "README.md",
           "app.js",
           "data/news.json",
-          ".github/workflows/news.yml"
+          ".github/workflows/news.yml",
+          ".github/workflows/pages.yml",
+          "index.html",
+          "styles.css",
+          "scripts/fetch-news.mjs"
         ]
       }
     },
@@ -1136,7 +1143,7 @@
     "temesotejam/spike-rt-web-toolkit": {
       "url": "https://github.com/temesotejam/spike-rt-web-toolkit",
       "default_branch": "main",
-      "pushed_at": "2026-10-29T04:57:50Z",
+      "pushed_at": "2026-11-19T12:00:43Z",
       "available_paths": [
         ".github",
         ".github/scripts",
@@ -1197,6 +1204,36 @@
         "apps/assignments/TS_S4_2/TS_S4_2.cfg",
         "apps/assignments/TS_S4_2/TS_S4_2.h",
         "apps/assignments/TS_S4_2/project.json",
+        "apps/assignments/cyc_task_multi",
+        "apps/assignments/cyc_task_multi/cyc_task_multi.c",
+        "apps/assignments/cyc_task_multi/cyc_task_multi.cdl",
+        "apps/assignments/cyc_task_multi/cyc_task_multi.cfg",
+        "apps/assignments/cyc_task_multi/cyc_task_multi.h",
+        "apps/assignments/cyc_task_multi/project.json",
+        "apps/assignments/cyc_task_realtime",
+        "apps/assignments/cyc_task_realtime/cyc_task_realtime.c",
+        "apps/assignments/cyc_task_realtime/cyc_task_realtime.cdl",
+        "apps/assignments/cyc_task_realtime/cyc_task_realtime.cfg",
+        "apps/assignments/cyc_task_realtime/cyc_task_realtime.h",
+        "apps/assignments/cyc_task_realtime/project.json",
+        "apps/assignments/multi_task1_A",
+        "apps/assignments/multi_task1_A/multi_task1_A.c",
+        "apps/assignments/multi_task1_A/multi_task1_A.cdl",
+        "apps/assignments/multi_task1_A/multi_task1_A.cfg",
+        "apps/assignments/multi_task1_A/multi_task1_A.h",
+        "apps/assignments/multi_task1_A/project.json",
+        "apps/assignments/multi_task3",
+        "apps/assignments/multi_task3/multi_task3.c",
+        "apps/assignments/multi_task3/multi_task3.cdl",
+        "apps/assignments/multi_task3/multi_task3.cfg",
+        "apps/assignments/multi_task3/multi_task3.h",
+        "apps/assignments/multi_task3/project.json",
+        "apps/assignments/pid_exercise",
+        "apps/assignments/pid_exercise/pid_exercise.c",
+        "apps/assignments/pid_exercise/pid_exercise.cdl",
+        "apps/assignments/pid_exercise/pid_exercise.cfg",
+        "apps/assignments/pid_exercise/pid_exercise.h",
+        "apps/assignments/pid_exercise/project.json",
         "apps/button",
         "apps/button/button.c",
         "apps/button/button.cdl",
@@ -1307,134 +1344,95 @@
         "apps/pd_M_S3/pd_M_S3.cdl",
         "apps/pd_M_S3/pd_M_S3.cfg",
         "apps/pd_M_S3/pd_M_S3.h",
-        "apps/pd_M_S3/project.json",
-        "apps/pd_M_S4",
-        "apps/pd_M_S4/M_S4.h",
-        "apps/pd_M_S4/pd_M_S4.c",
-        "apps/pd_M_S4/pd_M_S4.cdl",
-        "apps/pd_M_S4/pd_M_S4.cfg",
-        "apps/pd_M_S4/pd_M_S4.h",
-        "apps/pd_M_S4/project.json",
-        "apps/pd_M_S5",
-        "apps/pd_M_S5/M_S5.h",
-        "apps/pd_M_S5/pd_M_S5.c",
-        "apps/pd_M_S5/pd_M_S5.cdl",
-        "apps/pd_M_S5/pd_M_S5.cfg",
-        "apps/pd_M_S5/pd_M_S5.h",
-        "apps/pd_M_S5/project.json",
-        "apps/pd_PID",
-        "apps/pd_PID/PID.h",
-        "apps/pd_PID/pd_PID.c",
-        "apps/pd_PID/pd_PID.cdl",
-        "apps/pd_PID/pd_PID.cfg",
-        "apps/pd_PID/pd_PID.h",
-        "apps/pd_PID/project.json",
-        "apps/pd_SOUND_S1",
-        "apps/pd_SOUND_S1/SOUND_S1.h",
-        "apps/pd_SOUND_S1/pd_SOUND_S1.c",
-        "apps/pd_SOUND_S1/pd_SOUND_S1.cdl",
-        "apps/pd_SOUND_S1/pd_SOUND_S1.cfg",
-        "apps/pd_SOUND_S1/pd_SOUND_S1.h",
-        "apps/pd_SOUND_S1/project.json",
-        "apps/pd_SOUND_S2",
-        "apps/pd_SOUND_S2/SOUND_S2.h"
+        "apps/pd_M_S3/project.json"
       ],
       "recent_commits": [
         {
-          "sha": "d13d178f",
-          "message": "feat: DC_S2のLCDに色名を表示しながら距離測定を継続"
+          "sha": "198fd5a3",
+          "message": "chore(assignments): use English name for PID line tracer"
         },
         {
-          "sha": "8ccca7e1",
-          "message": "docs: DC_S2で文字表示の待ち時間を避ける構成を説明"
+          "sha": "7d994f13",
+          "message": "chore(assignments): rename PID line tracing exercise"
         },
         {
-          "sha": "79ea996e",
-          "message": "docs: TS_S4の単一タスクによる演奏と押下確認の仕組みを説明"
+          "sha": "1b7f13ad",
+          "message": "feat(assignments): add PID line tracing exercise"
         }
       ],
       "archived": false,
-      "fingerprint": "15dd45c5a14a91ce3aecdd362d013b0b8d3a492081897f0af5c616a30c587d8b",
-      "analyzed_at": "2026-11-01T05:32:13.945Z",
+      "fingerprint": "3edca68417e7881638fd34e769d4c074284d9f1ccfdfde661deefb29e76330dd",
+      "analyzed_at": "2026-11-20T00:47:13.433Z",
       "profile": {
-        "purpose": "SPIKE-RTアプリをブラウザーで編集・ビルド・Hubへ書き込み、USBシリアルログを確認するためのツールキット。複数のサンプル・課題アプリも収録する。",
-        "architecture": "READMEによれば、apps/内のアプリをGitHub Actionsでビルドし、GitHub Pagesから選択・配布する構成。WebUSBとDFUで書き込み、Web Serialでログを表示する。ワークフローやWeb側の実装内容は提示された抜粋からは確認できない。",
+        "purpose": "SPIKE-RTアプリをブラウザーで編集・ビルド・Hubへ書き込み、USBシリアルログを確認するためのツールキット。READMEでは、GitHub ActionsとGitHub Pagesを使う構成として説明されています。",
+        "architecture": "apps/以下のアプリをGitHub Actionsでビルドし、生成したファームウェアをPagesで選択・書き込みする構成です。WebUSBによるDFU書き込みとWeb Serialによるログ表示を備えるとREADMEに記載されています。差分ビルド、成果物の再利用、課題サンプルの複製用スクリプトとワークフローもファイルツリーにあります。",
         "technologies": [
           "C",
           "SPIKE-RT v0.2.0",
           "GitHub Actions",
           "GitHub Pages",
           "WebUSB",
-          "Web Serial",
-          "DFU/DfuSe",
-          "TECS設定（CDL）"
+          "Web Serial"
         ],
         "algorithms": [
-          "IMU角速度の初期値を1000回サンプリングして平均し、オフセットとして補正する",
-          "補正後の角速度をΔt=0.001秒として積分し、角度を更新する",
-          "PIDという名前のサンプルは、ソース上でPIDを実装していないと明記されている"
+          "左右カラーセンサーの反射光差を誤差とするPIDライントレース。積分項は台形積分で、積分値と出力を制限し、10 ms周期でモーター速度へ反映します。",
+          "IMUの角速度を一定回数サンプリングして軸ごとのオフセットを平均し、補正後の角速度を積分して角度を更新します。"
         ],
         "hardware": [
           "LEGO SPIKE Prime Hub",
-          "Hub内蔵IMU",
-          "Hubボタン・LED",
-          "モーター（README記載）"
+          "モーター（例ではA/Eポート）",
+          "カラーセンサー（例ではB/Cポート）",
+          "Hub内蔵IMU"
         ],
         "interfaces": [
-          "SPIKE-RTタスク関数",
-          "USBシリアルログ",
-          "WebUSBによるDFU書き込み",
-          "Web Serialによる115200 bps接続",
-          "アプリ単位のC・ヘッダー・CFG・CDL・任意のproject.json"
+          "SPIKE-RTアプリのCエントリポイント main_task()（README記載）",
+          "WebUSB / DfuSeによるDFUファームウェア書き込み。README記載のload addressは0x08008000、boot addressは0x08000000です。",
+          "Web SerialによるUSBシリアルログ表示。README記載の通信速度は115200 bpsです。",
+          "PIDサンプルはSPIKE-RTのモーター・カラーセンサーAPI、IMUサンプルはHub IMU・ボタン・ライトAPIを使用します。"
         ],
         "reusable_components": [
           {
-            "name": "IMUオフセット校正 imu_setup",
-            "purpose": "IMUを初期化し、3軸の角速度を1000回取得して平均オフセットを算出する。別のSPIKE-RTアプリへ移す場合は、IMU APIとタスク遅延の依存を合わせる必要がある。",
+            "name": "PIDライントレース制御ループ",
+            "purpose": "反射光の左右差から偏差を計算し、積分制限と出力制限を含むPID制御で左右モーター速度を調整する実装です。ポート割り当てやゲイン、周期は移植先に合わせた調整が必要です。",
             "evidence": [
-              "apps/pd_IMU_S1/pd_IMU_S1.c"
+              "apps/assignments/pid_exercise/pid_exercise.c",
+              "apps/assignments/pid_exercise/pid_exercise.h"
             ]
           },
           {
-            "name": "周期的な角速度積分 gyro_monitor",
-            "purpose": "角速度からオフセットを差し引き、3軸の角度値を更新する例。周期設定との時間刻みの整合性は別途検証が必要。",
+            "name": "IMUオフセット補正と角度積分",
+            "purpose": "角速度の初期平均値をオフセットとして算出し、周期ハンドラで補正後の角速度を積分するサンプルです。サンプリング周期と積分係数が実機の周期に合うかは移植時に確認が必要です。",
             "evidence": [
               "apps/pd_IMU_S1/pd_IMU_S1.c",
-              "apps/pd_IMU_S1/pd_IMU_S1.h"
+              "apps/pd_IMU_S1/IMU_S1.h"
             ]
           },
           {
-            "name": "最小アプリ構成と自動設定",
-            "purpose": "READMEでは、apps/<app>/<app>.cを起点にアプリを追加し、未指定のヘッダーや設定を標準構成で補う方法を説明している。既存のビルド環境へ転用するには生成・ビルド規則の確認が必要。",
+            "name": "アプリ単位の差分ビルドと成果物再利用",
+            "purpose": "READMEでは、ソースやビルド設定のSHA-256を使って変更のないアプリの成果物を再利用し、変更分をビルドする仕組みが説明されています。実装詳細は提示されたスクリプト・ワークフローの本文からは確認できません。",
             "evidence": [
               "README.md",
-              "apps/myapp/myapp.c",
-              "apps/myapp/project.json"
-            ]
-          },
-          {
-            "name": "課題アプリの作成・ビルド自動化",
-            "purpose": "課題作成や差分ビルドに関係するスクリプトとActionsワークフローがある。具体的な入力検証・キャッシュ処理の実装は提示情報だけでは確認できない。",
-            "evidence": [
-              ".github/scripts/create-assignment.py",
               ".github/scripts/incremental-firmware.py",
-              ".github/workflows/create-assignment.yml",
               ".github/workflows/build-and-deploy.yml"
             ]
           }
         ],
         "constraints": [
-          "提示された情報はREADME、ファイル一覧、一部ソース抜粋に限られ、Web画面・DFU処理・ビルド処理の実装詳細は未確認。",
-          "pd_PIDというサンプル名に反してPID制御は実装されていない。",
-          "IMUサンプルの周期ハンドラ設定や実機での数値精度は、提示情報からは検証できない。"
+          "PIDのゲイン、制御周期、センサー配置、モーター速度はサンプル機体の条件に依存し、別機体での妥当性は提示情報から確認できません。",
+          "IMUサンプルでは、ボタン状態変数 pressed を初期化する前にループ条件で参照しています。利用前に初期化と入力確認の順序を見直す必要があります。",
+          "IMU角度積分の係数は0.001固定です。周期ハンドラの実際の呼び出し周期との一致は提示情報から確認できません。",
+          "READMEが述べる実機End-to-End確認は別リポジトリの特定コミットを基準とした説明です。このリポジトリ全体の現在の実機動作は、提示された情報だけでは独立に検証できません。",
+          "Windows向けWinUSBセットアップについて、READMEでは未設定PCでの新規ドライバー割り当て経路は最終実機確認待ちとされています。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
         "evidence": [
           "README.md",
+          "apps/assignments/pid_exercise/pid_exercise.c",
+          "apps/assignments/pid_exercise/pid_exercise.h",
           "apps/pd_IMU_S1/pd_IMU_S1.c",
-          "apps/pd_IMU_S1/pd_IMU_S1.h",
-          "apps/pd_PID/pd_PID.c",
+          "apps/pd_IMU_S1/IMU_S1.h",
+          ".github/scripts/incremental-firmware.py",
           ".github/workflows/build-and-deploy.yml"
         ]
       }
@@ -11702,7 +11700,7 @@
     "temesotejam/rw-walker-motion-control": {
       "url": "https://github.com/temesotejam/rw-walker-motion-control",
       "default_branch": "main",
-      "pushed_at": "2026-11-18T05:02:28Z",
+      "pushed_at": "2026-11-19T11:55:29Z",
       "available_paths": [
         ".gitattributes",
         ".gitignore",
@@ -11754,6 +11752,9 @@
         "analysis/2026-11-16-walking/analyze_downloadfix2_trials.py",
         "analysis/2026-11-16-walking/analyze_frame_ready_trial.py",
         "analysis/2026-11-16-walking/analyze_line_budget_trial.py",
+        "analysis/2026-11-19-event-replay",
+        "analysis/2026-11-19-event-replay/events.csv",
+        "analysis/2026-11-19-event-replay/inputs.json",
         "build-smooth-web.cmd",
         "docs",
         "docs/CAD_SUPPORT_SHADOW.md",
@@ -11768,6 +11769,7 @@
         "docs/ENERGY_PULSE_LIFECYCLE_V16.md",
         "docs/ENERGY_PULSE_LIFECYCLE_V16_REVIEW.md",
         "docs/ENERGY_TRANSFER_V18.md",
+        "docs/EVENT_FOOT_ENERGY_REPLAY_20261119.md",
         "docs/FOOT_CAPTURE_V23.md",
         "docs/FOOT_COPY_DELTA_V27.md",
         "docs/FOOT_EXPORT_WEBFIX.md",
@@ -11899,107 +11901,105 @@
         "src/gyro_steering.h",
         "src/half_cycle_energy_budget.h",
         "src/immutable_export.cpp",
-        "src/immutable_export.h",
-        "src/imu_acquisition_audit.h",
-        "src/imu_i2c_transport.cpp",
-        "src/imu_i2c_transport.h",
-        "src/imu_manager.cpp"
+        "src/immutable_export.h"
       ],
       "recent_commits": [
         {
-          "sha": "469f4013",
-          "message": "Record periodic sensing with both feet near 20 degrees"
+          "sha": "ce7d0187",
+          "message": "Record verification of walking objective on GitHub main"
         },
         {
-          "sha": "7c674ecc",
-          "message": "Record foot sensing at the relocated setup"
+          "sha": "392bfc8c",
+          "message": "Record confirmed walking control objective at load transfer"
         },
         {
-          "sha": "d92c007f",
-          "message": "Publish walking foot estimates at 40 Hz and show low-rate run telemetry"
+          "sha": "54110c44",
+          "message": "Relate the split-sole geometry and recorded sway speeds to load-transfer timing"
         }
       ],
       "archived": false,
-      "fingerprint": "21a3459d1e48f3768ff8bb1aa741c81a057206ce574fb20ef1f1c2e12609d895",
-      "analyzed_at": "2026-11-19T00:39:40.621Z",
+      "fingerprint": "f21d402d4c5e9129a89074d8b9d37d18ef1ff6591eb4c12bbf025e02eed77e1d",
+      "analyzed_at": "2026-11-20T00:47:31.951Z",
       "profile": {
-        "purpose": "リアクションホイール歩行器の制御ソフトウェアを保存・試験するリポジトリ。READMEでは、実機への書き込みはPCで行い、GitHub更新による自動ビルドやデプロイは行わないとしている。",
-        "architecture": "C++の制御モジュール群をPlatformIOでビルドする構成。歩行制御の位相・角度基準を扱うヘッダーに加え、制御遅延の計測・JSON出力を行う実装がある。カメラ、IMU、足部推定関連のファイルも存在するが、提示された抜粋だけでは全体の呼び出し関係や構成は確認できない。",
+        "purpose": "リアクションホイール歩行器の制御ファームウェアを保存し、歩行制御や実機試験の分析を行うリポジトリ。",
+        "architecture": "C++の制御モジュール群に、カメラ・足部観測関連のモジュール、実験状態・エクスポート機能、試験分析スクリプトと記録を含む。READMEによればGitHub更新による自動ビルド・デプロイは行わず、実機への書き込みはPCで行う。",
         "technologies": [
           "C++",
-          "Arduino API",
-          "FreeRTOS",
-          "PlatformIO"
+          "Arduino API（ソース抜粋で確認）",
+          "FreeRTOS API（ソース抜粋で確認）",
+          "PlatformIO設定ファイルあり（設定内容は未確認）"
         ],
         "algorithms": [
-          "バイアス補正済み角速度の積分によるパルス相対角度の推定",
-          "角速度の符号反転と閾値による旋回・反転判定",
-          "beta制御値の指数ランプおよびsmoothstep補間",
-          "制御処理の経過時間・区間別遅延の集計"
+          "ジャイロ積分角と回転方向の反転を用いる、パルス単位のβ位相制御。",
+          "反転確認後、または時間切れ後にsmoothstepでβを復帰させる制御。",
+          "制御処理の各段階・キュー配送・I/Oの経過時間を記録し、予算超過を集計する方式。"
         ],
         "hardware": [
-          "リアクションホイール歩行器",
-          "ジャイロまたはIMU入力を利用する構成（型番は未確認）"
+          "リアクションホイール歩行器（README記載）。",
+          "カメラおよび慣性センサー関連のソースは存在するが、搭載機種・構成は提示情報から確定できない。"
         ],
         "interfaces": [
-          "PlatformIOビルド環境",
-          "ArduinoおよびFreeRTOS API",
-          "制御遅延情報のJSON出力"
+          "制御クラスのbeginPulse/update/resetおよびβ目標値取得メソッド。",
+          "制御遅延プロファイルの段階マーク、集計、JSON出力（PsramString）。",
+          "PlatformIO環境設定。利用可能な環境や正確なビルド条件はREADME記載の範囲のみ確認。"
         ],
         "reusable_components": [
           {
             "name": "BetaPhaseController",
-            "purpose": "パルス開始後の角速度・角度から旋回後の戻り進捗を求め、beta上限を指数補間する状態機械。",
+            "purpose": "入力保護中の方向判定を避け、パルス開始後のジャイロ積分角と反転から復帰率を算出し、指数曲線でβ上限を設定する。",
             "evidence": [
               "src/beta_phase_controller.h"
             ]
           },
           {
             "name": "BetaTurnFastController",
-            "purpose": "入力保護中の誤判定を避けつつ、反転を複数サンプルで確認するか、時間経過でフォールバックし、smoothstepでbetaを回復する制御器。",
+            "purpose": "複数サンプルで動作反転を確認し、smoothstepでβを復帰させる。反転が確認できない場合の時間ベースの復帰も備える。",
             "evidence": [
               "src/beta_turn_fast_controller.h"
             ]
           },
           {
-            "name": "control_angle_reference::origin",
-            "purpose": "動作モードに応じて、重力基準の角度または保存済みピッチを制御原点として選択する小さな再利用関数。",
-            "evidence": [
-              "src/control_angle_reference.h"
-            ]
-          },
-          {
             "name": "control_latency::Profile",
-            "purpose": "制御処理の区間時間、キュー配送時間、予算超過などを上限付きで集計し、JSON形式で出力する計測基盤。",
+            "purpose": "測定受信から制御完了までの段階別経過時間、キュー配送時間、I/O重複時間および予算超過を、有界バッファで記録・JSON出力する。",
             "evidence": [
               "src/control_latency.h",
               "src/control_latency.cpp"
             ]
+          },
+          {
+            "name": "control_angle_reference::origin",
+            "purpose": "作業モードでは重力基準の角度原点を0にし、それ以外では保存されたピッチ角を原点として返す。",
+            "evidence": [
+              "src/control_angle_reference.h"
+            ]
           }
         ],
         "constraints": [
-          "制御器の閾値はConfig定数に依存するが、提示情報から具体値や他機体への適用条件は確認できない。",
-          "制御遅延の計測値はホスト壁時計時間であり、純粋なCPU実行時間やプリエンプション時間ではないと実装内で明記されている。",
-          "提示されたソース抜粋とファイル一覧だけでは、カメラ・足部推定・IMU各モジュールの詳細な実装や統合状況、テスト結果を確認できない。",
-          "READMEでは通常ビルドと早期入力試験ビルドのフラグを区別している。"
+          "READMEでは初期データを別リポジトリ由来の試験版ソースに基づく移行と説明し、当時のログに基づく改善は未反映としている。現在の状態は提示情報のみでは確定できない。",
+          "β制御のしきい値・復帰時間はConfig依存であり、値や実機での効果は提示された抜粋だけでは評価できない。",
+          "遅延計測の時間はホスト側の壁時計時間であり、I/Oにはセットアップ・割り込み等も含む。純粋なCPU時間・プリエンプション時間ではない。",
+          "提示情報にビルドログや試験結果の詳細はなく、再現性・性能・安全性は未検証。"
         ],
         "maturity": "実験",
         "confidence": "medium",
         "evidence": [
           "README.md",
+          "platformio.ini",
           "src/beta_phase_controller.h",
           "src/beta_turn_fast_controller.h",
           "src/control_angle_reference.h",
           "src/control_latency.h",
           "src/control_latency.cpp",
-          "platformio.ini"
+          "src/experiment_runner.cpp",
+          "src/foot_observer.cpp",
+          "analysis/2026-11-19-event-replay/events.csv"
         ]
       }
     },
     "temesotejam/layer-workbench": {
       "url": "https://github.com/temesotejam/layer-workbench",
       "default_branch": "main",
-      "pushed_at": "2026-11-18T23:40:34Z",
+      "pushed_at": "2026-11-20T00:37:23Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -12030,7 +12030,15 @@
         "docs/NATIVE_WASM_DIAGNOSTIC_PAIR.md",
         "docs/ORCASLICER_UI_PARITY.md",
         "docs/ROADMAP.md",
+        "docs/V250_3MF_ANCILLARY_PRESERVATION.md",
+        "docs/V250_3MF_CORE_MODEL_PRESERVATION.md",
+        "docs/V250_3MF_MANIFEST_MESH_RANGES.md",
+        "docs/V250_INITIAL_LAYER_TRAVEL_SPEED.md",
+        "docs/V250_NATIVE_INITIAL_LAYER_TRAVEL_SPEED.md",
         "docs/V250_PARITY_LEDGER.md",
+        "docs/V250_SHELL_THICKNESS.md",
+        "docs/V250_SURFACE_SKIN_PATTERNS.md",
+        "docs/V250_VERTICAL_SHELL_MODE.md",
         "docs/WEB_PORT_SOURCE_AUDIT.md",
         "engine-probe.html",
         "index.html",
@@ -12047,6 +12055,7 @@
         "scripts/build-draco-wasm.sh",
         "scripts/check_3mf_stl_bounds.py",
         "scripts/check_parity_pair.py",
+        "scripts/compare_3mf_build_preservation.py",
         "scripts/compare_3mf_metadata.py",
         "scripts/compare_gcode.py",
         "scripts/diagnose-edited-3mf-toolpaths.mjs",
@@ -12064,6 +12073,7 @@
         "scripts/gcode-preview-parser.mjs",
         "scripts/gcode-speed-colors.mjs",
         "scripts/gcode-tool-colors.mjs",
+        "scripts/initial-layer-travel-diagnostic.mjs",
         "scripts/make_3mf_two_build_fixture.py",
         "scripts/make_parity_manifest.py",
         "scripts/multi-stl.mjs",
@@ -12094,6 +12104,7 @@
         "scripts/support-extrusion-diagnostic.mjs",
         "scripts/support-feature-diagnostic.mjs",
         "scripts/support-sphere-fixture.mjs",
+        "scripts/surface-skin-diagnostic.mjs",
         "scripts/test-3mf-viewport-items.mjs",
         "scripts/test-audit-native-wasm-profile-gap.mjs",
         "scripts/test-audit-wasm-cube-deposition.mjs",
@@ -12118,6 +12129,7 @@
         "scripts/test-gcode-preview-parser.mjs",
         "scripts/test-gcode-speed-colors.mjs",
         "scripts/test-hot-plate-bridge.mjs",
+        "scripts/test-initial-layer-travel-diagnostic.mjs",
         "scripts/test-multi-stl.mjs",
         "scripts/test-native-manifest-edit.mjs",
         "scripts/test-obj-to-stl.mjs",
@@ -12140,6 +12152,7 @@
         "scripts/test-support-extrusion-diagnostic.mjs",
         "scripts/test-support-feature-diagnostic.mjs",
         "scripts/test-support-sphere-fixture.mjs",
+        "scripts/test-surface-skin-diagnostic.mjs",
         "scripts/test-transform-matrix.mjs",
         "scripts/test-upstream-v250-creality.mjs",
         "scripts/test-upstream-v250-multi-vendor.mjs",
@@ -12147,10 +12160,13 @@
         "scripts/test-v250-imported-replacement-guard.mjs",
         "scripts/test-v250-native-multiobject-export.mjs",
         "scripts/test-v250-private-instance-edit.mjs",
+        "scripts/test-verify-native-initial-layer-travel.mjs",
+        "scripts/test-vertical-shell-diagnostic.mjs",
         "scripts/test_audit_3mf_scene.py",
         "scripts/test_audit_native_parity_cube_geometry.py",
         "scripts/test_check_3mf_stl_bounds.py",
         "scripts/test_check_parity_pair.py",
+        "scripts/test_compare_3mf_build_preservation.py",
         "scripts/test_compare_3mf_metadata.py",
         "scripts/test_compare_gcode.py",
         "scripts/test_diagnose_live_cube_pair.py",
@@ -12172,12 +12188,14 @@
         "scripts/three-mf-viewport-items.mjs",
         "scripts/three_mf_instance_expansion.py",
         "scripts/transform-matrix.mjs",
+        "scripts/verify-native-initial-layer-travel.mjs",
         "scripts/verify_native_bridge_speed.py",
         "scripts/verify_native_exported_stl.py",
         "scripts/verify_native_gcode_repeatability.py",
         "scripts/verify_native_layer_height.py",
         "scripts/verify_native_nozzle_temperature.py",
         "scripts/verify_native_outer_wall_speed.py",
+        "scripts/vertical-shell-diagnostic.mjs",
         "scripts/wrap_bridge_arch_3mf.py",
         "scripts/wrap_parity_cube_3mf.py",
         "styles.css",
@@ -12186,98 +12204,94 @@
       ],
       "recent_commits": [
         {
-          "sha": "cbbeaf4f",
-          "message": "feat(profile): verify native infill_direction in isolated WASM (#99)"
+          "sha": "397a941a",
+          "message": "Support quoted Core 3MF build transforms and gate editor CI (#125)"
         },
         {
-          "sha": "0befda5a",
-          "message": "audit(parity): compare numeric G1 footprints at shared deposited Z (#98)"
+          "sha": "3db1e3c9",
+          "message": "test(3mf): verify exact Core model bytes across surgical transforms (#124)"
         },
         {
-          "sha": "6dbed89e",
-          "message": "audit(parity): measure one-sided Z-stratum G1 footprints from real G-code (#97)"
+          "sha": "5e7f22ba",
+          "message": "test(3mf): audit ancillary archive preservation across Core edits (#123)"
         }
       ],
       "archived": false,
-      "fingerprint": "1e24be918ec328bc4d617836caf567a75cf506d6bab6121d43b88a2ca5f044c3",
-      "analyzed_at": "2026-11-19T00:38:54.738Z",
+      "fingerprint": "302757eeede6e2663c3359b0e0905098af7b2d551a01dfe64e52c77edf0a6106",
+      "analyzed_at": "2026-11-20T00:46:21.663Z",
       "profile": {
-        "purpose": "ブラウザーでの3Dプリント準備環境を開発し、OrcaSlicerとの互換性やスライス結果を検証する個人用プロジェクト。",
-        "architecture": "Three.jsベースのブラウザーUIと、ヘッドレスWebAssembly版OrcaSlicerの候補エンジンを分離。現行UIはモデルの表示・スライスをまだ実装しておらず、互換性監査やビルド検証は主に独立したスクリプトとGitHub Actionsで行う。",
+        "purpose": "ブラウザー上の3Dプリント準備環境を開発し、上流スライサーとの互換性を検証する個人用ワークスペース。現状の公開UIはモデル表示・スライス機能まで完成していません。",
+        "architecture": "Three.jsを使うブラウザーUIと、3MF・STLなどの監査／比較用スクリプト群を分離。OrcaSlicer v2.5.0のヘッドレスWebAssembly候補を構築・検証する仕組みもありますが、UIとの接続や本番ブラウザーでの動作は未完了です。",
         "technologies": [
           "JavaScript",
           "Python",
           "Three.js",
-          "WebAssembly / Emscripten",
-          "OrcaSlicer v2.5.0",
-          "Node.js",
-          "3MF、STL、OBJ"
+          "WebGL",
+          "WebAssembly",
+          "Emscripten",
+          "OrcaSlicer v2.5.0"
         ],
         "algorithms": [
-          "3MFのモデル単位、メッシュ、ビルド配置を検証し、インスタンスを展開して配置済み形状を監査する。",
-          "3MFの行ベクトル変換と単位換算を適用し、STLの頂点・三角形と形状を比較する。",
-          "ネイティブ出力STLの三角形を面順序・頂点順序に依存しない形で照合する。",
-          "ビューポートでレイキャストを使い、クリック位置から選択オブジェクトを特定する。"
+          "3MFのメッシュ・ビルド項目・変換行列を解析し、配置済み形状を検査する処理",
+          "3MFの単位を考慮したミリメートル境界値の診断",
+          "STLと配置済み3MF形状の三角形・頂点座標比較",
+          "ネイティブ出力STLと固定配置の基準形状を比較する幾何検証"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザーUIでのSTL・3MF・OBJファイル選択と3Dビューポート",
-          "監査・比較スクリプトのCLIとJSONレポート",
-          "3MF ZIP/XML、STL、G-code関連スクリプト",
-          "GitHub Actionsによるビルド・互換性検証"
+          "ブラウザーUIでのSTL・3MF・OBJファイル選択と3D表示",
+          "3MFおよびSTLの解析・検証スクリプト",
+          "GitHub Actionsによるビルド・互換性検証",
+          "WebAssembly候補はSharedArrayBufferとcross-origin isolationを要求する旨が記載されている"
         ],
         "reusable_components": [
           {
-            "name": "3MFシーン監査",
-            "purpose": "ZIP内モデル部品、XML、単位、ID、変換、メッシュ規模などを制限付きで検証する。別の3MF取込・検証ツールの入力検査に再利用できる。",
+            "name": "audit_3mf_scene.py の audit、parse_transform、parse_model_unit",
+            "purpose": "3MF ZIP/XMLを制限付きで読み込み、モデル単位、オブジェクト、メッシュ、ビルド項目、変換を検査する。DTD・entityや不正なID・座標なども拒否する。",
             "evidence": [
-              "scripts/audit_3mf_scene.py",
-              "scripts/three_mf_instance_expansion.py",
-              "scripts/compare_3mf_metadata.py"
+              "scripts/audit_3mf_scene.py"
             ]
           },
           {
-            "name": "3MF配置形状とSTLの比較",
-            "purpose": "3MFの配置済み三角形と変換後STLの形状を比較する診断方式。形式変換の回帰テストへ応用できるが、ネイティブとの完全な互換性を示すものではない。",
+            "name": "check_3mf_stl_bounds.py の compare、expected_geometry、stl_geometry",
+            "purpose": "配置変換と単位を適用した3MF形状と、変換後STLの幾何を比較する診断処理。監査対象やサイズには上限がある。",
             "evidence": [
               "scripts/check_3mf_stl_bounds.py",
               "scripts/audit_3mf_scene.py"
             ]
           },
           {
-            "name": "ネイティブSTL幾何監査",
-            "purpose": "固定フィクスチャの三角形を配置込みで照合し、許容差内か判定する。エクスポーターの幾何回帰テストに再利用できる。",
+            "name": "audit_native_parity_cube_geometry.py の audit",
+            "purpose": "バイト列を固定した基準STLとネイティブ出力STLについて、三角形数・配置・頂点偏差を許容誤差で検証する。G-codeやWASMとの同等性は判定しない。",
             "evidence": [
-              "scripts/audit_native_parity_cube_geometry.py",
-              "scripts/verify_native_exported_stl.py",
-              "scripts/wrap_parity_cube_3mf.py"
+              "scripts/audit_native_parity_cube_geometry.py"
             ]
           },
           {
-            "name": "Three.jsビューポート選択・変形操作",
-            "purpose": "OrbitControls、TransformControls、レイキャストを用いた3D表示・選択・変形UI。別のブラウザー3D編集画面の土台として参考になる。",
+            "name": "ブラウザーの3Dビューポート",
+            "purpose": "Three.jsのSTL・OBJ・3MFローダー、軌道操作、変形操作、レイキャストによるオブジェクト選択を組み合わせた表示基盤。3MF表示項目の処理を別モジュールから利用する。",
             "evidence": [
               "app.js",
               "scripts/three-mf-viewport-items.mjs"
             ]
           },
           {
-            "name": "上流WASMビルド適応スクリプト",
-            "purpose": "OrcaWasmパッチをv2.5.0のソース構成に合わせ、想定箇所がない場合は停止する。上流更新時のビルド調整の参考になる。",
+            "name": "adapt-orcawasm-v2.5.0.py",
+            "purpose": "固定バージョンの上流ソース配置に合わせ、WASM向けビルド調整を一度だけ適用し、想定外のソース構成では失敗させる。",
             "evidence": [
               "scripts/adapt-orcawasm-v2.5.0.py"
             ]
           }
         ],
         "constraints": [
-          "READMEによれば、現行の公開UIは表示用シェルで、モデル形状の読込・描画、プロファイル読込、WASMエンジン接続、スライスは未実装。",
-          "WASM候補の検証成功は記載されているが、デスクトップ機能全般の同等性やブラウザー公開環境での動作を示すものではない。",
-          "マルチスレッド候補はSharedArrayBufferとクロスオリジン分離を必要とし、GitHub Pagesでの実現性は未検証。",
-          "完全な3MFラウンドトリップやネイティブ対WASMのG-code同等性など、既知の機能・検証ギャップがある。",
-          "上流コード・依存関係を含む配布にはライセンスと通知の確認が必要。"
+          "READMEによると公開UIは表示用の枠組みで、形状の読込・描画、プロファイル読込、WASMエンジン呼出し、スライスは未接続。",
+          "3MFの完全な意味的ラウンドトリップ、ネイティブとWASMのG-code同等性は未確認。",
+          "GitHub Pagesで必要なcross-origin isolationを安定して提供できるか、サービスワーカー方式を含めて未検証。",
+          "監査スクリプトは限定された3MFモデル構造やサイズを対象としており、完全な形式互換性や印刷安全性を保証しない。",
+          "提示されたソース抜粋は一部のみのため、全モジュールの実装範囲やテスト結果は確認できない。"
         ],
-        "maturity": "実験",
-        "confidence": "high",
+        "maturity": "試作",
+        "confidence": "medium",
         "evidence": [
           "README.md",
           "app.js",
@@ -12285,8 +12299,10 @@
           "scripts/audit_3mf_scene.py",
           "scripts/check_3mf_stl_bounds.py",
           "scripts/audit_native_parity_cube_geometry.py",
+          "scripts/three-mf-viewport-items.mjs",
           "docs/V250_PARITY_LEDGER.md",
-          "THIRD_PARTY_NOTICES.md"
+          ".github/workflows/test-3mf-parity.yml",
+          ".github/workflows/verify-engine-browser.yml"
         ]
       }
     },
