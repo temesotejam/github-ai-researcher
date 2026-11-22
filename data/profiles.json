@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-21T23:36:42.498Z",
+  "generated_at": "2026-11-22T23:49:53.826Z",
   "owner": "temesotejam",
-  "repository_count": 114,
+  "repository_count": 115,
   "profiles": {
     "temesotejam/atoms3r-lateral-energy-control": {
       "url": "https://github.com/temesotejam/atoms3r-lateral-energy-control",
@@ -306,7 +306,7 @@
     "temesotejam/github-tavern": {
       "url": "https://github.com/temesotejam/github-tavern",
       "default_branch": "main",
-      "pushed_at": "2026-11-21T19:29:09Z",
+      "pushed_at": "2026-11-22T19:51:47Z",
       "available_paths": [
         ".github",
         ".github/agents",
@@ -335,80 +335,85 @@
       ],
       "recent_commits": [
         {
-          "sha": "bb893cd2",
+          "sha": "c887631e",
           "message": "chore: refresh tavern summaries"
         },
         {
-          "sha": "4fff3e37",
-          "message": "chore: refresh tavern summaries"
+          "sha": "5bd448db",
+          "message": "chore: refresh verified public pages"
         },
         {
-          "sha": "e4edc8e2",
+          "sha": "128c2f9d",
           "message": "chore: refresh tavern summaries"
         }
       ],
       "archived": false,
-      "fingerprint": "2d749ef1bb047926cc493569559123ac127d74085a50634f41c0f69dd5008ade",
-      "analyzed_at": "2026-11-21T23:31:39.288Z",
+      "fingerprint": "3c0474ae75b0cba9af9cdfe62f56ece2d8a225145ab110129e5925c92bc92a70",
+      "analyzed_at": "2026-11-22T23:43:21.534Z",
       "profile": {
-        "purpose": "公開GitHubリポジトリを検索・閲覧する個人向け静的ポータル。",
-        "architecture": "HTML/CSS/JavaScriptのブラウザーアプリがGitHub APIからリポジトリ情報を取得し、要約JSONなどの静的データと組み合わせて一覧・詳細を表示する。READMEによればGitHub Actionsで要約データを更新し、GitHub Pagesでホスティングする構成。",
+        "purpose": "公開GitHubリポジトリを検索・閲覧する個人向け静的ポータル。READMEでは、所有者 temesotejam の公開リポジトリを一覧化し、カテゴリ分類やCopilot生成の説明を提供するとされている。",
+        "architecture": "ブラウザー側のJavaScriptがGitHub APIや静的JSONデータを利用し、リポジトリ一覧・検索・詳細表示を担う構成。READMEによれば、GitHub Actionsで要約や公開ページ情報を更新し、GitHub Pagesで静的ホスティングする。各機能の全体的な連携やワークフロー実装の詳細は、提示されたソース抜粋だけでは確認できない。",
         "technologies": [
           "JavaScript",
-          "HTML",
-          "CSS",
-          "GitHub API",
-          "GitHub Pages",
-          "GitHub Actions",
-          "JSON",
-          "Copilot CLI"
+          "ブラウザーDOM、MutationObserver、Fetch API",
+          "GitHub REST API（README記載）",
+          "GitHub Pages、GitHub Actions（README記載）",
+          "GitHub Copilot CLI（README記載）"
         ],
         "algorithms": [
-          "キーワード規則に基づくリポジトリ分類（app.js）",
-          "README Markdownの整形・短文抽出と最大6件の並行取得（card-enricher.js）",
-          "MutationObserverによる詳細表示やカード変更の検知"
+          "キーワード規則を順に照合するカテゴリ分類（app.js）",
+          "README Markdownから装飾やノイズを除去し、短いプレビュー文を抽出（card-enricher.js）",
+          "同時実行数を6に制限したキュー処理でREADMEを取得（card-enricher.js）"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザー上の検索・カテゴリ選択・ソート・リポジトリ詳細表示",
-          "GitHub APIおよびraw.githubusercontent.comからの読み取り",
-          "data/summaries.jsonとdata/public-pages.jsonのJSONデータ"
+          "公開GitHub APIおよびraw.githubusercontent.comからのHTTP取得",
+          "data/summaries.json、data/public-pages.jsonのJSONデータ",
+          "ブラウザー上の検索・カテゴリ選択・詳細表示UI",
+          "GitHub Pagesの静的サイト（README記載）"
         ],
         "reusable_components": [
           {
-            "name": "README短文抽出・並行取得キュー",
-            "purpose": "READMEのMarkdownを整形し、説明文を抽出してカードに反映する。キャッシュ、重複抑止、同時実行数制限を備える。",
+            "name": "card-enricher.js の cleanMarkdown / shortPreview",
+            "purpose": "README Markdownをテキスト化し、リポジトリカード向けの短い説明を抽出する。",
             "evidence": [
               "card-enricher.js"
             ]
           },
           {
-            "name": "キーワード分類規則",
-            "purpose": "リポジトリ名・説明・言語・topics・要約を規則語と照合し、技術カテゴリを決める。",
+            "name": "card-enricher.js のキュー処理",
+            "purpose": "重複取得を抑えつつ、README取得の同時実行数を6件に制限する。別プロジェクトでは対象URLやカードDOMに合わせた調整が必要。",
             "evidence": [
-              "app.js"
+              "card-enricher.js"
             ]
           },
           {
-            "name": "日本語説明の口語変換器",
-            "purpose": "説明文を規則ベースで口語調に変換する純粋関数を提供する。",
+            "name": "public-pages-client.js の validEntry / hideLink / showLink",
+            "purpose": "ページURLの形式を検査し、選択中リポジトリに対応するリンクだけを表示する。",
+            "evidence": [
+              "public-pages-client.js"
+            ]
+          },
+          {
+            "name": "spoken-overview-client.js の spokenize",
+            "purpose": "日本語の説明文を口語調へ変換する純粋変換関数。グローバル公開によりブラウザーなしでのテストにも利用できる。",
             "evidence": [
               "spoken-overview-client.js"
             ]
           },
           {
-            "name": "公開ページリンク検証",
-            "purpose": "URLの形式とHTTP/HTTPSプロトコルを確認し、詳細表示中のリポジトリに対応するリンクだけを表示する。",
+            "name": "app.js の esc / withTimeout / categoryOf",
+            "purpose": "HTML出力用の文字エスケープ、AbortControllerによる取得タイムアウト、キーワードによるカテゴリ分類を提供する。",
             "evidence": [
-              "public-pages-client.js"
+              "app.js"
             ]
           }
         ],
         "constraints": [
-          "対象は所有者temesotejamの公開リポジトリで、READMEではPrivate Repositoryや書き込み操作を対象外としている。",
-          "分類はソース上のキーワード規則に依存する。",
-          "要約更新ワークフローおよび更新スクリプトの実装詳細は提示された抜粋から確認できない。",
-          "実運用状況やテスト結果は提示情報だけでは確認できない。"
+          "READMEによれば対象は所有者の公開リポジトリで、サイト側から書き込み操作は行わない。",
+          "提示された app.js の抜粋は一部であり、取得・検索・描画の全処理やエラー時の挙動は確認できない。",
+          "更新ワークフローや生成スクリプトの内容は提示されていないため、README記載を超える詳細は不明。",
+          "READMEプレビュー取得はmain/masterとREADMEの一般的な大小文字表記を試す実装で、他の配置への対応は確認できない。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
@@ -416,18 +421,15 @@
           "README.md",
           "app.js",
           "card-enricher.js",
-          "spoken-overview-client.js",
           "public-pages-client.js",
-          "data/summaries.json",
-          "data/public-pages.json",
-          ".github/workflows/copilot-summaries.yml"
+          "spoken-overview-client.js"
         ]
       }
     },
     "temesotejam/2026_10_24": {
       "url": "https://github.com/temesotejam/2026_10_24",
       "default_branch": "main",
-      "pushed_at": "2026-11-21T19:10:12Z",
+      "pushed_at": "2026-11-22T19:32:13Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -444,100 +446,86 @@
       ],
       "recent_commits": [
         {
+          "sha": "e39d94ce",
+          "message": "Update automatic news feed"
+        },
+        {
+          "sha": "99c3d759",
+          "message": "Update automatic news feed"
+        },
+        {
           "sha": "0cbaef32",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "919be4c7",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "5e6d42db",
           "message": "Update automatic news feed"
         }
       ],
       "archived": false,
-      "fingerprint": "2d550eb57122bd3eb9fcdc89a4048f92f2007e3cbd03786ccb1a0fe0dd57bf15",
-      "analyzed_at": "2026-11-21T23:31:55.288Z",
+      "fingerprint": "0e5b6391e17869398f2a38ee21b47a24f145065f7ee600deb28352d3fee19be8",
+      "analyzed_at": "2026-11-22T23:43:31.608Z",
       "profile": {
-        "purpose": "ニュースなどの現象を題材に、ニュースの見出しをゲーム内要素へ反映する一人用探索ゲーム。",
-        "architecture": "ブラウザー上のJavaScriptゲームがCanvasで描画し、data/news.jsonから自動収集ニュースを読み込む構成。ニュース取得とGitHub Pages公開のワークフローが分離されている。ゲーム本体の実装詳細は提示されたapp.js抜粋の範囲に限られる。",
+        "purpose": "ニュース見出しをゲーム内の現象や探索地点に反映する、ブラウザー向け一人用ダンジョン探索ゲーム。",
+        "architecture": "app.js がゲーム状態と処理を管理し、HTML canvas に描画する構成。data/news.json のニュースを読み込み、GitHub Actions のワークフローでRSS取得・更新する設計とREADMEに記載されています。ゲーム本体の全処理やワークフローの実装は提示された抜粋からは確認できません。",
         "technologies": [
           "JavaScript",
-          "HTML",
-          "CSS",
-          "Canvas 2D",
-          "Fetch API",
-          "localStorage",
+          "HTML canvas",
+          "ブラウザーのFetch API・localStorage・Visual Viewport API",
           "GitHub Actions",
-          "GitHub Pages"
+          "RSS（README記載）"
         ],
         "algorithms": [
-          "プレイヤーの行動ごとに仲間と敵も行動するターン制進行（README記載）。",
-          "日付と記事数を使った記事選択、および乱数による選択。",
-          "ニュース見出しのキーワード除外と、HTTP/HTTPS URLの検証。"
+          "マンハッタン距離による距離計算（dist）",
+          "Math.random による整数選択（rand）",
+          "URLプロトコル検査とニュース見出しの正規表現フィルタリング"
         ],
         "hardware": [],
         "interfaces": [
-          "キーボード（矢印キー/WASD）と画面上の方向ボタン。",
-          "data/news.json形式のニュースデータ。",
-          "ニュースの出典URLへのリンク。"
+          "ブラウザー上のキーボード・画面ボタン操作（README記載）",
+          "data/news.json のJSONデータ",
+          "ニュース記事へのHTTP/HTTPSリンク"
         ],
         "reusable_components": [
           {
             "name": "safeHttpUrl",
-            "purpose": "URLを解析し、HTTP/HTTPS以外を除外して安全なURL文字列を返す。",
+            "purpose": "入力値をURLとして解析し、HTTP/HTTPS以外のスキームを拒否する。",
             "evidence": [
               "app.js"
             ]
           },
           {
             "name": "loadAutomaticNews",
-            "purpose": "ニュースJSONの取得、カテゴリ制限、見出しによる除外、各項目の整形とURL検証を行う。",
+            "purpose": "ニュースJSONを取得し、カテゴリ・見出し・出典などを検査・整形して自動ニュース一覧に渡す。",
             "evidence": [
-              "app.js",
-              "data/news.json"
+              "app.js"
             ]
           },
           {
-            "name": "savedSeed",
-            "purpose": "localStorageから保存値を読み、出典URLが有効な場合に利用可能なデータとして返す。",
+            "name": "renderAutomaticNews",
+            "purpose": "ニュース項目をDOM要素として生成し、選択時のゲーム開始処理を結び付ける。",
             "evidence": [
               "app.js"
             ]
           },
           {
             "name": "esc",
-            "purpose": "HTMLで特別な意味を持つ文字をエスケープする。",
-            "evidence": [
-              "app.js"
-            ]
-          },
-          {
-            "name": "syncAppHeight",
-            "purpose": "画面サイズやvisualViewportの変更に合わせてCSSカスタムプロパティを更新する。",
+            "purpose": "HTMLの特殊文字をエスケープする文字列処理関数。",
             "evidence": [
               "app.js"
             ]
           }
         ],
         "constraints": [
-          "ニュースの除外は見出しに対するキーワード判定であり、記事内容の事実確認を示すものではない。",
-          "自動ニュースの説明文は要約または見出しを使い、記事本文を複製しないとREADMEに記載されている。",
-          "ゲーム生成や戦闘処理の詳細な実装は提示された抜粋だけでは確認できない。",
-          "ニュース取得処理とワークフローの具体的な実装内容は提示されたソース抜粋から確認できない。"
+          "提示されたソース抜粋はapp.jsの一部のみで、迷宮生成・戦闘・描画の全実装は確認できません。",
+          "ニュースの安全性フィルタは提示範囲では見出しと一部出典名を対象としており、記事本文の検証を示す証拠はありません。",
+          "実ニュースの本文を確認済みとは扱わない旨がREADMEに記載されています。"
         ],
         "maturity": "試作",
         "confidence": "medium",
         "evidence": [
           "README.md",
           "app.js",
-          "scripts/fetch-news.mjs",
           ".github/workflows/news.yml",
-          ".github/workflows/pages.yml",
+          "scripts/fetch-news.mjs",
           "data/news.json",
-          "index.html",
-          "styles.css"
+          "index.html"
         ]
       }
     },
@@ -1136,7 +1124,7 @@
     "temesotejam/spike-rt-web-toolkit": {
       "url": "https://github.com/temesotejam/spike-rt-web-toolkit",
       "default_branch": "main",
-      "pushed_at": "2026-11-20T11:57:43Z",
+      "pushed_at": "2026-11-22T11:04:23Z",
       "available_paths": [
         ".github",
         ".github/scripts",
@@ -1186,11 +1174,13 @@
         "apps/assignments/PID_Line_Tracer/PID_Line_Tracer.h",
         "apps/assignments/PID_Line_Tracer/project.json",
         "apps/assignments/PID_Line_Tracer_V2",
+        "apps/assignments/PID_Line_Tracer_V2/Makefile.inc",
         "apps/assignments/PID_Line_Tracer_V2/PID_Line_Tracer_V2.c",
         "apps/assignments/PID_Line_Tracer_V2/PID_Line_Tracer_V2.cdl",
         "apps/assignments/PID_Line_Tracer_V2/PID_Line_Tracer_V2.cfg",
         "apps/assignments/PID_Line_Tracer_V2/PID_Line_Tracer_V2.h",
         "apps/assignments/PID_Line_Tracer_V2/project.json",
+        "apps/assignments/PID_Line_Tracer_V2/usb_serial.c",
         "apps/assignments/README.md",
         "apps/assignments/SOUND_S3",
         "apps/assignments/SOUND_S3/SOUND_S3.c",
@@ -1335,135 +1325,108 @@
         "apps/pd_M_S2/M_S2.h",
         "apps/pd_M_S2/pd_M_S2.c",
         "apps/pd_M_S2/pd_M_S2.cdl",
-        "apps/pd_M_S2/pd_M_S2.cfg",
-        "apps/pd_M_S2/pd_M_S2.h",
-        "apps/pd_M_S2/project.json"
+        "apps/pd_M_S2/pd_M_S2.cfg"
       ],
       "recent_commits": [
         {
-          "sha": "95aad119",
-          "message": "docs(pid-v2): describe idle IMU diagnostics and sign check"
+          "sha": "84a5890b",
+          "message": "fix(pid-v2): specify force press event type"
         },
         {
-          "sha": "7690398e",
-          "message": "feat(pid-v2): log stationary IMU and encoder diagnostics before run"
+          "sha": "6fb334f1",
+          "message": "fix(pid-v2): declare long-press helper before USB export and document exit"
         },
         {
-          "sha": "f07ba0b5",
-          "message": "docs(pid-v2): describe fused IMU and encoder odometry"
+          "sha": "c8b3fb7b",
+          "message": "fix(pid-v2): honor force sensor long press during USB export"
         }
       ],
       "archived": false,
-      "fingerprint": "33ef92d76d7420ee4e12028cddd998aab4753fc4ad9b9159605331b4cc1d3c09",
-      "analyzed_at": "2026-11-21T00:07:00.839Z",
+      "fingerprint": "66f24fca81ffc77caf675248409574667562bb8938b0c3270a2936707d83210b",
+      "analyzed_at": "2026-11-22T23:43:47.008Z",
       "profile": {
-        "purpose": "SPIKE-RTアプリをブラウザ上から編集・ビルド・配布し、WebUSBでLEGO SPIKE Prime HubへDFU書き込み、Web Serialで実行ログを確認するためのWebツールキット。",
-        "architecture": "GitHub ActionsでCアプリとSPIKE-RTファームウェアを差分ビルドし、成果物をGitHub Pagesへ公開する構成。各アプリはapps/<app>/<app>.cを中心に、任意のヘッダ・設定・project.jsonを持ち、ブラウザからカタログを選択してWebUSBでasp.binを書き込む。",
+        "purpose": "SPIKE-RTアプリをブラウザーで編集・ビルド・Hubへ書き込み、USBシリアルログを確認するためのツールキット。",
+        "architecture": "apps/以下のCアプリをGitHub Actionsでビルドし、成果物をGitHub Pagesへ公開する。ブラウザーからWebUSB/DFUでHubに書き込み、Web Serialで実行ログを表示する。変更のないアプリのファームウェアはハッシュ確認後に再利用する構成と説明されている。",
         "technologies": [
           "C",
-          "SPIKE-RT",
-          "TOPPERSカーネル",
-          "TECS",
+          "Python（GitHub Actionsスクリプト）",
+          "SPIKE-RT v0.2.0",
           "GitHub Actions",
           "GitHub Pages",
-          "Docker",
           "WebUSB",
+          "Web Serial",
           "DfuSe",
-          "Web Serial"
+          "SHA-256"
         ],
         "algorithms": [
-          "PIDライントレース",
-          "制御周期10 msのサイクルタスク",
-          "セマフォによる制御処理の起床",
-          "フォースセンサ入力のデバウンス",
-          "反射光の正規化とホワイト／ブラック較正",
-          "微分項フィルタと積分アンチワインドアップ",
-          "適応的なモーター速度制限",
-          "エンコーダオドメトリ"
+          "左右カラーセンサーの反射光差を使うPIDライントレース。ゲインはkp=1.0、ki=0.1、kd=0.1、周期は10 ms。",
+          "フォースセンサー入力を2サンプル連続確認するデバウンス処理。",
+          "アプリのソースと設定のSHA-256に基づく差分ビルド・成果物再利用。"
         ],
         "hardware": [
           "LEGO SPIKE Prime Hub",
-          "LEGO Technic Large Hub",
-          "モーターポートA/E",
-          "カラーセンサーポートB/F",
-          "フォースセンサーポートC"
+          "SPIKE Hubのモーター、カラーセンサー、フォースセンサー",
+          "PIDサンプルの接続例: モーターA/E、カラーセンサーB/F、フォースセンサーC"
         ],
         "interfaces": [
-          "SPIKE-RT pu pモーターAPI",
-          "カラーセンサーAPI",
-          "フォースセンサーAPI",
-          "ハブボタン・ディスプレイ・スピーカー・IMU API",
-          "USBシリアル115200 bps",
-          "WebUSB",
-          "DfuSe",
-          "manifest.json"
+          "ブラウザー上のWebUSBによるDFUファームウェア書き込み",
+          "ブラウザー上のWeb Serialによる115200 bpsログ表示",
+          "アプリ入力形式: apps/<app>/<app>.c。任意で.h、.cfg、.cdl、project.jsonを配置",
+          "GitHub Actionsの課題作成ワークフロー"
         ],
         "reusable_components": [
           {
-            "name": "差分ファームウェアビルド方式",
-            "purpose": "変更されたアプリだけを再ビルドし、未変更成果物をSHA-256とキャッシュで再利用する。",
-            "evidence": [
-              ".github/scripts/incremental-firmware.py",
-              ".github/workflows/build-and-deploy.yml",
-              "README.md"
-            ]
-          },
-          {
-            "name": "課題スケルトン複製スクリプト",
-            "purpose": "既存サンプルからCソースとヘッダ・設定ファイルを複製し、新しい課題用アプリを生成する。",
-            "evidence": [
-              ".github/scripts/create-assignment.py",
-              ".github/scripts/import-zipped-apps.py",
-              "apps/assignments/README.md"
-            ]
-          },
-          {
-            "name": "PIDライントレースV2モジュール",
-            "purpose": "カラーセンサー較正、PID制御、エンコーダオドメトリ、IMU融合、モード切替、診断ログを統合する。",
-            "evidence": [
-              "apps/assignments/PID_Line_Tracer_V2/PID_Line_Tracer_V2.c",
-              "apps/assignments/PID_Line_Tracer_V2/PID_Line_Tracer_V2.h"
-            ]
-          },
-          {
-            "name": "基本PIDライントレースモジュール",
-            "purpose": "左右カラーセンサーとフォースセンサーを用いたライントレース開始・停止制御を実装する。",
+            "name": "PID_Line_Tracer",
+            "purpose": "2つのカラーセンサーによるPIDライントレース例。モーター・センサー初期化、異常時停止、フォースセンサーによる開始/停止切替を含む。機体固有のポート割当やSPIKE-RT APIへの適応が必要。",
             "evidence": [
               "apps/assignments/PID_Line_Tracer/PID_Line_Tracer.c",
               "apps/assignments/PID_Line_Tracer/PID_Line_Tracer.h"
             ]
           },
           {
-            "name": "最小アプリ自動スキャフォールド",
-            "purpose": "apps/<app>/<app>.cだけでアプリを追加でき、不足するヘッダ・cfg・cdlを標準構成で補完する。",
+            "name": "usb_serial.cの出力アダプター",
+            "purpose": "low_putchar()からSPIKE-RTのUSB標準出力関数pbsys_usb_stdout_put_char()へ1文字を渡す薄いアダプター。シリアル出力接続の参考にできる。",
             "evidence": [
-              "README.md",
-              ".github/workflows/build-and-deploy.yml"
+              "apps/assignments/PID_Line_Tracer_V2/usb_serial.c"
+            ]
+          },
+          {
+            "name": "アプリ追加の最小構成",
+            "purpose": "フォルダー名と同じ名前のCファイルを置く構成。標準の.h/.cfg/.cdl生成や任意のproject.jsonによる表示情報付与を利用できる。",
+            "evidence": [
+              "README.md"
+            ]
+          },
+          {
+            "name": "差分ビルドと課題作成の自動化",
+            "purpose": "ハッシュを使った変更アプリの選別、成果物再利用、サンプルからの課題作成を実現する構成。各スクリプトの詳細な入出力やエラー処理は提示情報だけでは確認できない。",
+            "evidence": [
+              ".github/scripts/incremental-firmware.py",
+              ".github/scripts/create-assignment.py",
+              ".github/workflows/build-and-deploy.yml",
+              ".github/workflows/create-assignment.yml"
             ]
           }
         ],
         "constraints": [
-          "提供されたソース抜粋は一部のみで、全スクリプト・ワークフロー・ブラウザ側実装は確認できない。",
-          "WinUSB未設定PCでの新規ドライバ割り当て経路は、リポジトリ記載上は実機最終確認待ち。",
-          "GitHub Actionsキャッシュの有効期限や容量制限により、過去のビルド成果物を再利用できなくなる場合がある。",
-          "PID実装の実機検証範囲、センサー較正精度、IMU融合の長期安定性は提供情報だけでは確認できない。",
-          "ブラウザ機能の実装ファイルや依存ライブラリの有無は提示されたファイル一覧では確認できない。",
-          "ミドルウェアAPIの互換性や他ハードウェアへの移植条件は、ソース一覧だけでは確定できない。",
-          "READMEは実機確認済み事実と将来拡張案を併記しているため、機能ごとに確認状態を分けて評価する必要がある。"
+          "WebUSB書き込み先はREADMEでSPIKE Prime HubのDFUモードに限定され、load addressは0x08008000、boot addressは0x08000000、最大サイズは992 KiBとされている。",
+          "Web Serialは115200 bpsでポートを開き、VID/PIDで候補を絞らない仕様と説明されている。",
+          "差分ビルドのキャッシュが消失・破損・期限切れの場合は再ビルドが必要。",
+          "PIDサンプルの制御ループ全体やPID_Line_Tracer_V2の実装は提示抜粋で確認できず、挙動の全容は未確認。",
+          "README記載の実機確認状況は説明上の情報であり、この分析では独立に検証していない。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
         "evidence": [
           "README.md",
-          ".github/scripts/incremental-firmware.py",
-          ".github/scripts/create-assignment.py",
-          ".github/scripts/import-zipped-apps.py",
-          ".github/workflows/build-and-deploy.yml",
           "apps/assignments/PID_Line_Tracer/PID_Line_Tracer.c",
           "apps/assignments/PID_Line_Tracer/PID_Line_Tracer.h",
-          "apps/assignments/PID_Line_Tracer_V2/PID_Line_Tracer_V2.c",
           "apps/assignments/PID_Line_Tracer_V2/PID_Line_Tracer_V2.h",
-          "apps/button/button.c"
+          "apps/assignments/PID_Line_Tracer_V2/usb_serial.c",
+          ".github/scripts/incremental-firmware.py",
+          ".github/scripts/create-assignment.py",
+          ".github/workflows/build-and-deploy.yml",
+          ".github/workflows/create-assignment.yml"
         ]
       }
     },
@@ -11730,117 +11693,311 @@
     "temesotejam/rw-walker-motion-control": {
       "url": "https://github.com/temesotejam/rw-walker-motion-control",
       "default_branch": "main",
-      "pushed_at": "2026-11-20T11:54:15Z",
-      "available_paths": [],
-      "recent_commits": [],
+      "pushed_at": "2026-11-22T11:00:28Z",
+      "available_paths": [
+        ".gitattributes",
+        ".gitignore",
+        "CURRENT_STATUS_20261109.md",
+        "README.md",
+        "THIRD_PARTY_BMM150_LICENSE.txt",
+        "analysis",
+        "analysis/2026-11-11-walking",
+        "analysis/2026-11-11-walking/analyze_cad_support.py",
+        "analysis/2026-11-19-event-replay",
+        "analysis/2026-11-19-event-replay/events.csv",
+        "analysis/2026-11-19-event-replay/inputs.json",
+        "analysis/2026-11-20-ab-trials",
+        "analysis/2026-11-20-ab-trials/README.md",
+        "analysis/2026-11-20-ab-trials/calibration.cpp",
+        "analysis/2026-11-20-ab-trials/calibration.md",
+        "analysis/2026-11-20-ab-trials/calibration.py",
+        "analysis/2026-11-20-ab-trials/compare.py",
+        "analysis/2026-11-20-ab-trials/nearby-inputs.md",
+        "analysis/2026-11-20-ab-trials/observed_returns.png",
+        "analysis/2026-11-20-ab-trials/plot_observed_returns.py",
+        "analysis/2026-11-20-ab-trials/right_arrivals.csv",
+        "analysis/2026-11-20-ab-trials/verification_20261122.md",
+        "analysis/2026-11-20-ab-trials/verify_arrival.py",
+        "analysis/2026-11-20-carry1-trials",
+        "analysis/2026-11-20-carry1-trials/README.md",
+        "analysis/2026-11-20-carry1-trials/aid-replay.md",
+        "analysis/2026-11-20-carry1-trials/bench-plan.md",
+        "analysis/2026-11-20-carry1-trials/bench_plan.cpp",
+        "analysis/2026-11-20-carry1-trials/bench_plan.py",
+        "analysis/2026-11-20-carry1-trials/final-aid.svg",
+        "analysis/2026-11-20-carry1-trials/gait-observables.md",
+        "analysis/2026-11-20-carry1-trials/plot_final_aid.py",
+        "analysis/2026-11-20-carry1-trials/replay_aid.cpp",
+        "analysis/2026-11-20-carry1-trials/replay_aid.py",
+        "analysis/2026-11-20-carry1-trials/video.md",
+        "analysis/2026-11-20-carry2-turn",
+        "analysis/2026-11-20-carry2-turn/README.md",
+        "analysis/2026-11-20-carry2-turn/foot-heading.svg",
+        "analysis/2026-11-20-carry2-turn/plot_turn.py",
+        "analysis/2026-11-20-smallstep-baseline",
+        "analysis/2026-11-20-smallstep-baseline/README.md",
+        "analysis/2026-11-20-smallstep-baseline/replay.py",
+        "analysis/2026-11-20-smallstep-baseline/selector.cpp",
+        "analysis/2026-11-20-smallstep-baseline/summarize_start.py",
+        "analysis/2026-11-20-support-transfer",
+        "analysis/2026-11-20-support-transfer/README.md",
+        "analysis/2026-11-20-support-transfer/half_cycles.csv",
+        "analysis/2026-11-20-support-transfer/summary.json",
+        "analysis/2026-11-20-turn-detection",
+        "analysis/2026-11-20-turn-detection/README.md",
+        "analysis/2026-11-20-turn-detection/cycles.csv",
+        "analysis/2026-11-20-turn-detection/input_response.py",
+        "analysis/2026-11-20-turn-detection/ordinary-zero.csv",
+        "analysis/2026-11-20-turn-detection/replay.cpp",
+        "analysis/2026-11-20-turn-detection/replay.py",
+        "analysis/2026-11-20-turn-detection/replay_control.cpp",
+        "analysis/2026-11-20-turn-detection/replay_control.py",
+        "analysis/2026-11-20-turn1-trial",
+        "analysis/2026-11-20-turn1-trial/README.md",
+        "analysis/2026-11-20-turn1-trial/arc.csv",
+        "analysis/2026-11-20-turn1-trial/arc.md",
+        "analysis/2026-11-20-turn1-trial/gait.md",
+        "analysis/2026-11-20-turn1-trial/replay.py",
+        "analysis/2026-11-20-turn1-trial/replay_arc.cpp",
+        "analysis/2026-11-20-turn1-trial/replay_arc.py",
+        "analysis/2026-11-20-turn1-trial/video.md",
+        "analysis/2026-11-20-turn1-trial/video.py",
+        "analysis/2026-11-20-turn2-trial",
+        "analysis/2026-11-20-turn2-trial/README.md",
+        "analysis/2026-11-20-turn2-trial/energy.md",
+        "analysis/2026-11-20-turn2-trial/gait.md",
+        "analysis/2026-11-20-turn2-trial/pivot.csv",
+        "analysis/2026-11-20-turn2-trial/replay_small_arc.cpp",
+        "analysis/2026-11-20-turn2-trial/replay_small_arc.py",
+        "analysis/2026-11-20-turn2-trial/replay_tail.py",
+        "analysis/2026-11-20-turn2-trial/video.md",
+        "analysis/2026-11-20-turn2-trial/video.py",
+        "analysis/2026-11-20-webfix3-walking",
+        "analysis/2026-11-20-webfix3-walking/README.md",
+        "analysis/2026-11-20-webfix3-walking/compare_receiving_foot.py",
+        "analysis/2026-11-20-webfix3-walking/feet-mat-progress.svg",
+        "analysis/2026-11-20-webfix3-walking/last-return.svg",
+        "analysis/2026-11-20-webfix3-walking/plot_last_return.py",
+        "analysis/2026-11-20-webfix3-walking/receiving-foot-history.md",
+        "analysis/2026-11-20-webfix3-walking/receiving-replay.md",
+        "analysis/2026-11-20-webfix3-walking/replay_audit.cpp",
+        "analysis/2026-11-20-webfix3-walking/replay_audit.py",
+        "analysis/2026-11-22-return-trial",
+        "analysis/2026-11-22-return-trial/135284989_floor.png",
+        "analysis/2026-11-22-return-trial/README.md",
+        "analysis/2026-11-22-return-trial/carry_replay.md",
+        "analysis/2026-11-22-return-trial/compare_observers.cpp",
+        "analysis/2026-11-22-return-trial/compare_timing.py",
+        "analysis/2026-11-22-return-trial/early_aid_history.md",
+        "analysis/2026-11-22-return-trial/early_aid_history.py",
+        "analysis/2026-11-22-return-trial/floor_progress.png",
+        "analysis/2026-11-22-return-trial/last_aid_135284989.png",
+        "analysis/2026-11-22-return-trial/last_aid_135284989.py",
+        "analysis/2026-11-22-return-trial/plot_return.py",
+        "analysis/2026-11-22-return-trial/prediction_trial_135284989.md",
+        "analysis/2026-11-22-return-trial/prediction_video.py",
+        "analysis/2026-11-22-return-trial/prior_gait_comparison.md",
+        "analysis/2026-11-22-return-trial/prior_gait_comparison.py",
+        "analysis/2026-11-22-return-trial/pulse_release.png",
+        "analysis/2026-11-22-return-trial/pulse_release.py",
+        "analysis/2026-11-22-return-trial/replay_small_arc.py",
+        "analysis/2026-11-22-return-trial/return.png",
+        "analysis/2026-11-22-return-trial/small_arc_observer.cpp",
+        "analysis/2026-11-22-return-trial/timing_grid.py",
+        "analysis/2026-11-22-return-trial/transfer_carry_replay.py",
+        "analysis/2026-11-22-return-trial/transfer_carry_selector.cpp",
+        "analysis/2026-11-22-return-trial/video.py",
+        "analysis/2026-11-22-walk1-trial",
+        "analysis/2026-11-22-walk1-trial/action_evidence.md",
+        "analysis/2026-11-22-walk1-trial/approach.md",
+        "analysis/2026-11-22-walk1-trial/compare_actions.py",
+        "analysis/2026-11-22-walk1-trial/plot_stop.py",
+        "analysis/2026-11-22-walk1-trial/recheck_speed.py",
+        "analysis/2026-11-22-walk1-trial/run.md",
+        "analysis/2026-11-22-walk1-trial/stop_68907120.png",
+        "analysis/2026-11-22-walk1-trial/video.md",
+        "analysis/2026-11-22-walk1-trial/video.py",
+        "analysis/2026-11-22-walk1-trial/walk2_replay.md",
+        "analysis/2026-11-22-walk2-trial",
+        "analysis/2026-11-22-walk2-trial/inspect_return.py",
+        "analysis/2026-11-22-walk2-trial/post_aid_replay.py",
+        "analysis/2026-11-22-walk2-trial/post_aid_selector.cpp",
+        "analysis/2026-11-22-walk2-trial/release.md",
+        "analysis/2026-11-22-walk2-trial/release_work.js",
+        "analysis/2026-11-22-walk2-trial/replan.md",
+        "analysis/2026-11-22-walk2-trial/return_41749536.png",
+        "analysis/2026-11-22-walk2-trial/right_peak_replay.py",
+        "analysis/2026-11-22-walk2-trial/run.md",
+        "analysis/2026-11-22-walk3-trial",
+        "analysis/2026-11-22-walk3-trial/audit_run.py",
+        "analysis/2026-11-22-walk3-trial/last_return_37339215.png",
+        "analysis/2026-11-22-walk3-trial/priority_probe.cpp",
+        "analysis/2026-11-22-walk3-trial/priority_replay.py",
+        "analysis/2026-11-22-walk3-trial/right_arrival_bias.py",
+        "analysis/2026-11-22-walk3-trial/run.md",
+        "analysis/2026-11-22-walk4-trial",
+        "analysis/2026-11-22-walk4-trial/continuation.md",
+        "analysis/2026-11-22-walk4-trial/export.md",
+        "analysis/2026-11-22-walk4-trial/last_return_33406765.png",
+        "analysis/2026-11-22-walk4-trial/measure_export.py",
+        "analysis/2026-11-22-walk4-trial/release_probe.cpp",
+        "analysis/2026-11-22-walk4-trial/release_replay.py",
+        "analysis/2026-11-22-walk4-trial/run.md",
+        "analysis/2026-11-22-walking-simulator",
+        "analysis/2026-11-22-walking-simulator/README.md",
+        "analysis/2026-11-22-walking-simulator/action_model.py",
+        "analysis/2026-11-22-walking-simulator/add_early_watch.py",
+        "analysis/2026-11-22-walking-simulator/aid_current_delivery.py",
+        "analysis/2026-11-22-walking-simulator/floor_check.py",
+        "analysis/2026-11-22-walking-simulator/floor_observations.csv",
+        "analysis/2026-11-22-walking-simulator/foot_kinematics.py",
+        "analysis/2026-11-22-walking-simulator/foot_phase_check.py",
+        "analysis/2026-11-22-walking-simulator/legacy_check.py",
+        "analysis/2026-11-22-walking-simulator/loss_observer.py",
+        "analysis/2026-11-22-walking-simulator/phase_dynamics.py",
+        "analysis/2026-11-22-walking-simulator/plot_warnings.py",
+        "analysis/2026-11-22-walking-simulator/post_zero_carry.py",
+        "analysis/2026-11-22-walking-simulator/receiving_carry.py",
+        "analysis/2026-11-22-walking-simulator/return_history_replay.py",
+        "analysis/2026-11-22-walking-simulator/return_history_results.md",
+        "analysis/2026-11-22-walking-simulator/return_history_selector.cpp",
+        "analysis/2026-11-22-walking-simulator/return_model.py",
+        "analysis/2026-11-22-walking-simulator/return_warnings.png",
+        "analysis/2026-11-22-walking-simulator/right_candidates.py",
+        "analysis/2026-11-22-walking-simulator/simulate.py",
+        "analysis/2026-11-22-walking-simulator/test_action_model.py",
+        "analysis/2026-11-22-walking-simulator/test_add_early_watch.py",
+        "analysis/2026-11-22-walking-simulator/test_aid_current_delivery.py",
+        "analysis/2026-11-22-walking-simulator/test_foot_kinematics.py",
+        "analysis/2026-11-22-walking-simulator/test_loss_observer.py",
+        "analysis/2026-11-22-walking-simulator/test_post_zero_carry.py",
+        "analysis/2026-11-22-walking-simulator/test_receiving_carry.py",
+        "analysis/2026-11-22-walking-simulator/test_return_history_measurement.py",
+        "analysis/2026-11-22-walking-simulator/test_return_model.py",
+        "analysis/2026-11-22-walking-simulator/test_right_candidates.py",
+        "analysis/README.md",
+        "docs",
+        "docs/CAD_SUPPORT_SHADOW.md",
+        "docs/ENERGY_ADMISSION_V19.md",
+        "docs/ENERGY_NEUTRAL_V14.md",
+        "docs/ENERGY_TRANSFER_V18.md",
+        "docs/EVENT_FOOT_ENERGY_REPLAY_20261119.md",
+        "docs/FOOT_STABLE40_V36.md",
+        "docs/FOOT_WALKING_AUDIT_20261117.md",
+        "docs/LOG_EXPORT_FAILURE_20261117.md",
+        "docs/SUPPORT_TRANSFER_V39.md",
+        "flasher",
+        "flasher/flasher-completion.js",
+        "flasher/foot-periodic40",
+        "flasher/foot-periodic40/index.html",
+        "flasher/index.html",
+        "flasher/manifest.json",
+        "flasher/soft-boot.js",
+        "flasher/support-transfer",
+        "flasher/support-transfer/index.html",
+        "src/beta_phase_controller.h",
+        "src/beta_turn_fast_controller.h",
+        "src/control_angle_reference.h",
+        "src/control_latency.cpp",
+        "src/control_latency.h"
+      ],
+      "recent_commits": [
+        {
+          "sha": "63c45cd1",
+          "message": "Seal walking logs with mixed continuation and ordinary aid records"
+        },
+        {
+          "sha": "6315db09",
+          "message": "Prioritize support carry and stream resumable compressed walking logs"
+        },
+        {
+          "sha": "c12a4adf",
+          "message": "Prioritize work needed to reach center and resume batched log downloads"
+        }
+      ],
       "archived": false,
-      "fingerprint": "9f18f53eaba0a13bd5afb7febfab24f1aa2bf8db3573f07da77e08b5c4a62d5a",
-      "analyzed_at": "2026-11-21T00:07:17.150Z",
+      "fingerprint": "87039762a6e23d35d9403bbdbf196e72b05dbb7243cea636c8f45d3cc4704250",
+      "analyzed_at": "2026-11-22T23:44:00.473Z",
       "profile": {
-        "purpose": "リアクションホイールと受動脚を用いた歩行器の姿勢制御・歩行制御ファームウェア、および実機測定・ログ解析ツールを提供する。",
-        "architecture": "PlatformIOの組込みファームウェア、MEKFによる胴体姿勢推定、カメラを用いた足角観測、定周期制御タスク、ブラウザ測定画面、Pythonによるログ変換・再生ツールで構成される。",
+        "purpose": "リアクションホイールで左右に揺動し、受動脚を交互に振り出す歩行器の制御ファームウェアと実験ツール。歩行補助のタイミングや制御遅延を評価している。",
+        "architecture": "Arduino系ファームウェアに、歩行制御・パルス後の位相推定・制御遅延計測の各モジュールを配置。READMEでは、姿勢推定にMEKFを使い、足角観測、Web測定画面、ログ変換・再生ツールを別の入口として案内している。",
         "technologies": [
           "C++",
-          "PlatformIO",
-          "MEKF",
-          "Python",
-          "HTML",
-          "JavaScript",
-          "Wi-Fi",
-          "CRC"
+          "Arduino API",
+          "FreeRTOS",
+          "MEKF（README記載）",
+          "JSON形式の計測出力"
         ],
         "algorithms": [
-          "MEKFによる胴体姿勢推定",
-          "リアクションホイール制御",
-          "25 ms周期での足角発行",
-          "カメラベースの40 Hz足角推定",
-          "到達エネルギーに基づく主入力調整",
-          "荷重移行イベント予測",
-          "v19方式の戻り補助判断"
+          "パルス後の角速度符号反転と複数サンプルによる旋回検出",
+          "旋回後のスムースステップによるbeta回復",
+          "戻り位相の進行度に基づく指数形beta上限",
+          "制御処理・I/Oの経過時間とサンプルからの遅延計測"
         ],
         "hardware": [
-          "リアクションホイール",
+          "リアクションホイール式歩行器",
           "受動脚",
-          "M5Stack AtomS3CAM",
-          "歩行器"
+          "角速度を取得するセンサー（機種は提示情報から確認できない）"
         ],
         "interfaces": [
-          "PlatformIOのビルド環境",
-          "ブラウザによるHTTP測定画面",
-          "RWLOGファイル形式",
-          "測定画面とファームウェア間の埋め込みヘッダー",
-          "Wi-Fiによる機体制御・測定"
+          "BetaPhaseController::beginPulse/update/betaCeiling",
+          "BetaTurnFastController::beginPulse/update/betaTarget",
+          "control_latency名前空間の計測APIとProfile::appendJson",
+          "制御基準角を返すcontrol_angle_reference::origin"
         ],
         "reusable_components": [
           {
-            "name": "定周期の足角推定器",
-            "purpose": "カメラ観測を40 Hzで処理し、足角状態を推定する方式。",
+            "name": "BetaTurnFastController",
+            "purpose": "入力保護中は旋回判定を保留し、入力後の旋回を連続サンプルで確認してから滑らかにbetaを回復する状態機械。旋回未確認時の時間ベースのフォールバックも備える。",
             "evidence": [
-              "src/periodic_foot_state.h",
-              "src/foot_observer.cpp"
+              "src/beta_turn_fast_controller.h"
             ]
           },
           {
-            "name": "歩行時のエネルギー評価",
-            "purpose": "必要仕事の算定、開始時刻、電流パルスの採否判定などの歩行制御入力処理。",
+            "name": "BetaPhaseController",
+            "purpose": "パルス開始からの角速度積分で位相を追跡し、戻りの進行度に応じて指数形にbeta上限を上げる。全体モデルに依存しない局所的な制御方式として記述されている。",
             "evidence": [
-              "src/walking_energy_runner.inc",
-              "docs/ENERGY_ADMISSION_V19.md"
+              "src/beta_phase_controller.h"
             ]
           },
           {
-            "name": "荷重移行イベント予測",
-            "purpose": "次の荷重移行を見越して制御を調整する研究上の方法。",
+            "name": "control_latency::Profile",
+            "purpose": "計測サンプルから制御段階ごとの経過時間、キュー配送時間、I/Oとの時間重複、予算超過を集計し、JSONに出力する。固定サイズの詳細バッファを使う。",
             "evidence": [
-              "docs/SUPPORT_TRANSFER_V39.md"
+              "src/control_latency.h",
+              "src/control_latency.cpp"
             ]
           },
           {
-            "name": "RWLOG変換・再生ツール",
-            "purpose": "ログのCRC検証、時系列展開、開始時刻固定での比較再生、開始時刻選択を行う。",
+            "name": "control_angle_reference::origin",
+            "purpose": "作業モードでは重力基準のゼロ角、通常モードでは保存姿勢を制御原点として選択する小さな再利用可能関数。",
             "evidence": [
-              "tools/convert_rwlog_to_csv.py",
-              "tools/replay_event_foot_energy.py",
-              "tools/replay_support_transfer.py"
-            ]
-          },
-          {
-            "name": "埋め込みWeb資産更新",
-            "purpose": "測定画面のHTML/JavaScript変更をファームウェア用ヘッダーへ反映し、整合性を検証する。",
-            "evidence": [
-              "tools/embed_runtime_web.py",
-              "web/index.html",
-              "web/runtime.js"
+              "src/control_angle_reference.h"
             ]
           }
         ],
         "constraints": [
-          "提供された情報にはソースツリーとソース抜粋が含まれないため、各ファイル内部の実装や依存関係は確認できない。",
-          "READMEは配布版v39-arrival1と実測に関する記述のみで、全アルゴリズムの実装内容は未確認。",
-          "主要ハードウェア構成、センサー仕様、制御周期以外の詳細は未確認。",
-          "README記載の実機確認・実測結果が再現可能かは、ソースと生ログを確認しない限り判断できない。",
-          "tree_pathsが空のため、列挙した再利用候補はREADMEが示すパスのみであり、ファイルの実在は別途確認が必要。"
+          "制御パラメーターはConfig定数に依存し、提示情報だけでは適用可能な機体条件や調整手順を確認できない。",
+          "Beta制御器のコメント上も実験的な方式であり、実機での効果や安全性は提示情報から検証できない。",
+          "遅延計測はホスト壁時計時間であり、I/O時間やポーリング時間をCPU占有時間・プリエンプション時間として解釈できない。",
+          "提示されたソース抜粋は一部に限られ、ファームウェア全体の呼び出し関係やテスト結果は確認できない。"
         ],
         "maturity": "実験",
         "confidence": "medium",
         "evidence": [
           "README.md",
-          "src/README.md",
-          "src/walking_energy_runner.inc",
-          "src/foot_observer.cpp",
-          "src/periodic_foot_state.h",
-          "web/index.html",
-          "web/runtime.js",
-          "tools/convert_rwlog_to_csv.py",
-          "tools/replay_event_foot_energy.py",
-          "tools/replay_support_transfer.py"
+          "src/beta_phase_controller.h",
+          "src/beta_turn_fast_controller.h",
+          "src/control_angle_reference.h",
+          "src/control_latency.h",
+          "src/control_latency.cpp"
         ]
       }
     },
     "temesotejam/layer-workbench": {
       "url": "https://github.com/temesotejam/layer-workbench",
       "default_branch": "main",
-      "pushed_at": "2026-11-21T22:57:50Z",
+      "pushed_at": "2026-11-22T23:35:45Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -11874,6 +12031,7 @@
         "docs/V250_3MF_ANCILLARY_PRESERVATION.md",
         "docs/V250_3MF_CORE_MODEL_PRESERVATION.md",
         "docs/V250_3MF_MANIFEST_MESH_RANGES.md",
+        "docs/V250_3MF_ROTATED_AFFINE_BROWSER_GAP.md",
         "docs/V250_INITIAL_LAYER_TRAVEL_SPEED.md",
         "docs/V250_NATIVE_INITIAL_LAYER_TRAVEL_SPEED.md",
         "docs/V250_PARITY_LEDGER.md",
@@ -11885,6 +12043,13 @@
         "index.html",
         "scripts",
         "scripts/adapt-orcawasm-v2.5.0.py",
+        "scripts/audit-native-3mf-anchor-spacing.mjs",
+        "scripts/audit-native-3mf-frame-offsets.mjs",
+        "scripts/audit-native-3mf-linear-parity.mjs",
+        "scripts/audit-native-3mf-relations.mjs",
+        "scripts/audit-native-3mf-shared-mesh-reframe.mjs",
+        "scripts/audit-native-3mf-stl-normals.mjs",
+        "scripts/audit-native-3mf-world-facets.mjs",
         "scripts/audit-native-wasm-profile-gap.mjs",
         "scripts/audit-wasm-cube-deposition.mjs",
         "scripts/audit-wasm-skirt-distance.mjs",
@@ -11916,6 +12081,7 @@
         "scripts/edit_3mf_build_transform.py",
         "scripts/edit_native_3mf_build_transform.py",
         "scripts/export-bridge-arch-stl.mjs",
+        "scripts/export_core_fixture_facets.py",
         "scripts/fetch-upstream-v250-fixture.py",
         "scripts/fetch-upstream-v250-multi-vendor-fixture.py",
         "scripts/gap-ring-fixture.mjs",
@@ -11926,7 +12092,9 @@
         "scripts/gcode-preview-parser.mjs",
         "scripts/gcode-speed-colors.mjs",
         "scripts/gcode-tool-colors.mjs",
+        "scripts/heater_setpoint_diagnostic.py",
         "scripts/initial-layer-travel-diagnostic.mjs",
+        "scripts/inspect-native-3mf.mjs",
         "scripts/inspect_native_3mf_hierarchy.py",
         "scripts/make_3mf_two_build_fixture.py",
         "scripts/make_native_3mf_distinct_branch_fixture.py",
@@ -11951,6 +12119,7 @@
         "scripts/patch_orcawasm_preservation_guard.py",
         "scripts/patch_orcawasm_private_instance_edit.py",
         "scripts/plan_native_3mf_copy_on_write.py",
+        "scripts/preflight-3mf-zip.mjs",
         "scripts/prepare-engine-lab.mjs",
         "scripts/prepare-native-v250-presets.mjs",
         "scripts/prepare-wasm-runner.sh",
@@ -11966,6 +12135,13 @@
         "scripts/support-sphere-fixture.mjs",
         "scripts/surface-skin-diagnostic.mjs",
         "scripts/test-3mf-viewport-items.mjs",
+        "scripts/test-audit-native-3mf-anchor-spacing.mjs",
+        "scripts/test-audit-native-3mf-frame-offsets.mjs",
+        "scripts/test-audit-native-3mf-linear-parity.mjs",
+        "scripts/test-audit-native-3mf-relations.mjs",
+        "scripts/test-audit-native-3mf-shared-mesh-reframe.mjs",
+        "scripts/test-audit-native-3mf-stl-normals.mjs",
+        "scripts/test-audit-native-3mf-world-facets.mjs",
         "scripts/test-audit-native-wasm-profile-gap.mjs",
         "scripts/test-audit-wasm-cube-deposition.mjs",
         "scripts/test-audit-wasm-skirt-distance.mjs",
@@ -11990,6 +12166,7 @@
         "scripts/test-gcode-speed-colors.mjs",
         "scripts/test-hot-plate-bridge.mjs",
         "scripts/test-initial-layer-travel-diagnostic.mjs",
+        "scripts/test-inspect-native-3mf.mjs",
         "scripts/test-multi-stl.mjs",
         "scripts/test-native-manifest-edit.mjs",
         "scripts/test-obj-to-stl.mjs",
@@ -12004,6 +12181,7 @@
         "scripts/test-orca-vendor-catalog.mjs",
         "scripts/test-orca-vendor-index.mjs",
         "scripts/test-parity-cube-fixture.mjs",
+        "scripts/test-preflight-3mf-zip.mjs",
         "scripts/test-prepare-native-v250-presets.mjs",
         "scripts/test-process-preset-inheritance.mjs",
         "scripts/test-process-profile-unit.mjs",
@@ -12020,131 +12198,98 @@
         "scripts/test-v250-imported-replacement-guard.mjs",
         "scripts/test-v250-native-multiobject-export.mjs",
         "scripts/test-v250-private-instance-edit.mjs",
-        "scripts/test-verify-native-initial-layer-travel.mjs",
-        "scripts/test-vertical-shell-diagnostic.mjs",
-        "scripts/test_audit_3mf_scene.py",
-        "scripts/test_audit_native_3mf_edit_ownership.py",
-        "scripts/test_audit_native_3mf_instance_placement.py",
-        "scripts/test_audit_native_3mf_metadata_object_refs.py",
-        "scripts/test_audit_native_3mf_part_mesh_context.py",
-        "scripts/test_audit_native_3mf_part_value_roundtrip.py",
-        "scripts/test_audit_native_parity_cube_geometry.py",
-        "scripts/test_check_3mf_stl_bounds.py",
-        "scripts/test_check_parity_pair.py",
-        "scripts/test_clone_native_3mf_branched_root.py",
-        "scripts/test_clone_native_3mf_shared_leaf.py",
-        "scripts/test_clone_native_3mf_shared_root_chain.py",
-        "scripts/test_clone_native_3mf_three_level_chain.py",
-        "scripts/test_compare_3mf_build_preservation.py",
-        "scripts/test_compare_3mf_metadata.py",
-        "scripts/test_compare_gcode.py",
-        "scripts/test_compare_native_3mf_part_mesh_candidates.py",
-        "scripts/test_compare_native_3mf_world_facets.py",
-        "scripts/test_diagnose_live_cube_pair.py",
-        "scripts/test_edit_3mf_build_transform.py"
+        "scripts/test-verify-native-initial-layer-travel.mjs"
       ],
       "recent_commits": [
         {
-          "sha": "a9d82cf0",
-          "message": "3MF parity: detect Core index connectivity drift despite identical facets"
+          "sha": "b1ee4c44",
+          "message": "feat(parity): audit explicit native/WASM heater setpoint requests (#199)"
         },
         {
-          "sha": "d3d508ef",
-          "message": "3MF parity: detect small-facet winding reversals beyond vertex tolerance"
+          "sha": "694fb3b2",
+          "message": "fix(parity): reject singular scene witnesses before G-code comparison (#198)"
         },
         {
-          "sha": "5de38d7a",
-          "message": "Audit native 3MF triangle winding in CLI re-export"
+          "sha": "a3e02507",
+          "message": "test(3MF): confirm volume-sign-driven source winding repair in pinned WASM"
         }
       ],
       "archived": false,
-      "fingerprint": "886a32356b99b3f7f6cb1f327507eff7a0c608a057ddbe8f5962451ac2369d97",
-      "analyzed_at": "2026-11-21T23:31:25.909Z",
+      "fingerprint": "e22cdeb8c3bbb73f665d63f5d65a67990736f538b1890b98e0a6b08a2773c1cc",
+      "analyzed_at": "2026-11-22T23:43:07.750Z",
       "profile": {
-        "purpose": "ブラウザーでの3Dプリント準備環境を試作し、OrcaSlicerのエンジンやプロジェクト形式との互換性を検証する個人用ワークスペース。",
-        "architecture": "Three.jsを使うブラウザーUIと、3MF・G-code・スライサー設定などを調査するスクリプト群、互換性検証用のCIワークフローで構成。READMEではOrcaSlicer v2.5.0のヘッドレスWebAssembly候補を検証済みとする一方、公開UIとの接続や完全な機能互換性は未完了としている。",
+        "purpose": "ブラウザー上の3Dプリント準備環境を開発し、OrcaSlicerのエンジン・設定・プロジェクト形式との互換性を検証する個人用ワークベンチ。",
+        "architecture": "Three.jsを使うブラウザーUIと、上流OrcaSlicerをWebAssembly化するためのビルド・適応スクリプト、3MF/G-codeの監査・比較ツール群で構成される。READMEによればWASMエンジン候補はビルド・検証済みだが、公開UIやブラウザーへの統合は未完了。",
         "technologies": [
           "JavaScript",
           "Python",
           "Three.js",
-          "WebAssembly",
-          "Emscripten",
-          "OrcaSlicer v2.5.0",
-          "3MF",
-          "STL",
-          "OBJ",
-          "G-code"
+          "WebAssembly / Emscripten",
+          "OrcaSlicer v2.5.0（上流実装）",
+          "GitHub Actions"
         ],
         "algorithms": [
-          "3MFのビルド項目・コンポーネント階層の展開と変換合成",
-          "3MFオブジェクトの実参照回数に基づくcopy-on-write要否判定",
-          "3MFメッシュ頂点の配置後境界計算",
-          "画面上のレイキャストによる3Dオブジェクト選択"
+          "3MFコンポーネント階層のインスタンス展開と変換行列の合成",
+          "3MFオブジェクトのインスタンス共有状況に基づくcopy-on-write編集可否の監査",
+          "3MFの座標単位・頂点・変換・境界範囲の検証",
+          "ネイティブ版とWASM版の出力・配置の比較"
         ],
         "hardware": [],
         "interfaces": [
           "ブラウザーUI",
-          "ローカルのSTL・3MF・OBJファイル",
-          "3MF XMLとZIPパッケージ",
+          "STL、3MF、OBJファイル",
           "G-code",
-          "WebAssemblyエンジン候補"
+          "GitHub Actionsワークフロー"
         ],
         "reusable_components": [
           {
             "name": "3MFシーン監査",
-            "purpose": "モデル単位、ID、変換、頂点・三角形数などを制限付きで検査し、診断用の境界情報を生成する。",
+            "purpose": "3MF ZIP/XMLの制約を検証し、モデル単位、メッシュ、ビルド項目、変換などを上限付きで監査する。",
             "evidence": [
               "scripts/audit_3mf_scene.py"
             ]
           },
           {
-            "name": "3MF編集所有権の事前監査",
-            "purpose": "ビルド項目からオブジェクト訪問回数を集計し、単一インスタンス編集にcopy-on-writeが必要かを判定する。ファイルの編集自体は行わない。",
+            "name": "3MF編集所有権・copy-on-write事前監査",
+            "purpose": "ビルド項目からオブジェクト参照をたどり、同一リソースが複数回使われる場合に、単一インスタンス編集で複製・参照先変更が必要かを判定する。ファイルの編集自体は行わない。",
             "evidence": [
               "scripts/audit_native_3mf_edit_ownership.py"
             ]
           },
           {
-            "name": "3MF配置・境界監査",
-            "purpose": "ビルド項目とコンポーネントの変換を合成し、メッシュ配置とワールド境界を計算する。対応範囲外の単位混在などは拒否する。",
+            "name": "ネイティブ3MF配置監査",
+            "purpose": "ビルド変換とコンポーネント変換を合成し、メッシュインスタンスのワールド境界を算出する。対応範囲は限定され、完全な3MF互換性を保証しない。",
             "evidence": [
               "scripts/audit_native_3mf_instance_placement.py"
             ]
           },
           {
-            "name": "ブラウザー3Dビューポート基盤",
-            "purpose": "Three.jsのカメラ、操作コントロール、変形コントロール、レイキャストによる選択の基盤。抜粋だけではファイル読込から表示までの全処理は確認できない。",
-            "evidence": [
-              "app.js"
-            ]
-          },
-          {
             "name": "OrcaWasm v2.5.0適応スクリプト",
-            "purpose": "CI用の使い捨てソースツリーに限って、上流パッチャーとビルド設定をv2.5.0向けに調整する。",
+            "purpose": "使い捨ての上流チェックアウトに対し、ソース構成に応じたビルド用パッチを適用する。想定外のソース差分では停止する検査を含む。",
             "evidence": [
               "scripts/adapt-orcawasm-v2.5.0.py"
             ]
           }
         ],
         "constraints": [
-          "READMEによれば公開UIは未完成で、プロファイル読込、WASMエンジン呼出し、スライスなどは未接続。app.jsの提示範囲だけでは実際の読込・描画機能を確認できない。",
-          "WASM候補の検証は限定されたAPI経路・スモークテストに対するもので、デスクトップ機能全体との同等性やブラウザー配備可能性を示さない。",
-          "SharedArrayBufferとcross-origin isolationを要する候補エンジンについて、GitHub Pages上でのサービスワーカー方式や実ブラウザー互換性は未検証。",
-          "3MF監査スクリプトはCore形式の限定的な監査であり、ベンダーメタデータや完全なプロジェクト往復互換性を保証しない。",
-          "READMEにGUI・プラグイン・テクスチャ変換などの機能差が記載されている。"
+          "READMEでは、エンジン候補の検証は限定されたAPI経路の確認であり、デスクトップ機能全体との同等性やブラウザー配備可能性を示さないとしている。",
+          "READMEでは公開UIをプレゼンテーション用の段階とし、WASMエンジン呼び出しやスライスなどは未接続としている。app.jsにはThree.jsのローダー・描画・操作関連コードが見えるが、提示部分だけでは実際の統合範囲を確認できない。",
+          "3MF監査コードはCore要素や限定されたネイティブCLI形式を対象とし、完全なプロジェクト意味論やメタデータの互換性を保証しない。",
+          "SharedArrayBufferとクロスオリジン分離を要する候補エンジンについて、GitHub Pages上での実動作は未検証とREADMEに記載されている。",
+          "提示された抜粋だけでは、ブラウザー上での実際のスライス処理、完全な3MF往復保存、ネイティブ版とのG-code同等性は確認できない。"
         ],
-        "maturity": "試作",
-        "confidence": "high",
+        "maturity": "実験",
+        "confidence": "medium",
         "evidence": [
           "README.md",
           "app.js",
+          "scripts/adapt-orcawasm-v2.5.0.py",
           "scripts/audit_3mf_scene.py",
           "scripts/audit_native_3mf_edit_ownership.py",
           "scripts/audit_native_3mf_instance_placement.py",
-          "scripts/adapt-orcawasm-v2.5.0.py",
-          "docs/V250_PARITY_LEDGER.md",
           ".github/workflows/test-3mf-parity.yml",
-          ".github/workflows/verify-engine-browser.yml"
+          ".github/workflows/test-gcode-parity.yml",
+          "docs/V250_PARITY_LEDGER.md"
         ]
       }
     },
@@ -12214,6 +12359,157 @@
           "README.md",
           "docs/INVESTIGATION_PLAN.md",
           "docs/BASELINE_SOURCE_MAP.md"
+        ]
+      }
+    },
+    "temesotejam/m5stack-mobile-robot": {
+      "url": "https://github.com/temesotejam/m5stack-mobile-robot",
+      "default_branch": "main",
+      "pushed_at": "2026-11-22T08:23:55Z",
+      "available_paths": [
+        ".github",
+        ".github/workflows",
+        ".github/workflows/deploy-pages.yml",
+        ".gitignore",
+        "README.md",
+        "docs",
+        "docs/ATTITUDE_EKF.md",
+        "docs/HARDWARE.md",
+        "partitions_16mb.csv",
+        "platformio.ini",
+        "src",
+        "src/drivers",
+        "src/drivers/GoPlus2Driver.cpp",
+        "src/drivers/GoPlus2Driver.h",
+        "src/estimation",
+        "src/estimation/AttitudeEkf.cpp",
+        "src/estimation/AttitudeEkf.h",
+        "src/main.cpp",
+        "web",
+        "web/index.html"
+      ],
+      "recent_commits": [
+        {
+          "sha": "5e829a7b",
+          "message": "Align BMI270 EKF gravity reference with sensor Z direction"
+        },
+        {
+          "sha": "402a3162",
+          "message": "Parse GNSS NMEA data and display fix status"
+        },
+        {
+          "sha": "d6a66bdf",
+          "message": "Reduce LCD flicker with partial text-row updates"
+        }
+      ],
+      "archived": false,
+      "fingerprint": "152285c29837612de4d3f862caa6bfa6476af48a18c1ebd2fd1a74e7a2b80777",
+      "analyzed_at": "2026-11-22T23:44:26.081Z",
+      "profile": {
+        "purpose": "M5Stack Basicを用いた移動ロボット向けファームウェア。サーボ制御、慣性姿勢推定、GNSSデータ処理、センサー状態表示を統合する。",
+        "architecture": "PlatformIOのArduino/C++構成で、src/main.cppがM5Unified、I2Cセンサー、GNSS UART、表示、シリアルコマンドを統合する。src/driversにはGoPlus2 I2Cドライバ、src/estimationには姿勢推定クラスを分離している。",
+        "technologies": [
+          "C++",
+          "Arduino",
+          "PlatformIO",
+          "M5Unified",
+          "ESP32",
+          "TinyGPSPlus",
+          "Adafruit_BMP280",
+          "I2C",
+          "UART",
+          "NMEA"
+        ],
+        "algorithms": [
+          "クォータニオンによる角速度積分",
+          "6次元誤差状態拡張カルマンフィルタ",
+          "加速度計によるロール・ピッチ初期化",
+          "加速度ベクトルのノルムによる重力サンプル判定",
+          "加速度補正イノベーションゲート",
+          "ジャイロバイアス推定",
+          "NMEAチェックサム検証",
+          "GNSS FIX鮮度判定"
+        ],
+        "hardware": [
+          "M5Stack Basic",
+          "BASE AAA",
+          "Module13.2 GoPlus2",
+          "BMI270",
+          "BMM150",
+          "BMP280",
+          "M5Stack GNSS Module (NEO-M9N)"
+        ],
+        "interfaces": [
+          "I2Cバス（SDA=GPIO21、SCL=GPIO22）",
+          "GNSS UART（RX=GPIO16、TX=GPIO17、38400 baud、8-N-1）",
+          "GoPlus2 I2Cアドレス0x38",
+          "USBシリアル（115200 baud）",
+          "サーボ角度コマンド",
+          "サーボパルス幅コマンド",
+          "M5Stack A/B/Cボタン",
+          "GNSS NMEA"
+        ],
+        "reusable_components": [
+          {
+            "name": "AttitudeEkf",
+            "purpose": "BMI270の加速度・ジャイロのみを用いてロール・ピッチ・ヨーとジャイロバイアスを推定する誤差状態EKF。",
+            "evidence": [
+              "src/estimation/AttitudeEkf.h",
+              "src/estimation/AttitudeEkf.cpp"
+            ]
+          },
+          {
+            "name": "AttitudeEkf::initializeFromAcceleration",
+            "purpose": "+Z-down座標系の静止加速度サンプルからロール・ピッチを初期化し、ヨーをゼロに設定する。",
+            "evidence": [
+              "src/estimation/AttitudeEkf.cpp"
+            ]
+          },
+          {
+            "name": "AttitudeEkf::predict",
+            "purpose": "ジャイロ角速度をクォータニオンへ積分し、ジャイロノイズとバイアスノイズを6次元誤差共分散へ伝播する。",
+            "evidence": [
+              "src/estimation/AttitudeEkf.cpp",
+              "src/estimation/AttitudeEkf.h"
+            ]
+          },
+          {
+            "name": "GoPlus2Driver",
+            "purpose": "I2C経由で4チャネルのサーボ角度または500〜2500usのパルス幅を制御し、範囲検証と応答確認を行う。",
+            "evidence": [
+              "src/drivers/GoPlus2Driver.h",
+              "src/drivers/GoPlus2Driver.cpp"
+            ]
+          },
+          {
+            "name": "pollGnssUart",
+            "purpose": "GNSS UARTのバイト列をTinyGPSPlusへ供給し、受信量、有効NMEA文、チェックサム、FIX鮮度を追跡する。",
+            "evidence": [
+              "src/main.cpp"
+            ]
+          }
+        ],
+        "constraints": [
+          "ヨーはスタート時ゼロで、磁気センサーやGNSS等による外部方位基準がないためドリフトする。",
+          "AttitudeEkfは加速度のノルムが0.75g〜1.25gの範囲にあるサンプルのみ補正対象とする。",
+          "BMM150はハードウェア確認にのみ使用され、姿勢推定には使用しない。",
+          "GNSS位置やバロメータ値、車輪情報は姿勢推定に未接続。",
+          "証拠スニペットからは、EKF補正ゲートの全実装とベンチマーク結果を確認できない。",
+          "M5Stack特有のライブラリやピン配置への依存があるため、汎用移植には設計分離と設定化が必要。",
+          "サーボ初期状態ではアクチュエータ指令を送らない。",
+          "ブラウザフラッシャはデスクトップChromeまたはEdgeとHTTPS環境を前提とする。"
+        ],
+        "maturity": "試作",
+        "confidence": "medium",
+        "evidence": [
+          "README.md",
+          "src/estimation/AttitudeEkf.h",
+          "src/estimation/AttitudeEkf.cpp",
+          "src/drivers/GoPlus2Driver.h",
+          "src/drivers/GoPlus2Driver.cpp",
+          "src/main.cpp",
+          "platformio.ini",
+          ".github/workflows/deploy-pages.yml"
         ]
       }
     }
