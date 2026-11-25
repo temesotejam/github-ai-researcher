@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-24T04:07:10.749Z",
+  "generated_at": "2026-11-25T02:46:14.114Z",
   "owner": "temesotejam",
-  "repository_count": 115,
+  "repository_count": 117,
   "profiles": {
     "temesotejam/atoms3r-lateral-energy-control": {
       "url": "https://github.com/temesotejam/atoms3r-lateral-energy-control",
@@ -306,7 +306,7 @@
     "temesotejam/github-tavern": {
       "url": "https://github.com/temesotejam/github-tavern",
       "default_branch": "main",
-      "pushed_at": "2026-11-24T00:03:01Z",
+      "pushed_at": "2026-11-24T22:36:19Z",
       "available_paths": [
         ".github",
         ".github/agents",
@@ -335,85 +335,89 @@
       ],
       "recent_commits": [
         {
-          "sha": "1a1568a9",
+          "sha": "2f5fd56b",
           "message": "chore: refresh tavern summaries"
         },
         {
-          "sha": "1455d0fb",
-          "message": "chore: refresh tavern summaries"
+          "sha": "a0ede705",
+          "message": "chore: refresh verified public pages"
         },
         {
-          "sha": "c887631e",
+          "sha": "258a38d3",
           "message": "chore: refresh tavern summaries"
         }
       ],
       "archived": false,
-      "fingerprint": "d3a38cf20724aae46f8021e8613f414ab2c1ecb965bb741827474b60dc1bfdee",
-      "analyzed_at": "2026-11-24T04:01:20.900Z",
+      "fingerprint": "c178fa6b2a607be8e5a13f81d4dd28ec9b4e339fce94cbe9a4d82017a4ab941e",
+      "analyzed_at": "2026-11-25T02:42:14.455Z",
       "profile": {
-        "purpose": "公開GitHubリポジトリを検索・閲覧する個人向け静的ポータル。",
-        "architecture": "GitHub Pages上のJavaScriptフロントエンドがGitHub APIから公開リポジトリを取得し、静的JSONの要約・公開ページ情報と組み合わせて表示する構成。READMEによれば、GitHub ActionsとNode.jsスクリプトで要約データを更新する。",
+        "purpose": "公開GitHubリポジトリを検索・分類・閲覧する静的な個人向けポータル。",
+        "architecture": "ブラウザー側のJavaScriptがGitHub APIからリポジトリ情報を扱い、一覧・検索・分類・詳細表示を行う構成。要約や公開ページ情報はJSONファイルから読み込む。カードのREADME補足取得、詳細画面の表示補助も個別のクライアントスクリプトで実装されている。自動更新用スクリプトとActionsワークフローの存在はファイル一覧で確認できるが、実装の詳細は未確認。",
         "technologies": [
           "JavaScript",
           "HTML",
           "CSS",
-          "GitHub REST API",
-          "GitHub Pages",
-          "GitHub Actions",
-          "Node.js"
+          "GitHub API",
+          "GitHub Pages"
         ],
         "algorithms": [
-          "キーワード規則を順に照合するカテゴリ分類",
-          "READMEのMarkdownを簡略化し、冒頭の短い説明を抽出",
-          "カード用README取得を最大6件同時に処理"
+          "リポジトリ名・説明・言語・Topics・要約の文字列をキーワード規則に照合してカテゴリ分類（app.js）",
+          "同時実行数を6に制限したキューでREADMEを取得し、カードを更新（card-enricher.js）",
+          "Markdownから不要要素を除去し、短いプレビュー文を抽出（card-enricher.js）",
+          "正規表現による日本語説明文の口語化（spoken-overview-client.js）"
         ],
         "hardware": [],
         "interfaces": [
-          "GitHub公開リポジトリAPI",
-          "静的JSONデータ（data/summaries.json、data/public-pages.json）",
-          "ブラウザーUI"
+          "GitHub APIからのリポジトリ情報取得",
+          "raw.githubusercontent.comからのREADME取得",
+          "data/summaries.jsonおよびdata/public-pages.jsonのJSON読み込み",
+          "ブラウザー上の検索・カテゴリ絞り込み・詳細表示",
+          "GitHub Pages向け静的サイト"
         ],
         "reusable_components": [
           {
-            "name": "card-enricher.js の cleanMarkdown / shortPreview",
-            "purpose": "READMEのMarkdown装飾やノイズを取り除き、カード表示向けの短い説明文を生成する。",
-            "evidence": [
-              "card-enricher.js"
-            ]
-          },
-          {
-            "name": "card-enricher.js のキュー処理",
-            "purpose": "README取得をキューイングし、同時実行数を6件に制限してカードを更新する。",
-            "evidence": [
-              "card-enricher.js"
-            ]
-          },
-          {
-            "name": "app.js の esc",
-            "purpose": "HTMLに挿入する文字列の特殊文字をエスケープする。",
+            "name": "categoryOf",
+            "purpose": "リポジトリ情報と要約をキーワード規則に照合し、カテゴリを決定する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "app.js の categoryOf",
-            "purpose": "リポジトリ情報と要約を対象に、キーワード規則からカテゴリを選ぶ。",
+            "name": "withTimeout",
+            "purpose": "AbortControllerを用いてfetchにタイムアウトを設定する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "public-pages-client.js の validEntry",
-            "purpose": "公開ページのURLを解析し、HTTPまたはHTTPSのURLだけを有効な項目として扱う。",
+            "name": "readReadme / shortPreview",
+            "purpose": "一般的なブランチ名・README表記を順に試し、Markdownからカード用の短い説明を作る。",
             "evidence": [
-              "public-pages-client.js"
+              "card-enricher.js"
+            ]
+          },
+          {
+            "name": "public-pages-client.js",
+            "purpose": "公開ページのURLを検証し、選択中リポジトリに対応する場合のみリンクを表示する。",
+            "evidence": [
+              "public-pages-client.js",
+              "data/public-pages.json"
+            ]
+          },
+          {
+            "name": "__projectTavernSpokenize",
+            "purpose": "説明文を口語調に変換する純粋変換関数として公開し、ブラウザー外からも呼び出せる。",
+            "evidence": [
+              "spoken-overview-client.js"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋は一部ファイルに限られるため、検索・詳細表示や更新スクリプトの実装全体は確認できない。",
-          "READMEによれば対象は所有者の公開リポジトリで、サイト側から書き込み操作は行わない。",
-          "README取得はmain/masterと複数のREADMEファイル名を試す実装だが、他のブランチ名やパスは抜粋上確認できない。"
+          "app.jsの抜粋は一部のみのため、全体の検索・描画・エラー処理は確認できない。",
+          "README・要約生成スクリプト・ワークフローの内容は抜粋されておらず、自動更新の挙動や権限設定は独立に確認できない。",
+          "公開された証拠では所有者名や対象リポジトリ名がコードに固定されている（app.js、card-enricher.js、public-pages-client.js）。",
+          "カードREADME取得はmain/masterと限られたREADMEファイル名を試す実装で、他の配置は対象外。",
+          "ハードウェア連携を示す証拠はない。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
@@ -423,18 +427,16 @@
           "card-enricher.js",
           "public-pages-client.js",
           "spoken-overview-client.js",
+          "keeper-closing-client.js",
           "data/summaries.json",
-          "data/public-pages.json",
-          "scripts/update-summaries.mjs",
-          "scripts/update-public-pages.mjs",
-          ".github/workflows/copilot-summaries.yml"
+          "data/public-pages.json"
         ]
       }
     },
     "temesotejam/2026_10_24": {
       "url": "https://github.com/temesotejam/2026_10_24",
       "default_branch": "main",
-      "pushed_at": "2026-11-23T23:49:13Z",
+      "pushed_at": "2026-11-24T22:22:14Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -451,88 +453,78 @@
       ],
       "recent_commits": [
         {
+          "sha": "801c74cb",
+          "message": "Update automatic news feed"
+        },
+        {
+          "sha": "e7c1c21a",
+          "message": "Update automatic news feed"
+        },
+        {
           "sha": "2463c943",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "c796a5fe",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "e39d94ce",
           "message": "Update automatic news feed"
         }
       ],
       "archived": false,
-      "fingerprint": "3687ab9f054b3bb8a9a4bc2a84098ba04d7f52251ea8936320e986423fe2f862",
-      "analyzed_at": "2026-11-24T04:01:34.985Z",
+      "fingerprint": "2355bc0c591fb24c2c0061d8ae2c08df1e6ea283f4f9354745b947d1de1159a1",
+      "analyzed_at": "2026-11-25T02:42:26.709Z",
       "profile": {
-        "purpose": "ニュース見出しなどの現象を取り込んで迷宮を生成する、一人用の探索ゲームです。",
-        "architecture": "ブラウザー上のゲーム本体をapp.jsが担い、Canvas描画とDOM UIを使います。ニュースデータはdata/news.jsonから読み込む構成です。READMEではGitHub ActionsによるRSS収集とGitHub Pagesでの公開が説明されていますが、ワークフローと収集スクリプトの実装内容は提示されていません。",
+        "purpose": "ニュース見出しや入力した現実の出来事をゲーム内の迷宮・敵・観測ノートに反映する、一人用の探索ゲームです。記事情報を現実地点として表示する機能も説明されています。",
+        "architecture": "ブラウザー上のJavaScriptゲームがCanvasと画面要素を扱い、data/news.jsonから自動収集ニュースを読み込みます。ニュース収集はGitHub Actionsで定期実行する構成とREADMEに記載されていますが、収集処理の実装詳細は提示された情報だけでは確認できません。",
         "technologies": [
           "JavaScript",
           "HTML Canvas",
-          "ブラウザーDOM",
-          "localStorage",
-          "Fetch API",
-          "GitHub Actions（READMEに記載）",
-          "GitHub Pages（READMEに記載）"
+          "ブラウザーのlocalStorage・Fetch API",
+          "GitHub Actions（README記載）",
+          "JSON"
         ],
         "algorithms": [
-          "マンハッタン距離による距離計算",
-          "乱数による整数選択",
-          "ニュース見出しのキーワード除外と件数制限",
-          "URLのHTTP/HTTPSスキーム検証",
-          "HTML特殊文字のエスケープ"
+          "乱数を使った選択・ゲーム進行（app.jsのrand関数とREADME記載のランダム生成）",
+          "マンハッタン距離による距離計算（dist関数）",
+          "HTTP/HTTPS URLの許可とニュース見出しのキーワード除外"
         ],
         "hardware": [],
         "interfaces": [
-          "Canvasによるゲーム画面",
-          "矢印キー・WASD・画面方向ボタンでの移動（README記載）",
-          "data/news.jsonのJSONニュースデータ",
-          "HTTP/HTTPSのニュース出典URL"
+          "ブラウザー画面（Canvas描画）",
+          "矢印キー・WASD・画面方向ボタン（README記載）",
+          "data/news.jsonのニュースデータ",
+          "公開RSSの取得とGitHub Actionsによる定期更新（README記載）",
+          "GitHub Pagesでの公開（README記載）"
         ],
         "reusable_components": [
           {
             "name": "safeHttpUrl",
-            "purpose": "URLを解析し、HTTPまたはHTTPSの場合のみ正規化したURLを返します。それ以外や解析失敗時は空文字を返します。",
-            "evidence": [
-              "app.js"
-            ]
-          },
-          {
-            "name": "esc",
-            "purpose": "HTMLで意味を持つ文字をエスケープする小さなユーティリティです。",
+            "purpose": "URLを解析し、HTTP/HTTPS以外を許可しない。外部リンクを扱うアプリに転用できます。",
             "evidence": [
               "app.js"
             ]
           },
           {
             "name": "loadAutomaticNews",
-            "purpose": "JSONフィードを取得し、カテゴリ・見出し・出典などを検査、整形してゲーム用ニュース一覧に変換します。安全性キーワードによる除外とURL検証を含みます。",
+            "purpose": "JSONフィードを取得し、カテゴリ・見出し長・出典などを整形してゲーム用ニュース一覧に変換します。ニュースを使う別のフロントエンドにも応用可能です。",
             "evidence": [
               "app.js"
             ]
           },
           {
             "name": "savedSeed",
-            "purpose": "localStorageの保存値をJSONとして読み込み、出典URLを検証したうえでゲーム用の種データとして返します。",
+            "purpose": "localStorageから保存データを読み込み、出典URLを検証して利用可能な状態にします。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "categoryThemes / enemyTypes",
-            "purpose": "ニュースカテゴリと迷宮の色・現象タイプ、および敵の表示・能力値・説明を対応づけるデータ駆動の定義です。",
+            "name": "esc",
+            "purpose": "HTMLの特殊文字をエスケープする小さな表示安全化関数です。提示範囲からは呼び出し箇所を確認できません。",
             "evidence": [
               "app.js"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋はapp.jsの一部のみで、ゲーム全体のターン処理、迷宮生成、描画、敵AIの詳細は確認できません。",
-          "ニュース収集スクリプトとGitHub Actionsの内容は提示されていないため、RSS取得・フィルタリング・保存処理の実装詳細は未確認です。",
-          "ニュース除外は提示範囲では見出しのキーワード照合に基づき、記事本文の検証を示す証拠はありません。"
+          "提示されたapp.jsは一部抜粋のため、迷宮生成・戦闘・ニュース選別の全体実装やテスト状況は確認できません。",
+          "scripts/fetch-news.mjsと.github/workflows/news.ymlの内容は提示されておらず、RSS取得元、失敗時の詳細な挙動、除外処理の実効性は未確認です。",
+          "自動ニュースのfactVerifiedはfalseに設定されており、記事本文の確認済み情報として扱わない設計です。"
         ],
         "maturity": "試作",
         "confidence": "medium",
@@ -542,8 +534,8 @@
           "data/news.json",
           "scripts/fetch-news.mjs",
           ".github/workflows/news.yml",
-          ".github/workflows/pages.yml",
-          "index.html"
+          "index.html",
+          "styles.css"
         ]
       }
     },
@@ -12015,7 +12007,7 @@
     "temesotejam/layer-workbench": {
       "url": "https://github.com/temesotejam/layer-workbench",
       "default_branch": "main",
-      "pushed_at": "2026-11-24T03:57:02Z",
+      "pushed_at": "2026-11-25T02:41:27Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -12032,6 +12024,7 @@
         ".github/workflows/verify-accepted-3mf-placements.yml",
         ".github/workflows/verify-engine-browser.yml",
         ".github/workflows/verify-native-3mf-candidate.yml",
+        ".github/workflows/verify-native-cli-3mf-to-wasm.yml",
         ".github/workflows/verify-real-v250-profiles.yml",
         ".gitignore",
         "README.md",
@@ -12074,6 +12067,7 @@
         "scripts/audit_3mf_scene.py",
         "scripts/audit_native_3mf_edit_ownership.py",
         "scripts/audit_native_3mf_instance_placement.py",
+        "scripts/audit_native_3mf_metadata_loss.py",
         "scripts/audit_native_3mf_metadata_object_refs.py",
         "scripts/audit_native_3mf_part_mesh_context.py",
         "scripts/audit_native_3mf_part_value_roundtrip.py",
@@ -12139,10 +12133,12 @@
         "scripts/patch_orcawasm_private_instance_edit.py",
         "scripts/plan_native_3mf_copy_on_write.py",
         "scripts/preflight-3mf-zip.mjs",
+        "scripts/prepare-camera-fit.mjs",
         "scripts/prepare-engine-lab.mjs",
         "scripts/prepare-native-v250-presets.mjs",
         "scripts/prepare-viewer-transform-history.mjs",
         "scripts/prepare-wasm-runner.sh",
+        "scripts/preserve-native-source-translation.mjs",
         "scripts/probe-engine.mjs",
         "scripts/process-preset-inheritance.mjs",
         "scripts/reconcile_native_3mf_cloned_root_settings.py",
@@ -12188,6 +12184,7 @@
         "scripts/test-initial-layer-travel-diagnostic.mjs",
         "scripts/test-inspect-native-3mf.mjs",
         "scripts/test-multi-stl.mjs",
+        "scripts/test-native-cli-3mf-to-wasm.mjs",
         "scripts/test-native-manifest-edit.mjs",
         "scripts/test-obj-to-stl.mjs",
         "scripts/test-orca-config-array-semantics.mjs",
@@ -12202,6 +12199,7 @@
         "scripts/test-orca-vendor-index.mjs",
         "scripts/test-parity-cube-fixture.mjs",
         "scripts/test-preflight-3mf-zip.mjs",
+        "scripts/test-prepare-camera-fit.mjs",
         "scripts/test-prepare-native-v250-presets.mjs",
         "scripts/test-prepare-viewer-transform-history.mjs",
         "scripts/test-process-preset-inheritance.mjs",
@@ -12210,109 +12208,97 @@
         "scripts/test-slice-stl-process-application.mjs",
         "scripts/test-support-extrusion-diagnostic.mjs",
         "scripts/test-support-feature-diagnostic.mjs",
-        "scripts/test-support-sphere-fixture.mjs",
-        "scripts/test-surface-skin-diagnostic.mjs",
-        "scripts/test-transform-matrix.mjs",
-        "scripts/test-upstream-v250-creality.mjs",
-        "scripts/test-upstream-v250-multi-vendor.mjs",
-        "scripts/test-upstream-v250-profiles.mjs",
-        "scripts/test-v250-imported-replacement-guard.mjs"
+        "scripts/test-support-sphere-fixture.mjs"
       ],
       "recent_commits": [
         {
-          "sha": "d75e33a6",
-          "message": "3MF: verify non-right-angle shared instance against source STL facets (#223)"
+          "sha": "facc2753",
+          "message": "Merge pull request #238 from temesotejam/ui/prepare-bottom-view-20261125"
         },
         {
-          "sha": "53d4e4f4",
-          "message": "3MF: test independent rotation and nonuniform scale on shared instances (#222)"
+          "sha": "2be62dd9",
+          "message": "Prepare: add underside camera and prevent bed occlusion"
         },
         {
-          "sha": "1f5a4956",
-          "message": "3MF: enforce shared-object reimport and distinguish Core wrapper resources (#221)"
+          "sha": "6cc22790",
+          "message": "Merge pull request #237 from temesotejam/ui/prepare-side-directions-20261125"
         }
       ],
       "archived": false,
-      "fingerprint": "72b25784f3cd9d3ab604f8514ce70b0b9609b3300c0e23dc27bd9aeba37818a5",
-      "analyzed_at": "2026-11-24T04:01:06.830Z",
+      "fingerprint": "44ccfc0c47743decdd1f9550ea330e9027375cd9f35198cc3f85fbff9d6f0ae4",
+      "analyzed_at": "2026-11-25T02:41:48.206Z",
       "profile": {
-        "purpose": "ブラウザーでの3Dプリント準備環境を目指し、OrcaSlicerのWebAssembly化と3MF・G-codeの互換性検証を進める個人用プロジェクト。",
-        "architecture": "Three.jsを使うブラウザーUI、OrcaSlicer v2.5.0のヘッドレスWebAssembly候補、3MF/G-codeの調査・診断スクリプト、互換性を確認するCIワークフローで構成される。READMEによれば、現行UIはモデルの選択・表示を含む準備段階で、WASMエンジンとは未接続。",
+        "purpose": "3Dプリント準備用のブラウザワークスペース。OrcaSlicerのデスクトップ版に近い設定・プロジェクト互換性を目指し、ブラウザ向けWASMエンジン候補を検証しています。",
+        "architecture": "Three.jsを使うブラウザUIと、上流OrcaSlicerをヘッドレスWASM化するビルド・適応スクリプト群を分離。3MF、G-code、プリンタープロファイルなどの監査・比較用スクリプトとテストも含みます。現状の公開UIはモデル表示・編集機能の一部を備えますが、スライス機能は未接続です。",
         "technologies": [
           "JavaScript",
-          "Python",
           "Three.js",
-          "WebAssembly / Emscripten",
-          "OrcaSlicer v2.5.0"
+          "WebAssembly／Emscripten",
+          "Python",
+          "OrcaSlicer v2.5.0",
+          "3MF、STL、OBJ、G-code"
         ],
         "algorithms": [
-          "3MFのCoreオブジェクト階層を展開し、build/component変換を合成してメッシュ配置とワールド境界を算出",
-          "オブジェクトの実インスタンス訪問数に基づく、3MFのインスタンス単位編集に必要なcopy-on-write判定",
-          "3MF単位を保持した座標検査と、ミリメートル単位の診断用境界算出",
-          "ビューアー変形操作の履歴管理"
+          "3MFのビルド項目とコンポーネント階層をたどり、変換行列を合成してメッシュ配置・ワールド境界を算出する監査",
+          "3MFオブジェクトの実インスタンス訪問数を数え、個別編集時にコピーオンライトが必要かを判定する事前診断",
+          "3MFの単位・ID・変換・座標・XML/ZIPサイズを制限付きで検証する読み取り専用監査"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザーでSTL・3MF・OBJファイルを選択するUI",
-          "3MF監査スクリプトのCLI（--input、--report、--require-shared-mesh、--require-independent-roots）",
-          "GitHub Actionsによるビルド・ブラウザー・互換性検証"
+          "ブラウザUIでのSTL／3MF／OBJファイル選択・表示・変換操作",
+          "3MF内部のモデル、ビルド項目、コンポーネント、メッシュ",
+          "G-codeの解析・比較・プレビュー用スクリプト",
+          "OrcaSlicerのヘッドレスWASM候補。ただしブラウザUIからの呼び出しは未接続"
         ],
         "reusable_components": [
           {
-            "name": "audit_edit_ownership(path)",
-            "purpose": "3MFのbuild itemからCoreオブジェクトの実訪問数を数え、特定インスタンス編集でcopy-on-writeが必要かを報告する。ファイルの書き換えは行わない。",
+            "name": "3MF配置監査",
+            "purpose": "コンポーネント参照を展開し、変換を合成して各メッシュの配置と境界を算出。階層やサイズに上限を設け、安全側に失敗します。",
+            "evidence": [
+              "scripts/audit_native_3mf_instance_placement.py",
+              "scripts/audit_3mf_scene.py"
+            ]
+          },
+          {
+            "name": "3MF編集所有権の事前診断",
+            "purpose": "ビルド項目ごとのオブジェクト訪問回数から共有リソースを見つけ、単一インスタンス編集にコピーオンライトが必要かを報告します。実際の書き換えは行いません。",
             "evidence": [
               "scripts/audit_native_3mf_edit_ownership.py"
             ]
           },
           {
-            "name": "inspect_placements(path, max_instances)",
-            "purpose": "3MFの階層をたどり、コンポーネント変換を合成して各メッシュの配置・三角形数・ワールド境界を算出する。現状は異なるモデル単位の混在を拒否する。",
-            "evidence": [
-              "scripts/audit_native_3mf_instance_placement.py"
-            ]
-          },
-          {
-            "name": "parse_model_unit(raw)、parse_transform(raw)、diagnostic_bounds_mm(bounds, factor)",
-            "purpose": "3MF単位、12要素変換、診断用境界を検証・変換する小さな再利用可能関数群。",
-            "evidence": [
-              "scripts/audit_3mf_scene.py",
-              "scripts/audit_native_3mf_instance_placement.py"
-            ]
-          },
-          {
-            "name": "createViewerTransformHistory(50)、captureViewerTransform(entry)",
-            "purpose": "ビューアー上の変形状態を記録し、編集履歴に利用する。",
+            "name": "ブラウザ表示変換履歴とカメラ補助",
+            "purpose": "表示モデルの変換履歴管理、カメラのフィット距離・向きの補助に使う関数がUIから読み込まれています。実装詳細や他形式への適用範囲は提示情報だけでは未確認です。",
             "evidence": [
               "app.js",
+              "scripts/prepare-camera-fit.mjs",
               "scripts/prepare-viewer-transform-history.mjs"
             ]
           },
           {
-            "name": "OrcaSlicer v2.5.0 WASM適応パッチ",
-            "purpose": "上流ソースのレイアウト差分に対応し、ヘッドレスWASMビルドで不要なデスクトップ依存部分を除外する。想定したパッチ位置がなければ失敗する。",
+            "name": "OrcaWasm v2.5.0適応スクリプト",
+            "purpose": "使い捨ての上流チェックアウトに対するパッチャーの差分適用と、WASM対象外のデスクトップ依存部分の除外を行います。想定外のソース構造では停止する設計です。",
             "evidence": [
               "scripts/adapt-orcawasm-v2.5.0.py"
             ]
           }
         ],
         "constraints": [
-          "READMEではWASMエンジン候補のビルド・限定的なAPI適合・Nodeスモークテストを報告しているが、デスクトップ機能全体との同等性やブラウザーでの配備可能性は確認されていない。",
-          "READMEによれば、現行UIはSTL/3MF/OBJを選択できる段階で、形状の解析・描画、プロファイル読込、WASM呼び出し、スライスは未接続。",
-          "完全な3MF意味論ラウンドトリップとネイティブ版・WASM版のG-code同等性は未確認。GUI、プラグイン、OpenCV依存機能などにも既知の未対応領域がある。",
-          "配置監査はOrcaSlicer固有の不透明なプロジェクトメタデータを扱わず、異なるモデル単位が混在するケースをサポートしない。",
-          "マルチスレッドWASM候補はSharedArrayBufferとcross-origin isolationを要するが、GitHub Pages上での実動作は未検証。"
+          "READMEによると、WASMエンジン候補のビルドと限定的なAPI適合・スモークテストは済んでいますが、デスクトップ機能全体との同等性やブラウザ公開準備を示すものではありません。",
+          "UIは現状、選択したファイルの一覧表示などにとどまり、モデル形状の読込・表示、プロファイル読込、WASM呼び出し、スライスは未接続です。",
+          "READMEに記載された既知の不足には、完全な3MF意味論ラウンドトリップ、ネイティブ版とWASM版のG-code同等性、GUI等の機能があります。",
+          "マルチスレッドWASM候補はSharedArrayBufferとクロスオリジン分離を必要とし、GitHub Pagesでの実ブラウザ互換性は未検証です。",
+          "提示された抜粋は一部ファイルに限られるため、各監査スクリプトの全対応範囲や本番運用状況は確認できません。"
         ],
-        "maturity": "試作",
-        "confidence": "high",
+        "maturity": "実験",
+        "confidence": "medium",
         "evidence": [
           "README.md",
           "app.js",
-          "scripts/adapt-orcawasm-v2.5.0.py",
           "scripts/audit_3mf_scene.py",
-          "scripts/audit_native_3mf_edit_ownership.py",
           "scripts/audit_native_3mf_instance_placement.py",
-          "scripts/prepare-viewer-transform-history.mjs"
+          "scripts/audit_native_3mf_edit_ownership.py",
+          "scripts/adapt-orcawasm-v2.5.0.py"
         ]
       }
     },
@@ -12533,6 +12519,236 @@
           "src/main.cpp",
           "platformio.ini",
           ".github/workflows/deploy-pages.yml"
+        ]
+      }
+    },
+    "temesotejam/pcb-workbench": {
+      "url": "https://github.com/temesotejam/pcb-workbench",
+      "default_branch": "main",
+      "pushed_at": "2026-11-25T01:58:11Z",
+      "available_paths": [
+        ".github",
+        ".github/workflows",
+        ".github/workflows/build.yml",
+        ".gitignore",
+        "README.md",
+        "docs",
+        "docs/PARTS.md",
+        "docs/ROADMAP.md",
+        "library",
+        "library/catalog.json",
+        "library/catalog.test.ts",
+        "library/footprints.ts",
+        "library/parts.tsx",
+        "package.json",
+        "projects",
+        "projects/demo",
+        "projects/demo/design.tsx",
+        "projects/demo/project.json",
+        "scripts",
+        "scripts/build.tsx",
+        "scripts/fabricate.py",
+        "site",
+        "site/app.js",
+        "site/catalog.js",
+        "site/index.html",
+        "site/style.css",
+        "tests",
+        "tests/test_assembly.py",
+        "tsconfig.json"
+      ],
+      "recent_commits": [
+        {
+          "sha": "9639e804",
+          "message": "Configure exact EasyEDA footprint resolver and regression tests"
+        },
+        {
+          "sha": "a1fe9cde",
+          "message": "Make JLCPCB catalog the source of part identity and expose searchable web library"
+        },
+        {
+          "sha": "7e3dff92",
+          "message": "Fix missing polygon-clipping dependency in KiCad converter"
+        }
+      ],
+      "archived": false,
+      "fingerprint": "2a1983e5c875d9e963bd9d83d533cdeb5192c4feb13a706a5b9357dce892186e",
+      "analyzed_at": "2026-11-25T02:42:01.361Z",
+      "profile": {
+        "purpose": "ブラウザーで設計を確認し、KiCadによる検証とJLCPCB向け製造データのドラフト生成を行うワークベンチ。READMEでは発注準備未完了と明記されている。",
+        "architecture": "プロジェクトのtscircuit設計ソースと部品メタデータからCircuit JSON、回路図・基板プレビュー、KiCadファイルを生成する。KiCad CLIでERC・DRCと製造エクスポートを行い、PythonでBOM/CPL等を作成する。静的ブラウザー画面で設計・レポートを閲覧する。",
+        "technologies": [
+          "Python",
+          "TypeScript/TSX",
+          "Bun",
+          "tscircuit",
+          "Circuit JSON",
+          "KiCad CLI",
+          "EasyEDA部品データ変換",
+          "GitHub Actions",
+          "ブラウザーJavaScript"
+        ],
+        "algorithms": [
+          "登録済みLCSC番号との照合と、部品参照・供給元番号・物理パッドの整合性検証",
+          "部品番号ごとのEasyEDA取得結果をPromiseキャッシュし、返却された部品番号を照合",
+          "BOMとKiCad配置データの部品参照一致、重複、座標・回転値の有限性を検証",
+          "配置回転にオフセットを加算し、0〜360度に正規化してCPLを生成"
+        ],
+        "hardware": [],
+        "interfaces": [
+          "ブラウザーの設計プレビュー、部品カタログ、検証レポート",
+          "KiCad CLIによるERC・DRC・Gerber・ドリル・配置データの入出力",
+          "EasyEDA部品取得と外部部品検索API",
+          "JLCPCB向けGerber ZIP、BOM CSV、CPL CSVのドラフト"
+        ],
+        "reusable_components": [
+          {
+            "name": "resolveParts / assertSourceParity",
+            "purpose": "部品カタログの同定、参照番号の重複やサプライヤー番号の不一致、物理パッド不足を検出する。",
+            "evidence": [
+              "library/catalog.test.ts"
+            ]
+          },
+          {
+            "name": "jlcpcbFootprintResolver",
+            "purpose": "JLCPCB形式の部品番号を検証し、EasyEDAから正確な部品フットプリントを取得・変換する。番号不一致や使用可能なパッド不足はエラーにする。",
+            "evidence": [
+              "library/footprints.ts"
+            ]
+          },
+          {
+            "name": "assembly_rows",
+            "purpose": "部品表とKiCad配置の参照番号を照合し、配置位置・回転・基板面からJLCPCB向けBOM/CPL行と未確認事項を生成する。",
+            "evidence": [
+              "scripts/fabricate.py"
+            ]
+          },
+          {
+            "name": "initCatalog / renderRows",
+            "purpose": "登録部品のローカル検索と外部検索結果の表示を行い、外部データを参考情報として区別する。",
+            "evidence": [
+              "site/catalog.js"
+            ]
+          }
+        ],
+        "constraints": [
+          "READMEでは現状を注文不可の試作段階としており、発注用の製造リリースは無効化されている。",
+          "部品の実在庫、実装可否、データシート、フットプリント、回転は別途確認が必要。",
+          "fabricate.pyは製造データをドラフトとして扱い、SMD以外の実装は未対応としてブロックする。",
+          "提示された抜粋だけでは、全工程の実行成功や生成ファイルの製造適合性は確認できない。"
+        ],
+        "maturity": "試作",
+        "confidence": "high",
+        "evidence": [
+          "README.md",
+          "library/catalog.test.ts",
+          "library/footprints.ts",
+          "scripts/fabricate.py",
+          "site/catalog.js",
+          "site/app.js"
+        ]
+      }
+    },
+    "temesotejam/matlab-simulink-stm32-nucleo": {
+      "url": "https://github.com/temesotejam/matlab-simulink-stm32-nucleo",
+      "default_branch": "main",
+      "pushed_at": "2026-11-24T10:40:39Z",
+      "available_paths": [
+        ".gitignore",
+        "README.md",
+        "cubemx",
+        "cubemx/README.md",
+        "docs",
+        "docs/images",
+        "docs/images/build-options-layout.svg",
+        "docs/images/cubemx-advanced-settings-layout.svg",
+        "docs/setup-nucleo-f446re-r2026b.md",
+        "docs/troubleshooting.md",
+        "models",
+        "models/README.md"
+      ],
+      "recent_commits": [
+        {
+          "sha": "7b14aca8",
+          "message": "docs: add table of contents to full setup guide"
+        },
+        {
+          "sha": "087c08d9",
+          "message": "docs: list Build options layout diagram"
+        },
+        {
+          "sha": "3d039137",
+          "message": "docs: add Build options screen layout diagram"
+        }
+      ],
+      "archived": false,
+      "fingerprint": "83d4fccd2e2e3e0dffde2b2603c78c3abcde589ccac06f28032dde94aa88e425",
+      "analyzed_at": "2026-11-25T02:42:36.685Z",
+      "profile": {
+        "purpose": "MATLAB/SimulinkからSTM32 Nucleo向けのコードを生成・ビルドし、ST-LINK経由で実機へ書き込む環境の構築手順を記録するリポジトリ。",
+        "architecture": "READMEとセットアップ・トラブルシューティング文書が開発環境の構築から実機展開までを案内する構成。モデルとCubeMX設定の格納先は示されているが、実ファイルは未登録。",
+        "technologies": [
+          "MATLAB R2026b",
+          "Simulink R2026b",
+          "MATLAB Coder",
+          "Simulink Coder",
+          "Embedded Coder",
+          "STM32 Microcontroller Blockset",
+          "STM32CubeMX 6.16.0",
+          "STM32CubeProgrammer 2.22.0",
+          "GNU Tools for STM32",
+          "ST-LINK/V2-1"
+        ],
+        "algorithms": [],
+        "hardware": [
+          "NUCLEO-F446RE",
+          "STM32F446RETx / STM32F446xx",
+          "LD2（PA5）",
+          "ST-LINK/V2-1"
+        ],
+        "interfaces": [
+          "SimulinkモデルからのCコード生成",
+          "ELF / HEX / BINのビルド",
+          "ST-LINK経由のSWD接続と実機書き込み"
+        ],
+        "reusable_components": [
+          {
+            "name": "STM32向けセットアップ・実機展開手順",
+            "purpose": "ツールチェーン設定、CubeMX設定、コード生成、ビルド、書き込みまでの再現手順として利用できる。",
+            "evidence": [
+              "README.md",
+              "docs/setup-nucleo-f446re-r2026b.md"
+            ]
+          },
+          {
+            "name": "接続トラブルシューティング記録",
+            "purpose": "環境構築や接続時の問題調査の参考資料として利用できる。個別の解決内容は文書の記載範囲で確認が必要。",
+            "evidence": [
+              "docs/troubleshooting.md"
+            ]
+          },
+          {
+            "name": "CubeMX設定・ビルド画面のレイアウト図",
+            "purpose": "設定画面の操作箇所を確認する補助資料として再利用できる。",
+            "evidence": [
+              "docs/images/cubemx-advanced-settings-layout.svg",
+              "docs/images/build-options-layout.svg"
+            ]
+          }
+        ],
+        "constraints": [
+          "READMEによれば、動作確認に使ったSimulinkの.slxモデルとCubeMXの.ioc設定ファイルは未登録で、設定やモデルの直接再利用は確認できない。",
+          "動作確認の記述はREADMEに基づくもので、ソースコードやモデル実体による独立検証はできない。",
+          "確認対象として記載されているのはNUCLEO-F446REとMATLAB/Simulink R2026b環境であり、他のボードやバージョンへの適用は未確認。"
+        ],
+        "maturity": "教材",
+        "confidence": "medium",
+        "evidence": [
+          "README.md",
+          "docs/setup-nucleo-f446re-r2026b.md",
+          "docs/troubleshooting.md",
+          "models/README.md",
+          "cubemx/README.md"
         ]
       }
     }
