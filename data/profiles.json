@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-25T02:46:14.114Z",
+  "generated_at": "2026-11-26T01:58:21.656Z",
   "owner": "temesotejam",
-  "repository_count": 117,
+  "repository_count": 118,
   "profiles": {
     "temesotejam/atoms3r-lateral-energy-control": {
       "url": "https://github.com/temesotejam/atoms3r-lateral-energy-control",
@@ -306,7 +306,7 @@
     "temesotejam/github-tavern": {
       "url": "https://github.com/temesotejam/github-tavern",
       "default_branch": "main",
-      "pushed_at": "2026-11-24T22:36:19Z",
+      "pushed_at": "2026-11-25T21:50:40Z",
       "available_paths": [
         ".github",
         ".github/agents",
@@ -335,89 +335,82 @@
       ],
       "recent_commits": [
         {
-          "sha": "2f5fd56b",
+          "sha": "1e95023a",
           "message": "chore: refresh tavern summaries"
         },
         {
-          "sha": "a0ede705",
+          "sha": "c08f3c1c",
           "message": "chore: refresh verified public pages"
         },
         {
-          "sha": "258a38d3",
+          "sha": "e0b083ed",
           "message": "chore: refresh tavern summaries"
         }
       ],
       "archived": false,
-      "fingerprint": "c178fa6b2a607be8e5a13f81d4dd28ec9b4e339fce94cbe9a4d82017a4ab941e",
-      "analyzed_at": "2026-11-25T02:42:14.455Z",
+      "fingerprint": "7cf6e24151df8553ee396648d4f9f454e7bd6c01eab53575a40d24d9a70b147c",
+      "analyzed_at": "2026-11-26T01:53:44.572Z",
       "profile": {
-        "purpose": "公開GitHubリポジトリを検索・分類・閲覧する静的な個人向けポータル。",
-        "architecture": "ブラウザー側のJavaScriptがGitHub APIからリポジトリ情報を扱い、一覧・検索・分類・詳細表示を行う構成。要約や公開ページ情報はJSONファイルから読み込む。カードのREADME補足取得、詳細画面の表示補助も個別のクライアントスクリプトで実装されている。自動更新用スクリプトとActionsワークフローの存在はファイル一覧で確認できるが、実装の詳細は未確認。",
+        "purpose": "公開GitHubリポジトリを検索・閲覧する個人向けポータル。酒場風の画面で、リポジトリの概要や説明を表示する。",
+        "architecture": "GitHub Pagesで配信する静的Webアプリ。ブラウザー側のJavaScriptがリポジトリ情報やJSONデータを扱い、補助クライアントがREADME由来の説明や詳細画面の表示を補う。サマリーと公開ページ情報を更新するスクリプトおよびGitHub Actionsワークフローもファイルツリーにある。",
         "technologies": [
           "JavaScript",
           "HTML",
           "CSS",
           "GitHub API",
-          "GitHub Pages"
+          "GitHub Pages",
+          "GitHub Actions"
         ],
         "algorithms": [
-          "リポジトリ名・説明・言語・Topics・要約の文字列をキーワード規則に照合してカテゴリ分類（app.js）",
-          "同時実行数を6に制限したキューでREADMEを取得し、カードを更新（card-enricher.js）",
-          "Markdownから不要要素を除去し、短いプレビュー文を抽出（card-enricher.js）",
-          "正規表現による日本語説明文の口語化（spoken-overview-client.js）"
+          "キーワード規則によるリポジトリの技術領域分類",
+          "Markdownを整形してREADMEから短い説明文を抽出",
+          "最大6件の並行処理キューによるREADME取得",
+          "MutationObserverによるDOM変更検知",
+          "定型置換による日本語説明文の口語化"
         ],
         "hardware": [],
         "interfaces": [
-          "GitHub APIからのリポジトリ情報取得",
-          "raw.githubusercontent.comからのREADME取得",
-          "data/summaries.jsonおよびdata/public-pages.jsonのJSON読み込み",
-          "ブラウザー上の検索・カテゴリ絞り込み・詳細表示",
-          "GitHub Pages向け静的サイト"
+          "ブラウザーUI",
+          "GitHub API",
+          "raw.githubusercontent.com上のREADME",
+          "data/summaries.json",
+          "data/public-pages.json"
         ],
         "reusable_components": [
           {
-            "name": "categoryOf",
-            "purpose": "リポジトリ情報と要約をキーワード規則に照合し、カテゴリを決定する。",
-            "evidence": [
-              "app.js"
-            ]
-          },
-          {
-            "name": "withTimeout",
-            "purpose": "AbortControllerを用いてfetchにタイムアウトを設定する。",
-            "evidence": [
-              "app.js"
-            ]
-          },
-          {
-            "name": "readReadme / shortPreview",
-            "purpose": "一般的なブランチ名・README表記を順に試し、Markdownからカード用の短い説明を作る。",
+            "name": "README説明文の抽出とカード更新",
+            "purpose": "READMEのMarkdown記法やノイズを除き、短いプレビューを生成してカードに反映する。キャッシュ、重複排除、並行数制限も備える。",
             "evidence": [
               "card-enricher.js"
             ]
           },
           {
-            "name": "public-pages-client.js",
-            "purpose": "公開ページのURLを検証し、選択中リポジトリに対応する場合のみリンクを表示する。",
+            "name": "キーワードベース分類と検索対象テキストの構成",
+            "purpose": "リポジトリ情報とサマリーを結合して検索対象を作り、規則に基づいて技術カテゴリを決める。",
             "evidence": [
-              "public-pages-client.js",
-              "data/public-pages.json"
+              "app.js"
             ]
           },
           {
-            "name": "__projectTavernSpokenize",
-            "purpose": "説明文を口語調に変換する純粋変換関数として公開し、ブラウザー外からも呼び出せる。",
+            "name": "公開ページURLの検証と表示制御",
+            "purpose": "HTTPまたはHTTPSのURLだけを採用し、選択中リポジトリに対応するリンクを表示・非表示にする。",
+            "evidence": [
+              "public-pages-client.js"
+            ]
+          },
+          {
+            "name": "説明文の口語変換",
+            "purpose": "定型表現を置換する純粋変換関数を提供し、詳細説明のDOM変更にも適用する。",
             "evidence": [
               "spoken-overview-client.js"
             ]
           }
         ],
         "constraints": [
-          "app.jsの抜粋は一部のみのため、全体の検索・描画・エラー処理は確認できない。",
-          "README・要約生成スクリプト・ワークフローの内容は抜粋されておらず、自動更新の挙動や権限設定は独立に確認できない。",
-          "公開された証拠では所有者名や対象リポジトリ名がコードに固定されている（app.js、card-enricher.js、public-pages-client.js）。",
-          "カードREADME取得はmain/masterと限られたREADMEファイル名を試す実装で、他の配置は対象外。",
-          "ハードウェア連携を示す証拠はない。"
+          "分類は定義済みキーワードに依存する。",
+          "README取得はmain/masterとREADMEの一般的な大文字小文字の組み合わせを試す実装で、他の配置は確認できない。",
+          "所有者名や対象リポジトリ名がクライアントコードに固定されている。",
+          "サマリー生成・公開ページ更新の具体的な処理やデータ形式の全容は、提示されたソース抜粋だけでは確認できない。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
@@ -427,16 +420,18 @@
           "card-enricher.js",
           "public-pages-client.js",
           "spoken-overview-client.js",
-          "keeper-closing-client.js",
-          "data/summaries.json",
-          "data/public-pages.json"
+          "scripts/update-summaries.mjs",
+          "scripts/update-public-pages.mjs",
+          ".github/workflows/copilot-summaries.yml",
+          ".github/workflows/public-pages.yml",
+          "data/summaries.json"
         ]
       }
     },
     "temesotejam/2026_10_24": {
       "url": "https://github.com/temesotejam/2026_10_24",
       "default_branch": "main",
-      "pushed_at": "2026-11-24T22:22:14Z",
+      "pushed_at": "2026-11-25T21:38:08Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -453,89 +448,90 @@
       ],
       "recent_commits": [
         {
+          "sha": "68f326f1",
+          "message": "Update automatic news feed"
+        },
+        {
+          "sha": "3ada37f6",
+          "message": "Update automatic news feed"
+        },
+        {
           "sha": "801c74cb",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "e7c1c21a",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "2463c943",
           "message": "Update automatic news feed"
         }
       ],
       "archived": false,
-      "fingerprint": "2355bc0c591fb24c2c0061d8ae2c08df1e6ea283f4f9354745b947d1de1159a1",
-      "analyzed_at": "2026-11-25T02:42:26.709Z",
+      "fingerprint": "ed92ac454d4de9fc0a41a5a28b4a0ea2eae480206850e0e2638b75f9dbe12d90",
+      "analyzed_at": "2026-11-26T01:53:56.170Z",
       "profile": {
-        "purpose": "ニュース見出しや入力した現実の出来事をゲーム内の迷宮・敵・観測ノートに反映する、一人用の探索ゲームです。記事情報を現実地点として表示する機能も説明されています。",
-        "architecture": "ブラウザー上のJavaScriptゲームがCanvasと画面要素を扱い、data/news.jsonから自動収集ニュースを読み込みます。ニュース収集はGitHub Actionsで定期実行する構成とREADMEに記載されていますが、収集処理の実装詳細は提示された情報だけでは確認できません。",
+        "purpose": "ニュース見出しや利用者入力を題材に、現象を仲間にしながら3階からの脱出を目指す一人用探索ゲーム。",
+        "architecture": "GitHub Pagesで配信するブラウザーゲーム。app.jsがCanvas描画とゲーム状態を扱い、data/news.jsonを読み込む。READMEによればGitHub Actionsが公開RSSからニュースデータを定期更新する。",
         "technologies": [
           "JavaScript",
           "HTML Canvas",
-          "ブラウザーのlocalStorage・Fetch API",
-          "GitHub Actions（README記載）",
-          "JSON"
+          "Fetch API",
+          "localStorage",
+          "GitHub Actions",
+          "RSS",
+          "GitHub Pages"
         ],
         "algorithms": [
-          "乱数を使った選択・ゲーム進行（app.jsのrand関数とREADME記載のランダム生成）",
-          "マンハッタン距離による距離計算（dist関数）",
-          "HTTP/HTTPS URLの許可とニュース見出しのキーワード除外"
+          "プレイヤーの1行動ごとに仲間と敵が各1回行動するターン進行（README記載）。",
+          "ニュースの選別に見出し・配信元の正規表現フィルターを使用。",
+          "日付を数値化し、ニュース配列の剰余で初期ニュースを選択。"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザー画面（Canvas描画）",
-          "矢印キー・WASD・画面方向ボタン（README記載）",
-          "data/news.jsonのニュースデータ",
-          "公開RSSの取得とGitHub Actionsによる定期更新（README記載）",
-          "GitHub Pagesでの公開（README記載）"
+          "キーボード（矢印キー/WASD）と画面上の方向ボタン",
+          "Canvasによるゲーム表示",
+          "data/news.jsonのJSONニュースデータ",
+          "localStorageキー「reality-dungeon-seed」に保存する利用者入力",
+          "記事のRSS見出し・配信元・日時・出典リンクの表示"
         ],
         "reusable_components": [
           {
-            "name": "safeHttpUrl",
-            "purpose": "URLを解析し、HTTP/HTTPS以外を許可しない。外部リンクを扱うアプリに転用できます。",
+            "name": "safeHttpUrl(value)",
+            "purpose": "URLを解析し、HTTP/HTTPS以外のスキームを除外する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "loadAutomaticNews",
-            "purpose": "JSONフィードを取得し、カテゴリ・見出し長・出典などを整形してゲーム用ニュース一覧に変換します。ニュースを使う別のフロントエンドにも応用可能です。",
+            "name": "esc(v)",
+            "purpose": "文字列中のHTML特殊文字をエスケープする。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "savedSeed",
-            "purpose": "localStorageから保存データを読み込み、出典URLを検証して利用可能な状態にします。",
+            "name": "loadAutomaticNews()",
+            "purpose": "JSONニュースを取得し、カテゴリ・見出し・配信元をフィルターしたうえでゲーム用データへ整形する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "esc",
-            "purpose": "HTMLの特殊文字をエスケープする小さな表示安全化関数です。提示範囲からは呼び出し箇所を確認できません。",
+            "name": "renderAutomaticNews()",
+            "purpose": "自動収集ニュースをDOM要素として一覧表示し、選択時にゲーム開始へつなぐ。",
             "evidence": [
               "app.js"
             ]
           }
         ],
         "constraints": [
-          "提示されたapp.jsは一部抜粋のため、迷宮生成・戦闘・ニュース選別の全体実装やテスト状況は確認できません。",
-          "scripts/fetch-news.mjsと.github/workflows/news.ymlの内容は提示されておらず、RSS取得元、失敗時の詳細な挙動、除外処理の実効性は未確認です。",
-          "自動ニュースのfactVerifiedはfalseに設定されており、記事本文の確認済み情報として扱わない設計です。"
+          "提示されたソース抜粋はapp.jsの一部のみで、ゲーム生成・戦闘・階移動の詳細実装は確認できない。",
+          "ニュースの除外は見出し・配信元のパターン照合であり、記事本文の事実確認を行う実装は確認できない。READMEも記事本文を確認済みとは表示しないとしている。",
+          "RSS取得・JSON生成の具体的な処理や失敗時の実装は提示情報から確認できない。"
         ],
         "maturity": "試作",
         "confidence": "medium",
         "evidence": [
           "README.md",
           "app.js",
-          "data/news.json",
-          "scripts/fetch-news.mjs",
           ".github/workflows/news.yml",
+          "data/news.json",
           "index.html",
-          "styles.css"
+          "scripts/fetch-news.mjs"
         ]
       }
     },
@@ -11703,7 +11699,7 @@
     "temesotejam/rw-walker-motion-control": {
       "url": "https://github.com/temesotejam/rw-walker-motion-control",
       "default_branch": "main",
-      "pushed_at": "2026-11-22T11:00:28Z",
+      "pushed_at": "2026-11-25T10:40:56Z",
       "available_paths": [
         ".gitattributes",
         ".gitignore",
@@ -11885,6 +11881,18 @@
         "analysis/2026-11-22-walking-simulator/test_return_history_measurement.py",
         "analysis/2026-11-22-walking-simulator/test_return_model.py",
         "analysis/2026-11-22-walking-simulator/test_right_candidates.py",
+        "analysis/2026-11-25-logfix4-trial",
+        "analysis/2026-11-25-logfix4-trial/33863489-motion.png",
+        "analysis/2026-11-25-walk5-logfix1-trial",
+        "analysis/2026-11-25-walk5-logfix1-trial/34374950-motion.png",
+        "analysis/2026-11-25-walk5-logfix1-trial/README.md",
+        "analysis/2026-11-25-walk6-logfix1-trial",
+        "analysis/2026-11-25-walk6-logfix1-trial/38871004-motion.png",
+        "analysis/2026-11-25-walk6-logfix1-trial/44453706-motion.png",
+        "analysis/2026-11-25-walk6-replay",
+        "analysis/2026-11-25-walk6-replay/README.md",
+        "analysis/2026-11-25-walk6-replay/detectors.cpp",
+        "analysis/2026-11-25-walk6-replay/replay.py",
         "analysis/README.md",
         "docs",
         "docs/CAD_SUPPORT_SHADOW.md",
@@ -11893,18 +11901,6 @@
         "docs/ENERGY_TRANSFER_V18.md",
         "docs/EVENT_FOOT_ENERGY_REPLAY_20261119.md",
         "docs/FOOT_STABLE40_V36.md",
-        "docs/FOOT_WALKING_AUDIT_20261117.md",
-        "docs/LOG_EXPORT_FAILURE_20261117.md",
-        "docs/SUPPORT_TRANSFER_V39.md",
-        "flasher",
-        "flasher/flasher-completion.js",
-        "flasher/foot-periodic40",
-        "flasher/foot-periodic40/index.html",
-        "flasher/index.html",
-        "flasher/manifest.json",
-        "flasher/soft-boot.js",
-        "flasher/support-transfer",
-        "flasher/support-transfer/index.html",
         "src/beta_phase_controller.h",
         "src/beta_turn_fast_controller.h",
         "src/control_angle_reference.h",
@@ -11913,66 +11909,65 @@
       ],
       "recent_commits": [
         {
-          "sha": "63c45cd1",
-          "message": "Seal walking logs with mixed continuation and ordinary aid records"
+          "sha": "4d9669fd",
+          "message": "Record full CRC-verified recovery of trial 31326458"
         },
         {
-          "sha": "6315db09",
-          "message": "Prioritize support carry and stream resumable compressed walking logs"
+          "sha": "4bb22f9f",
+          "message": "Version installer requests and record walk5 download diagnostics"
         },
         {
-          "sha": "c12a4adf",
-          "message": "Prioritize work needed to reach center and resume batched log downloads"
+          "sha": "ccd6f906",
+          "message": "Replan leftward support transfer from measured residual current and passage work"
         }
       ],
       "archived": false,
-      "fingerprint": "87039762a6e23d35d9403bbdbf196e72b05dbb7243cea636c8f45d3cc4704250",
-      "analyzed_at": "2026-11-22T23:44:00.473Z",
+      "fingerprint": "49a3c00c7aff83d7a50cc803c8a7756fa2ca1116b95b536b4e532dcbcfb678a8",
+      "analyzed_at": "2026-11-26T01:54:10.221Z",
       "profile": {
-        "purpose": "リアクションホイールで左右に揺動し、受動脚を交互に振り出す歩行器の制御ファームウェアと実験ツール。歩行補助のタイミングや制御遅延を評価している。",
-        "architecture": "Arduino系ファームウェアに、歩行制御・パルス後の位相推定・制御遅延計測の各モジュールを配置。READMEでは、姿勢推定にMEKFを使い、足角観測、Web測定画面、ログ変換・再生ツールを別の入口として案内している。",
+        "purpose": "リアクションホイールと受動脚を使う歩行器向けのモーション制御ファームウェアおよび実験・解析ツール。README記載の機能説明に基づく。",
+        "architecture": "ファームウェアに、入力後の姿勢変化を追跡するベータ制御器と制御遅延計測モジュールがある。READMEでは、センサー推定、歩行入力、Web測定画面、ログ変換・再生ツールも案内されているが、提示されたソース抜粋ではそれらの内部構成は確認できない。",
         "technologies": [
           "C++",
           "Arduino API",
           "FreeRTOS",
-          "MEKF（README記載）",
-          "JSON形式の計測出力"
+          "JSON診断出力"
         ],
         "algorithms": [
-          "パルス後の角速度符号反転と複数サンプルによる旋回検出",
-          "旋回後のスムースステップによるbeta回復",
-          "戻り位相の進行度に基づく指数形beta上限",
-          "制御処理・I/Oの経過時間とサンプルからの遅延計測"
+          "バイアス補正ジャイロ角速度の積分によるパルス開始後の位相角推定",
+          "入力保護時間後の角速度反転と複数サンプルによる旋回検出",
+          "旋回後のベータ目標値を指数曲線またはsmoothstepで復帰",
+          "処理段階・キュー配送の経過時間、最大値、超過を記録する遅延計測"
         ],
         "hardware": [
           "リアクションホイール式歩行器",
-          "受動脚",
-          "角速度を取得するセンサー（機種は提示情報から確認できない）"
+          "受動脚（README記載）"
         ],
         "interfaces": [
-          "BetaPhaseController::beginPulse/update/betaCeiling",
-          "BetaTurnFastController::beginPulse/update/betaTarget",
-          "control_latency名前空間の計測APIとProfile::appendJson",
-          "制御基準角を返すcontrol_angle_reference::origin"
+          "BetaPhaseController: reset(), beginPulse(), update(), betaCeiling()",
+          "BetaTurnFastController: reset(), beginPulse(), update(), betaTarget()",
+          "control_latency: pollBegin()/pollEnd(), ioBegin()/ioEnd(), mark(), finish()",
+          "制御遅延診断のJSON出力",
+          "README記載のWi-Fi測定画面とRWLOGの変換・再生"
         ],
         "reusable_components": [
           {
             "name": "BetaTurnFastController",
-            "purpose": "入力保護中は旋回判定を保留し、入力後の旋回を連続サンプルで確認してから滑らかにbetaを回復する状態機械。旋回未確認時の時間ベースのフォールバックも備える。",
+            "purpose": "入力後の旋回を確認するまでベータを下限に保ち、旋回確認またはタイムアウト後に滑らかに上限へ戻す状態機械。歩行周期に依存しない、パルス単位の位相制御へ応用可能。",
             "evidence": [
               "src/beta_turn_fast_controller.h"
             ]
           },
           {
             "name": "BetaPhaseController",
-            "purpose": "パルス開始からの角速度積分で位相を追跡し、戻りの進行度に応じて指数形にbeta上限を上げる。全体モデルに依存しない局所的な制御方式として記述されている。",
+            "purpose": "ジャイロ積分から旋回後の戻り進捗を算出し、指数曲線でベータ上限を調整する。",
             "evidence": [
               "src/beta_phase_controller.h"
             ]
           },
           {
             "name": "control_latency::Profile",
-            "purpose": "計測サンプルから制御段階ごとの経過時間、キュー配送時間、I/Oとの時間重複、予算超過を集計し、JSONに出力する。固定サイズの詳細バッファを使う。",
+            "purpose": "処理段階ごとの経過時間、キュー配送時間、予算超過を有界バッファで集計し、JSON化する。組込み制御の遅延診断に再利用できる。",
             "evidence": [
               "src/control_latency.h",
               "src/control_latency.cpp"
@@ -11980,17 +11975,17 @@
           },
           {
             "name": "control_angle_reference::origin",
-            "purpose": "作業モードでは重力基準のゼロ角、通常モードでは保存姿勢を制御原点として選択する小さな再利用可能関数。",
+            "purpose": "作業モードでは推定器の重力基準ピッチを原点とし、それ以外では保存ピッチを使い分ける小さな参照値選択関数。",
             "evidence": [
               "src/control_angle_reference.h"
             ]
           }
         ],
         "constraints": [
-          "制御パラメーターはConfig定数に依存し、提示情報だけでは適用可能な機体条件や調整手順を確認できない。",
-          "Beta制御器のコメント上も実験的な方式であり、実機での効果や安全性は提示情報から検証できない。",
-          "遅延計測はホスト壁時計時間であり、I/O時間やポーリング時間をCPU占有時間・プリエンプション時間として解釈できない。",
-          "提示されたソース抜粋は一部に限られ、ファームウェア全体の呼び出し関係やテスト結果は確認できない。"
+          "ソース確認は提示された抜粋に限られ、ファームウェア全体や呼び出し側との統合状況は未確認。",
+          "制御器の設定値はConfigに依存し、別機体へ移植する際は閾値・時間設定の適合が必要。",
+          "実機での効果、安定性、性能値を裏付ける測定結果は提示情報から確認できない。",
+          "READMEにMEKFや足角配信などの説明はあるが、対応する実装抜粋は提示されていない。"
         ],
         "maturity": "実験",
         "confidence": "medium",
@@ -12007,7 +12002,7 @@
     "temesotejam/layer-workbench": {
       "url": "https://github.com/temesotejam/layer-workbench",
       "default_branch": "main",
-      "pushed_at": "2026-11-25T02:41:27Z",
+      "pushed_at": "2026-11-26T01:07:08Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -12135,6 +12130,7 @@
         "scripts/preflight-3mf-zip.mjs",
         "scripts/prepare-camera-fit.mjs",
         "scripts/prepare-engine-lab.mjs",
+        "scripts/prepare-find-space.mjs",
         "scripts/prepare-native-v250-presets.mjs",
         "scripts/prepare-viewer-transform-history.mjs",
         "scripts/prepare-wasm-runner.sh",
@@ -12200,95 +12196,88 @@
         "scripts/test-parity-cube-fixture.mjs",
         "scripts/test-preflight-3mf-zip.mjs",
         "scripts/test-prepare-camera-fit.mjs",
+        "scripts/test-prepare-find-space.mjs",
         "scripts/test-prepare-native-v250-presets.mjs",
         "scripts/test-prepare-viewer-transform-history.mjs",
         "scripts/test-process-preset-inheritance.mjs",
         "scripts/test-process-profile-unit.mjs",
         "scripts/test-process-profile.mjs",
         "scripts/test-slice-stl-process-application.mjs",
-        "scripts/test-support-extrusion-diagnostic.mjs",
-        "scripts/test-support-feature-diagnostic.mjs",
-        "scripts/test-support-sphere-fixture.mjs"
+        "scripts/test-support-extrusion-diagnostic.mjs"
       ],
       "recent_commits": [
         {
-          "sha": "facc2753",
-          "message": "Merge pull request #238 from temesotejam/ui/prepare-bottom-view-20261125"
+          "sha": "4c816140",
+          "message": "Prepare: recover failed greedy viewer arrangements with bounded alternate orders (#249)"
         },
         {
-          "sha": "2be62dd9",
-          "message": "Prepare: add underside camera and prevent bed occlusion"
+          "sha": "24c9f152",
+          "message": "Prepare: greedy arrange all loose meshes with atomic viewer history (#245)"
         },
         {
-          "sha": "6cc22790",
-          "message": "Merge pull request #237 from temesotejam/ui/prepare-side-directions-20261125"
+          "sha": "694f0bd9",
+          "message": "Merge pull request #244 from temesotejam/ui/prepare-find-space-20261125"
         }
       ],
       "archived": false,
-      "fingerprint": "44ccfc0c47743decdd1f9550ea330e9027375cd9f35198cc3f85fbff9d6f0ae4",
-      "analyzed_at": "2026-11-25T02:41:48.206Z",
+      "fingerprint": "e54489c3d47f85103d9a2d6a2a6a5868568083c868c3335679cbc0f37c49e22f",
+      "analyzed_at": "2026-11-26T01:53:31.735Z",
       "profile": {
-        "purpose": "3Dプリント準備用のブラウザワークスペース。OrcaSlicerのデスクトップ版に近い設定・プロジェクト互換性を目指し、ブラウザ向けWASMエンジン候補を検証しています。",
-        "architecture": "Three.jsを使うブラウザUIと、上流OrcaSlicerをヘッドレスWASM化するビルド・適応スクリプト群を分離。3MF、G-code、プリンタープロファイルなどの監査・比較用スクリプトとテストも含みます。現状の公開UIはモデル表示・編集機能の一部を備えますが、スライス機能は未接続です。",
+        "purpose": "ブラウザー上の3Dプリント準備環境と、OrcaSlicerのWebAssembly移植・互換性を調査する個人用ワークベンチ。READMEでは、現状のUIはファイル一覧などの表示シェルで、スライス機能やエンジン接続は未実装と説明されています。",
+        "architecture": "ブラウザーUI（app.js）と、3MF解析・互換性診断・エンジン適応を行うスクリプト群、検証用GitHub Actionsで構成。READMEによればOrcaSlicer v2.5.0のheadless WASM候補は検証されていますが、UIからの呼び出しや本番ブラウザーでの稼働は確認されていません。",
         "technologies": [
-          "JavaScript",
-          "Three.js",
-          "WebAssembly／Emscripten",
+          "JavaScript ES modules",
+          "Three.js（OrbitControls、TransformControls、STL/OBJ/3MF loadersのimportを確認）",
           "Python",
           "OrcaSlicer v2.5.0",
-          "3MF、STL、OBJ、G-code"
+          "WebAssembly / Emscripten"
         ],
         "algorithms": [
-          "3MFのビルド項目とコンポーネント階層をたどり、変換行列を合成してメッシュ配置・ワールド境界を算出する監査",
-          "3MFオブジェクトの実インスタンス訪問数を数え、個別編集時にコピーオンライトが必要かを判定する事前診断",
-          "3MFの単位・ID・変換・座標・XML/ZIPサイズを制限付きで検証する読み取り専用監査"
+          "3MFのビルド項目・コンポーネント階層をたどる配置監査と、変換行列によるワールド座標境界の算出",
+          "3MFオブジェクトの実参照回数に基づく、インスタンス単位編集向けcopy-on-write判定",
+          "入力サイズ・要素数・階層深度などに上限を設けた3MF監査"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザUIでのSTL／3MF／OBJファイル選択・表示・変換操作",
-          "3MF内部のモデル、ビルド項目、コンポーネント、メッシュ",
-          "G-codeの解析・比較・プレビュー用スクリプト",
-          "OrcaSlicerのヘッドレスWASM候補。ただしブラウザUIからの呼び出しは未接続"
+          "ブラウザーUIでのSTL・3MF・OBJファイル選択（READMEでは現状、一覧表示まで）",
+          "3MF ZIP/XMLを入力とする監査・診断スクリプト",
+          "GitHub Actionsによるビルド・互換性・ブラウザー検証"
         ],
         "reusable_components": [
           {
-            "name": "3MF配置監査",
-            "purpose": "コンポーネント参照を展開し、変換を合成して各メッシュの配置と境界を算出。階層やサイズに上限を設け、安全側に失敗します。",
+            "name": "3MFモデル監査関数群",
+            "purpose": "単位、ID、変換値、頂点・三角形などを検証し、制限付きでモデルを読み取る。変換値は生の3MF形式で扱い、完全なプロジェクト互換性は保証しない。",
             "evidence": [
-              "scripts/audit_native_3mf_instance_placement.py",
               "scripts/audit_3mf_scene.py"
             ]
           },
           {
-            "name": "3MF編集所有権の事前診断",
-            "purpose": "ビルド項目ごとのオブジェクト訪問回数から共有リソースを見つけ、単一インスタンス編集にコピーオンライトが必要かを報告します。実際の書き換えは行いません。",
+            "name": "ネイティブ3MF配置監査",
+            "purpose": "build/component変換を合成し、メッシュ配置とmm単位の境界情報を算出する。複数モデル部品の単位が異なる場合は処理を拒否する。",
+            "evidence": [
+              "scripts/audit_native_3mf_instance_placement.py"
+            ]
+          },
+          {
+            "name": "3MF編集所有権プリフライト",
+            "purpose": "ビルド項目からオブジェクトの訪問回数を数え、共有リソースを一つのインスタンスだけ編集する場合のcopy-on-write必要性を報告する。実際の編集は行わない。",
             "evidence": [
               "scripts/audit_native_3mf_edit_ownership.py"
             ]
           },
           {
-            "name": "ブラウザ表示変換履歴とカメラ補助",
-            "purpose": "表示モデルの変換履歴管理、カメラのフィット距離・向きの補助に使う関数がUIから読み込まれています。実装詳細や他形式への適用範囲は提示情報だけでは未確認です。",
-            "evidence": [
-              "app.js",
-              "scripts/prepare-camera-fit.mjs",
-              "scripts/prepare-viewer-transform-history.mjs"
-            ]
-          },
-          {
             "name": "OrcaWasm v2.5.0適応スクリプト",
-            "purpose": "使い捨ての上流チェックアウトに対するパッチャーの差分適用と、WASM対象外のデスクトップ依存部分の除外を行います。想定外のソース構造では停止する設計です。",
+            "purpose": "上流パッチャーをv2.5.0のソース構成に合わせる。期待する変更箇所がない場合に停止するガードや、WASM対象外機能の除外を含む。",
             "evidence": [
               "scripts/adapt-orcawasm-v2.5.0.py"
             ]
           }
         ],
         "constraints": [
-          "READMEによると、WASMエンジン候補のビルドと限定的なAPI適合・スモークテストは済んでいますが、デスクトップ機能全体との同等性やブラウザ公開準備を示すものではありません。",
-          "UIは現状、選択したファイルの一覧表示などにとどまり、モデル形状の読込・表示、プロファイル読込、WASM呼び出し、スライスは未接続です。",
-          "READMEに記載された既知の不足には、完全な3MF意味論ラウンドトリップ、ネイティブ版とWASM版のG-code同等性、GUI等の機能があります。",
-          "マルチスレッドWASM候補はSharedArrayBufferとクロスオリジン分離を必要とし、GitHub Pagesでの実ブラウザ互換性は未検証です。",
-          "提示された抜粋は一部ファイルに限られるため、各監査スクリプトの全対応範囲や本番運用状況は確認できません。"
+          "READMEによればブラウザーUIはWASMエンジン、プロファイル、スライサーに未接続で、完全なデスクトップ機能互換性も確認されていません。",
+          "GitHub Pagesで必要なSharedArrayBuffer用クロスオリジン分離の実運用は未検証です。",
+          "3MF監査はCore形式の限定的な範囲であり、ベンダー固有メタデータや完全なセマンティック往復を保証しません。",
+          "一部スクリプトがimportする補助モジュールの実装は、提示されたファイル一覧・抜粋から確認できません。"
         ],
         "maturity": "実験",
         "confidence": "medium",
@@ -12298,7 +12287,9 @@
           "scripts/audit_3mf_scene.py",
           "scripts/audit_native_3mf_instance_placement.py",
           "scripts/audit_native_3mf_edit_ownership.py",
-          "scripts/adapt-orcawasm-v2.5.0.py"
+          "scripts/adapt-orcawasm-v2.5.0.py",
+          ".github/workflows/build-wasm-candidate.yml",
+          ".github/workflows/browser-e2e.yml"
         ]
       }
     },
@@ -12525,20 +12516,33 @@
     "temesotejam/pcb-workbench": {
       "url": "https://github.com/temesotejam/pcb-workbench",
       "default_branch": "main",
-      "pushed_at": "2026-11-25T01:58:11Z",
+      "pushed_at": "2026-11-25T10:34:01Z",
       "available_paths": [
         ".github",
         ".github/workflows",
         ".github/workflows/build.yml",
+        ".github/workflows/manufacturing.yml",
         ".gitignore",
         "README.md",
+        "agent",
+        "agent/bridge.mjs",
+        "agent/bridge.test.mjs",
+        "agent/engine.mjs",
+        "agent/engine.test.mjs",
+        "agent/server.mjs",
         "docs",
+        "docs/JLCPCB-EXPORT.md",
+        "docs/NUCLEO-HANDOFF-AUDIT.md",
         "docs/PARTS.md",
         "docs/ROADMAP.md",
         "library",
         "library/catalog.json",
         "library/catalog.test.ts",
         "library/footprints.ts",
+        "library/handoff-core.mjs",
+        "library/handoff-core.test.ts",
+        "library/native-patch.mjs",
+        "library/native-patch.test.ts",
         "library/parts.tsx",
         "package.json",
         "projects",
@@ -12547,112 +12551,141 @@
         "projects/demo/project.json",
         "scripts",
         "scripts/build.tsx",
+        "scripts/easyeda_native.py",
         "scripts/fabricate.py",
         "site",
         "site/app.js",
         "site/catalog.js",
+        "site/handoff-entry.js",
+        "site/handoff.css",
+        "site/handoff.html",
         "site/index.html",
         "site/style.css",
+        "start-workbench.ps1",
         "tests",
         "tests/test_assembly.py",
         "tsconfig.json"
       ],
       "recent_commits": [
         {
-          "sha": "9639e804",
-          "message": "Configure exact EasyEDA footprint resolver and regression tests"
+          "sha": "fcbc0dfd",
+          "message": "Include ERC, DRC and validation diagnostics in draft manufacturing artifact"
         },
         {
-          "sha": "a1fe9cde",
-          "message": "Make JLCPCB catalog the source of part identity and expose searchable web library"
+          "sha": "e02fc347",
+          "message": "Test common KiCad Edge_Cuts Gerber profile output"
         },
         {
-          "sha": "7e3dff92",
-          "message": "Fix missing polygon-clipping dependency in KiCad converter"
+          "sha": "b28a80d1",
+          "message": "Accept common Gerber profile layer naming variants"
         }
       ],
       "archived": false,
-      "fingerprint": "2a1983e5c875d9e963bd9d83d533cdeb5192c4feb13a706a5b9357dce892186e",
-      "analyzed_at": "2026-11-25T02:42:01.361Z",
+      "fingerprint": "25b69eaefe999dbe836059c65a99470bbaf15aa9077a755ad36c802f5d981e51",
+      "analyzed_at": "2026-11-26T01:54:25.137Z",
       "profile": {
-        "purpose": "ブラウザーで設計を確認し、KiCadによる検証とJLCPCB向け製造データのドラフト生成を行うワークベンチ。READMEでは発注準備未完了と明記されている。",
-        "architecture": "プロジェクトのtscircuit設計ソースと部品メタデータからCircuit JSON、回路図・基板プレビュー、KiCadファイルを生成する。KiCad CLIでERC・DRCと製造エクスポートを行い、PythonでBOM/CPL等を作成する。静的ブラウザー画面で設計・レポートを閲覧する。",
+        "purpose": "ブラウザー上でPCB設計の確認・限定編集を行い、EasyEDA Proとのローカル連携やJLCPCB向けレビュー用出力を支援するツールです。製造発注の自動化や製造可否の保証は目的に含まれません。",
+        "architecture": "静的Web UIからローカルNode.jsエージェントに接続し、EasyEDA ProのBridge経由で設計を検証・編集する構成です。ライブラリには部品カタログ、フットプリント取得、ハンドオフ検証、ネイティブファイルの限定パッチ処理が分かれています。製造用出力はレビュー専用として扱われます。",
         "technologies": [
-          "Python",
-          "TypeScript/TSX",
-          "Bun",
-          "tscircuit",
-          "Circuit JSON",
-          "KiCad CLI",
-          "EasyEDA部品データ変換",
-          "GitHub Actions",
-          "ブラウザーJavaScript"
+          "JavaScript",
+          "TypeScript",
+          "Node.js",
+          "EasyEDA Pro API Gateway / Bridge Server",
+          "EasyEDA部品データからCircuit JSONへの変換",
+          "SHA-256",
+          "CSV、JSON、ZIP",
+          "KiCad CLIによる記載上の製造検証"
         ],
         "algorithms": [
-          "登録済みLCSC番号との照合と、部品参照・供給元番号・物理パッドの整合性検証",
-          "部品番号ごとのEasyEDA取得結果をPromiseキャッシュし、返却された部品番号を照合",
-          "BOMとKiCad配置データの部品参照一致、重複、座標・回転値の有限性を検証",
-          "配置回転にオフセットを加算し、0〜360度に正規化してCPLを生成"
+          "ハンドオフアーカイブのマニフェスト照合とSHA-256検証",
+          "ネイティブ設計ファイルを文書ID・レコードIDで特定し、旧値と基準ハッシュを照合して限定的に変更する方式",
+          "パッチ適用後の読戻し・再読込確認と失敗時のロールバック",
+          "部品の製造元部品番号・フットプリント・ソース設計との整合性検査",
+          "BOM/CPLの参照整合性確認と製造出力ファイルのハッシュ記録"
         ],
-        "hardware": [],
+        "hardware": [
+          "NUCLEO-F401REの上下基板設計を対象として記載（実機検証済みとは確認できない）",
+          "2抵抗の統合テスト用クーポンを記載（物理基板の存在は確認できない）"
+        ],
         "interfaces": [
-          "ブラウザーの設計プレビュー、部品カタログ、検証レポート",
-          "KiCad CLIによるERC・DRC・Gerber・ドリル・配置データの入出力",
-          "EasyEDA部品取得と外部部品検索API",
-          "JLCPCB向けGerber ZIP、BOM CSV、CPL CSVのドラフト"
+          "ブラウザーUI: handoff.html",
+          "EasyEDA ProローカルBridge接続",
+          "JSON形式のガード付きネイティブ設計パッチ",
+          "CSV形式のBOM/CPL",
+          "Gerber ZIP、任意のSTEP/ネットリスト、JSONマニフェストを含むレビュー用ZIP",
+          "ローカルWebサーバー（README記載では127.0.0.1:8787）"
         ],
         "reusable_components": [
           {
-            "name": "resolveParts / assertSourceParity",
-            "purpose": "部品カタログの同定、参照番号の重複やサプライヤー番号の不一致、物理パッド不足を検出する。",
+            "name": "ネイティブ設計パッチ適用・検査",
+            "purpose": "対象ファイルのSHA-256、レコード識別子、変更前値を照合して許可された設計データだけを変更し、古い検証結果を無効化します。",
             "evidence": [
+              "library/native-patch.mjs",
+              "library/native-patch.test.ts"
+            ]
+          },
+          {
+            "name": "ハンドオフ検証コア",
+            "purpose": "CSVを解析し、アーカイブ内の選択ファイル・ネイティブ文書・マニフェストハッシュを検証します。上側設計とのソースハッシュ照合もテストされています。",
+            "evidence": [
+              "library/handoff-core.mjs",
+              "library/handoff-core.test.ts"
+            ]
+          },
+          {
+            "name": "部品カタログとソース整合性検査",
+            "purpose": "登録済みLCSC番号を解決し、重複参照や部品番号不一致、物理パッド不足を検出します。",
+            "evidence": [
+              "library/parts.tsx",
+              "library/catalog.json",
               "library/catalog.test.ts"
             ]
           },
           {
-            "name": "jlcpcbFootprintResolver",
-            "purpose": "JLCPCB形式の部品番号を検証し、EasyEDAから正確な部品フットプリントを取得・変換する。番号不一致や使用可能なパッド不足はエラーにする。",
+            "name": "厳密なフットプリント取得",
+            "purpose": "登録済み部品番号でEasyEDA部品データを取得し、返却された部品番号とパッドの存在を確認します。汎用形状への代替はしません。",
             "evidence": [
               "library/footprints.ts"
             ]
           },
           {
-            "name": "assembly_rows",
-            "purpose": "部品表とKiCad配置の参照番号を照合し、配置位置・回転・基板面からJLCPCB向けBOM/CPL行と未確認事項を生成する。",
+            "name": "EasyEDAローカル連携エージェント",
+            "purpose": "ブラウザーのワークベンチとローカルEasyEDA連携を担う構成要素です。READMEでは設計保存、変更反映、読戻し検証を含む運用が説明されています。",
             "evidence": [
-              "scripts/fabricate.py"
-            ]
-          },
-          {
-            "name": "initCatalog / renderRows",
-            "purpose": "登録部品のローカル検索と外部検索結果の表示を行い、外部データを参考情報として区別する。",
-            "evidence": [
-              "site/catalog.js"
+              "agent/bridge.mjs",
+              "agent/engine.mjs",
+              "agent/server.mjs",
+              "agent/engine.test.mjs"
             ]
           }
         ],
         "constraints": [
-          "READMEでは現状を注文不可の試作段階としており、発注用の製造リリースは無効化されている。",
-          "部品の実在庫、実装可否、データシート、フットプリント、回転は別途確認が必要。",
-          "fabricate.pyは製造データをドラフトとして扱い、SMD以外の実装は未対応としてブロックする。",
-          "提示された抜粋だけでは、全工程の実行成功や生成ファイルの製造適合性は確認できない。"
+          "製造向け出力はDO_NOT_ORDERを含むレビュー専用で、発注可能状態を自動保証しません。",
+          "正確な部品在庫、適合性、フットプリント・ピン対応、配置角度や製造プレビューは別途確認が必要です。",
+          "トラックやビアのネット名検査は幾何学的なパッド接続を証明しません。",
+          "実際のNUCLEO基板に対する最新のEasyEDA Bridge検証や、稼働中Windows環境との連携結果は提示情報から確認できません。",
+          "EasyEDAの製造データAPIはREADMEでベータプレビューとされ、実セッションでの動作確認も未実施と記載されています。"
         ],
-        "maturity": "試作",
-        "confidence": "high",
+        "maturity": "ツール（製造出力はレビュー専用）",
+        "confidence": "medium",
         "evidence": [
           "README.md",
+          "library/native-patch.mjs",
+          "library/native-patch.test.ts",
+          "library/handoff-core.mjs",
+          "library/handoff-core.test.ts",
+          "library/parts.tsx",
+          "library/catalog.json",
           "library/catalog.test.ts",
           "library/footprints.ts",
-          "scripts/fabricate.py",
-          "site/catalog.js",
-          "site/app.js"
+          "agent/bridge.mjs"
         ]
       }
     },
     "temesotejam/matlab-simulink-stm32-nucleo": {
       "url": "https://github.com/temesotejam/matlab-simulink-stm32-nucleo",
       "default_branch": "main",
-      "pushed_at": "2026-11-24T10:40:39Z",
+      "pushed_at": "2026-11-25T05:23:32Z",
       "available_paths": [
         ".gitignore",
         "README.md",
@@ -12664,10 +12697,16 @@
         "docs/images/cubemx-advanced-settings-layout.svg",
         "docs/setup-nucleo-f446re-r2026b.md",
         "docs/troubleshooting.md",
+        "downloads",
+        "downloads/nucleo_f446re_blink_project_r2026b.zip",
         "models",
         "models/README.md"
       ],
       "recent_commits": [
+        {
+          "sha": "6b26aa98",
+          "message": "feat: add downloadable NUCLEO-F446RE Simulink project package"
+        },
         {
           "sha": "7b14aca8",
           "message": "docs: add table of contents to full setup guide"
@@ -12675,80 +12714,149 @@
         {
           "sha": "087c08d9",
           "message": "docs: list Build options layout diagram"
-        },
-        {
-          "sha": "3d039137",
-          "message": "docs: add Build options screen layout diagram"
         }
       ],
       "archived": false,
-      "fingerprint": "83d4fccd2e2e3e0dffde2b2603c78c3abcde589ccac06f28032dde94aa88e425",
-      "analyzed_at": "2026-11-25T02:42:36.685Z",
+      "fingerprint": "99be553d35268f33d1dc4056b383de816481904d669e7355af81d77bcb63eb45",
+      "analyzed_at": "2026-11-26T01:54:45.208Z",
       "profile": {
-        "purpose": "MATLAB/SimulinkからSTM32 Nucleo向けのコードを生成・ビルドし、ST-LINK経由で実機へ書き込む環境の構築手順を記録するリポジトリ。",
-        "architecture": "READMEとセットアップ・トラブルシューティング文書が開発環境の構築から実機展開までを案内する構成。モデルとCubeMX設定の格納先は示されているが、実ファイルは未登録。",
+        "purpose": "MATLAB / Simulink から STM32 向けコードを生成し、ST-LINK 経由で NUCLEO-F446RE に書き込む環境構築手順と、LED 点滅プロジェクトを提供するリポジトリ。",
+        "architecture": "セットアップ・トラブル対応の文書、画面配置図、Simulink モデルと STM32CubeMX 設定を含む ZIP で構成。モデルからコードを生成・ビルドし、ST-LINK で実機へ書き込む流れが記載されている。",
         "technologies": [
           "MATLAB R2026b",
-          "Simulink R2026b",
-          "MATLAB Coder",
-          "Simulink Coder",
-          "Embedded Coder",
+          "Simulink",
           "STM32 Microcontroller Blockset",
           "STM32CubeMX 6.16.0",
-          "STM32CubeProgrammer 2.22.0",
           "GNU Tools for STM32",
-          "ST-LINK/V2-1"
+          "STM32CubeProgrammer"
         ],
-        "algorithms": [],
+        "algorithms": [
+          "Pulse Generator と STM32 Digital Port Write による LED の 1 秒 ON / 1 秒 OFF 制御"
+        ],
         "hardware": [
           "NUCLEO-F446RE",
           "STM32F446RETx / STM32F446xx",
-          "LD2（PA5）",
-          "ST-LINK/V2-1"
+          "ST-LINK/V2-1",
+          "LD2（PA5）"
         ],
         "interfaces": [
-          "SimulinkモデルからのCコード生成",
-          "ELF / HEX / BINのビルド",
-          "ST-LINK経由のSWD接続と実機書き込み"
+          "Simulink モデルからの C コード生成",
+          "GNU Arm Toolchain による ELF / HEX / BIN ビルド",
+          "ST-LINK 経由の SWD 書き込み",
+          "STM32CubeMX の IOC 設定ファイル"
         ],
         "reusable_components": [
           {
-            "name": "STM32向けセットアップ・実機展開手順",
-            "purpose": "ツールチェーン設定、CubeMX設定、コード生成、ビルド、書き込みまでの再現手順として利用できる。",
+            "name": "NUCLEO-F446RE LED 点滅 Simulink プロジェクト",
+            "purpose": "Pulse Generator と Digital Port Write を用いた、LED 点滅モデルおよび CubeMX 設定の再利用可能なサンプル。ZIP 内のファイル内容自体は提示されていないため、モデルの詳細設定は未確認。",
             "evidence": [
               "README.md",
-              "docs/setup-nucleo-f446re-r2026b.md"
+              "downloads/nucleo_f446re_blink_project_r2026b.zip"
             ]
           },
           {
-            "name": "接続トラブルシューティング記録",
-            "purpose": "環境構築や接続時の問題調査の参考資料として利用できる。個別の解決内容は文書の記載範囲で確認が必要。",
+            "name": "Simulink から実機へ展開する手順",
+            "purpose": "CubeMX IOC の相対パス指定、ビルド設定、ST-LINK 接続、Build, Deploy & Start までの手順を別の STM32 プロジェクトへ応用するための資料。",
             "evidence": [
+              "README.md",
+              "docs/setup-nucleo-f446re-r2026b.md",
               "docs/troubleshooting.md"
-            ]
-          },
-          {
-            "name": "CubeMX設定・ビルド画面のレイアウト図",
-            "purpose": "設定画面の操作箇所を確認する補助資料として再利用できる。",
-            "evidence": [
-              "docs/images/cubemx-advanced-settings-layout.svg",
-              "docs/images/build-options-layout.svg"
             ]
           }
         ],
         "constraints": [
-          "READMEによれば、動作確認に使ったSimulinkの.slxモデルとCubeMXの.ioc設定ファイルは未登録で、設定やモデルの直接再利用は確認できない。",
-          "動作確認の記述はREADMEに基づくもので、ソースコードやモデル実体による独立検証はできない。",
-          "確認対象として記載されているのはNUCLEO-F446REとMATLAB/Simulink R2026b環境であり、他のボードやバージョンへの適用は未確認。"
+          "提示された情報にソース抜粋はなく、モデルや IOC の内部設定・実装詳細は確認できない。",
+          "動作確認対象は記載上 NUCLEO-F446RE と特定の R2026b 開発環境。別ボードやバージョンでの互換性は未確認。",
+          "ZIP にコンパイル済みバイナリや開発ツール本体は含まれない。",
+          "書き込み設定では全 Flash 消去が有効と記載されており、既存データを保持する用途では設定確認が必要。"
         ],
-        "maturity": "教材",
+        "maturity": "試作",
         "confidence": "medium",
         "evidence": [
           "README.md",
           "docs/setup-nucleo-f446re-r2026b.md",
           "docs/troubleshooting.md",
-          "models/README.md",
-          "cubemx/README.md"
+          "downloads/nucleo_f446re_blink_project_r2026b.zip"
+        ]
+      }
+    },
+    "temesotejam/triple-formation-battle": {
+      "url": "https://github.com/temesotejam/triple-formation-battle",
+      "default_branch": "main",
+      "pushed_at": "2026-11-25T06:22:35Z",
+      "available_paths": [
+        ".github",
+        ".github/workflows",
+        ".github/workflows/pages.yml",
+        "README.md",
+        "index.html"
+      ],
+      "recent_commits": [
+        {
+          "sha": "c3b6288f",
+          "message": "Document swapped A and C arrow-key mapping"
+        },
+        {
+          "sha": "e1b5c6e1",
+          "message": "Swap A and C arrow-key formation inputs"
+        },
+        {
+          "sha": "ac9ed212",
+          "message": "Update controls documentation for arrow-key formation input"
+        }
+      ],
+      "archived": false,
+      "fingerprint": "00b455f780056a4064d4f9d1aa2654d95c39953659c1f97b30e1c76ff992e849",
+      "analyzed_at": "2026-11-26T01:54:35.060Z",
+      "profile": {
+        "purpose": "HTML5 Canvas上で編隊の分離・再編成と戦闘を試す、ブラウザー向けプロトタイプ。",
+        "architecture": "READMEによれば、ビルド工程や外部ランタイム依存のない単体HTMLゲームで、インラインJavaScriptを検証するGitHub ActionsワークフローからGitHub Pagesへ公開する構成。実際の実装は未確認。",
+        "technologies": [
+          "HTML",
+          "HTML5 Canvas",
+          "インラインJavaScript",
+          "GitHub Actions",
+          "GitHub Pages"
+        ],
+        "algorithms": [
+          "A・B・Cの6通りの順列を6種類の編隊形態へ対応付ける方式（README記載。実装詳細は未確認）",
+          "移動補助、分離・再編成、ダッシュを含む戦闘操作（README記載。アルゴリズム詳細は未確認）"
+        ],
+        "hardware": [],
+        "interfaces": [
+          "ブラウザー上のCanvasゲーム",
+          "キーボード操作（WASD、矢印キー、V、X、Shift、P）",
+          "敵をクリックして優先対象を選択"
+        ],
+        "reusable_components": [
+          {
+            "name": "順序依存の編隊選択方式",
+            "purpose": "A・B・Cの入力順を6種類の形態と戦闘役割へ対応させる設計。別ゲームの編隊・クラス選択にも応用できる可能性がある。具体的な関数やデータ構造は未確認。",
+            "evidence": [
+              "README.md"
+            ]
+          },
+          {
+            "name": "ビルド不要のCanvasゲーム公開構成",
+            "purpose": "単体HTMLをGitHub Actionsで検証し、リポジトリルートからGitHub Pagesへ公開する構成。小規模なブラウザー実験の雛形として再利用できる可能性がある。",
+            "evidence": [
+              "README.md",
+              ".github/workflows/pages.yml",
+              "index.html"
+            ]
+          }
+        ],
+        "constraints": [
+          "提示された情報にソース抜粋がなく、index.htmlやワークフローの実装内容・動作は確認できない。",
+          "操作やゲーム機能はREADMEの説明に基づき、実装済みかどうかは独立に検証できない。",
+          "依存関係、テスト内容、ブラウザー互換性は不明。"
+        ],
+        "maturity": "実験",
+        "confidence": "low",
+        "evidence": [
+          "README.md",
+          "index.html",
+          ".github/workflows/pages.yml"
         ]
       }
     }
