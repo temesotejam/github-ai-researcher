@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-26T01:58:21.656Z",
+  "generated_at": "2026-11-27T01:55:39.218Z",
   "owner": "temesotejam",
   "repository_count": 118,
   "profiles": {
@@ -306,7 +306,7 @@
     "temesotejam/github-tavern": {
       "url": "https://github.com/temesotejam/github-tavern",
       "default_branch": "main",
-      "pushed_at": "2026-11-25T21:50:40Z",
+      "pushed_at": "2026-11-26T21:43:12Z",
       "available_paths": [
         ".github",
         ".github/agents",
@@ -335,82 +335,90 @@
       ],
       "recent_commits": [
         {
-          "sha": "1e95023a",
+          "sha": "3ec3a7df",
           "message": "chore: refresh tavern summaries"
         },
         {
-          "sha": "c08f3c1c",
-          "message": "chore: refresh verified public pages"
+          "sha": "d865bf6f",
+          "message": "chore: refresh tavern summaries"
         },
         {
-          "sha": "e0b083ed",
+          "sha": "1e95023a",
           "message": "chore: refresh tavern summaries"
         }
       ],
       "archived": false,
-      "fingerprint": "7cf6e24151df8553ee396648d4f9f454e7bd6c01eab53575a40d24d9a70b147c",
-      "analyzed_at": "2026-11-26T01:53:44.572Z",
+      "fingerprint": "2a34c6bd3953a1e03decbe631014e6b743e85625cc4bbc52a1956b5b2ba262e5",
+      "analyzed_at": "2026-11-27T01:51:39.936Z",
       "profile": {
-        "purpose": "公開GitHubリポジトリを検索・閲覧する個人向けポータル。酒場風の画面で、リポジトリの概要や説明を表示する。",
-        "architecture": "GitHub Pagesで配信する静的Webアプリ。ブラウザー側のJavaScriptがリポジトリ情報やJSONデータを扱い、補助クライアントがREADME由来の説明や詳細画面の表示を補う。サマリーと公開ページ情報を更新するスクリプトおよびGitHub Actionsワークフローもファイルツリーにある。",
+        "purpose": "公開GitHubリポジトリを検索・分類・閲覧する個人向けの静的ポータル。READMEでは対象をtemesotejam所有の公開リポジトリと説明している。",
+        "architecture": "ブラウザー側のJavaScriptがリポジトリ情報を扱い、HTML/CSSで一覧・詳細画面を表示する構成。説明文や公開ページ情報はJSONファイルから読み込む。READMEによればGitHub Actionsで要約データを更新し、GitHub Pagesで公開する。",
         "technologies": [
           "JavaScript",
           "HTML",
           "CSS",
+          "Fetch API",
+          "MutationObserver",
+          "AbortController",
           "GitHub API",
-          "GitHub Pages",
-          "GitHub Actions"
+          "GitHub Pages（README記載）",
+          "GitHub Actions（README記載）"
         ],
         "algorithms": [
-          "キーワード規則によるリポジトリの技術領域分類",
-          "Markdownを整形してREADMEから短い説明文を抽出",
-          "最大6件の並行処理キューによるREADME取得",
-          "MutationObserverによるDOM変更検知",
-          "定型置換による日本語説明文の口語化"
+          "名前・説明・言語・Topics・要約に対するキーワード検索と、キーワード規則による優先順位付きカテゴリ分類",
+          "README Markdownの不要部分除去、文分割、ノイズ除外、長さ制限によるカード用プレビュー生成",
+          "カードのREADME取得を最大6件並行で処理するキュー方式",
+          "日本語の説明文を正規表現で口語調に変換するルールベース処理"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザーUI",
-          "GitHub API",
-          "raw.githubusercontent.com上のREADME",
-          "data/summaries.json",
-          "data/public-pages.json"
+          "ブラウザー上の検索・カテゴリ選択・リポジトリ詳細UI",
+          "GitHub APIおよびraw.githubusercontent.comからの読み取り",
+          "data/summaries.jsonとdata/public-pages.jsonのJSONデータ",
+          "GitHub Pagesによる静的公開（README記載）"
         ],
         "reusable_components": [
           {
-            "name": "README説明文の抽出とカード更新",
-            "purpose": "READMEのMarkdown記法やノイズを除き、短いプレビューを生成してカードに反映する。キャッシュ、重複排除、並行数制限も備える。",
-            "evidence": [
-              "card-enricher.js"
-            ]
-          },
-          {
-            "name": "キーワードベース分類と検索対象テキストの構成",
-            "purpose": "リポジトリ情報とサマリーを結合して検索対象を作り、規則に基づいて技術カテゴリを決める。",
+            "name": "categoryOf / textFor",
+            "purpose": "リポジトリの名前、説明、言語、Topics、要約をまとめ、キーワード規則でカテゴリを割り当てる。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "公開ページURLの検証と表示制御",
-            "purpose": "HTTPまたはHTTPSのURLだけを採用し、選択中リポジトリに対応するリンクを表示・非表示にする。",
+            "name": "cleanMarkdown / shortPreview",
+            "purpose": "README Markdownからコード、画像、リンク等を除去し、短い説明文を抽出する。",
+            "evidence": [
+              "card-enricher.js"
+            ]
+          },
+          {
+            "name": "README取得キュー",
+            "purpose": "README取得結果をキャッシュし、同時取得数を6件に制限してカードへ反映する。",
+            "evidence": [
+              "card-enricher.js"
+            ]
+          },
+          {
+            "name": "validEntry",
+            "purpose": "公開ページのURLを解析し、HTTP/HTTPS以外のプロトコルを除外する。",
             "evidence": [
               "public-pages-client.js"
             ]
           },
           {
-            "name": "説明文の口語変換",
-            "purpose": "定型表現を置換する純粋変換関数を提供し、詳細説明のDOM変更にも適用する。",
+            "name": "spokenize",
+            "purpose": "技術説明の日本語表現をルールベースで口語調に変換する。純粋変換関数として公開され、CIで実例を実行できる旨の記述がある。",
             "evidence": [
               "spoken-overview-client.js"
             ]
           }
         ],
         "constraints": [
-          "分類は定義済みキーワードに依存する。",
-          "README取得はmain/masterとREADMEの一般的な大文字小文字の組み合わせを試す実装で、他の配置は確認できない。",
-          "所有者名や対象リポジトリ名がクライアントコードに固定されている。",
-          "サマリー生成・公開ページ更新の具体的な処理やデータ形式の全容は、提示されたソース抜粋だけでは確認できない。"
+          "公開された抜粋はapp.jsの一部のみで、検索・描画・API取得の全実装は確認できない。",
+          "ワークフローや更新スクリプトの内容は提示されていないため、自動要約生成の実際の処理や権限設定はREADMEの説明以上には確認できない。",
+          "README取得はmain/masterとREADMEの一般的な大小文字表記を試す実装で、他の配置やブランチへの対応は確認できない。",
+          "カテゴリ分類と日本語変換は固定キーワード・正規表現に依存する。"
         ],
         "maturity": "ツール",
         "confidence": "medium",
@@ -420,18 +428,18 @@
           "card-enricher.js",
           "public-pages-client.js",
           "spoken-overview-client.js",
+          "data/summaries.json",
+          "data/public-pages.json",
           "scripts/update-summaries.mjs",
           "scripts/update-public-pages.mjs",
-          ".github/workflows/copilot-summaries.yml",
-          ".github/workflows/public-pages.yml",
-          "data/summaries.json"
+          ".github/workflows/copilot-summaries.yml"
         ]
       }
     },
     "temesotejam/2026_10_24": {
       "url": "https://github.com/temesotejam/2026_10_24",
       "default_branch": "main",
-      "pushed_at": "2026-11-25T21:38:08Z",
+      "pushed_at": "2026-11-26T21:27:16Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -448,89 +456,99 @@
       ],
       "recent_commits": [
         {
+          "sha": "2c49a24d",
+          "message": "Update automatic news feed"
+        },
+        {
+          "sha": "5ee26204",
+          "message": "Update automatic news feed"
+        },
+        {
           "sha": "68f326f1",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "3ada37f6",
-          "message": "Update automatic news feed"
-        },
-        {
-          "sha": "801c74cb",
           "message": "Update automatic news feed"
         }
       ],
       "archived": false,
-      "fingerprint": "ed92ac454d4de9fc0a41a5a28b4a0ea2eae480206850e0e2638b75f9dbe12d90",
-      "analyzed_at": "2026-11-26T01:53:56.170Z",
+      "fingerprint": "d3c3bba891ef228850283a154f59668a6e33cccd47d206dc963d66b8375a3a2f",
+      "analyzed_at": "2026-11-27T01:51:52.019Z",
       "profile": {
-        "purpose": "ニュース見出しや利用者入力を題材に、現象を仲間にしながら3階からの脱出を目指す一人用探索ゲーム。",
-        "architecture": "GitHub Pagesで配信するブラウザーゲーム。app.jsがCanvas描画とゲーム状態を扱い、data/news.jsonを読み込む。READMEによればGitHub Actionsが公開RSSからニュースデータを定期更新する。",
+        "purpose": "ニュースや入力した出来事を迷宮のテーマに取り込む、ブラウザー向け一人用探索ゲームです。",
+        "architecture": "静的なHTML・CSS・JavaScript構成です。app.jsがCanvas描画とゲーム処理を担い、data/news.jsonから自動収集ニュースを読み込みます。READMEではGitHub Actionsによる6時間ごとのRSS取得とGitHub Pagesでの公開が説明されています。",
         "technologies": [
           "JavaScript",
           "HTML Canvas",
+          "CSS",
           "Fetch API",
           "localStorage",
           "GitHub Actions",
-          "RSS",
-          "GitHub Pages"
+          "RSS"
         ],
         "algorithms": [
-          "プレイヤーの1行動ごとに仲間と敵が各1回行動するターン進行（README記載）。",
-          "ニュースの選別に見出し・配信元の正規表現フィルターを使用。",
-          "日付を数値化し、ニュース配列の剰余で初期ニュースを選択。"
+          "マンハッタン距離による座標間距離計算",
+          "乱数による選択",
+          "日付を使ったニュース項目の選択",
+          "プレイヤーの行動ごとに仲間・敵も行動するターン制（README記載）"
         ],
         "hardware": [],
         "interfaces": [
-          "キーボード（矢印キー/WASD）と画面上の方向ボタン",
-          "Canvasによるゲーム表示",
-          "data/news.jsonのJSONニュースデータ",
-          "localStorageキー「reality-dungeon-seed」に保存する利用者入力",
-          "記事のRSS見出し・配信元・日時・出典リンクの表示"
+          "ブラウザー画面・Canvas",
+          "矢印キー、WASD、画面上の方向ボタン（README記載）",
+          "data/news.jsonのJSONデータ",
+          "公開RSSの取得（README記載）",
+          "HTTP/HTTPSのニュース出典URL"
         ],
         "reusable_components": [
           {
-            "name": "safeHttpUrl(value)",
+            "name": "safeHttpUrl",
             "purpose": "URLを解析し、HTTP/HTTPS以外のスキームを除外する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "esc(v)",
-            "purpose": "文字列中のHTML特殊文字をエスケープする。",
+            "name": "loadAutomaticNews",
+            "purpose": "ニュースJSONの取得、カテゴリ・見出し・出典のフィルタリングと項目整形を行う。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "loadAutomaticNews()",
-            "purpose": "JSONニュースを取得し、カテゴリ・見出し・配信元をフィルターしたうえでゲーム用データへ整形する。",
+            "name": "savedSeed",
+            "purpose": "localStorageから保存済みデータを読み込み、出典URLを検証する。",
             "evidence": [
               "app.js"
             ]
           },
           {
-            "name": "renderAutomaticNews()",
-            "purpose": "自動収集ニュースをDOM要素として一覧表示し、選択時にゲーム開始へつなぐ。",
+            "name": "renderAutomaticNews",
+            "purpose": "取得したニュースをDOM要素として一覧表示し、選択操作を登録する。",
+            "evidence": [
+              "app.js"
+            ]
+          },
+          {
+            "name": "dist",
+            "purpose": "グリッド座標間のマンハッタン距離を計算する。",
             "evidence": [
               "app.js"
             ]
           }
         ],
         "constraints": [
-          "提示されたソース抜粋はapp.jsの一部のみで、ゲーム生成・戦闘・階移動の詳細実装は確認できない。",
-          "ニュースの除外は見出し・配信元のパターン照合であり、記事本文の事実確認を行う実装は確認できない。READMEも記事本文を確認済みとは表示しないとしている。",
-          "RSS取得・JSON生成の具体的な処理や失敗時の実装は提示情報から確認できない。"
+          "確認できるapp.jsの抜粋は一部のため、迷宮生成・戦闘・描画の具体的な実装詳細は未確認です。",
+          "ニュース見出しのキーワード除外はコード上で確認できますが、誤検出・見逃しの精度は不明です。",
+          "ニュース取得やJSON解析が失敗した場合、コードでは自動ニュース一覧を空にします。READMEには更新失敗時に直前のデータを保持するとありますが、その仕組みの詳細は未確認です。",
+          "RSS取得ワークフローおよびdata/news.jsonの全スキーマは、提示された内容だけでは確認できません。"
         ],
         "maturity": "試作",
         "confidence": "medium",
         "evidence": [
           "README.md",
           "app.js",
-          ".github/workflows/news.yml",
           "data/news.json",
+          ".github/workflows/news.yml",
           "index.html",
+          "styles.css",
           "scripts/fetch-news.mjs"
         ]
       }
@@ -1130,7 +1148,7 @@
     "temesotejam/spike-rt-web-toolkit": {
       "url": "https://github.com/temesotejam/spike-rt-web-toolkit",
       "default_branch": "main",
-      "pushed_at": "2026-11-22T11:04:23Z",
+      "pushed_at": "2026-11-26T07:26:39Z",
       "available_paths": [
         ".github",
         ".github/scripts",
@@ -1180,11 +1198,15 @@
         "apps/assignments/PID_Line_Tracer/PID_Line_Tracer.h",
         "apps/assignments/PID_Line_Tracer/project.json",
         "apps/assignments/PID_Line_Tracer_V2",
+        "apps/assignments/PID_Line_Tracer_V2/COMPETITION_RULES_2026.md",
         "apps/assignments/PID_Line_Tracer_V2/Makefile.inc",
         "apps/assignments/PID_Line_Tracer_V2/PID_Line_Tracer_V2.c",
         "apps/assignments/PID_Line_Tracer_V2/PID_Line_Tracer_V2.cdl",
         "apps/assignments/PID_Line_Tracer_V2/PID_Line_Tracer_V2.cfg",
         "apps/assignments/PID_Line_Tracer_V2/PID_Line_Tracer_V2.h",
+        "apps/assignments/PID_Line_Tracer_V2/images",
+        "apps/assignments/PID_Line_Tracer_V2/images/competition_front_LR.png",
+        "apps/assignments/PID_Line_Tracer_V2/images/competition_rear_LR.png",
         "apps/assignments/PID_Line_Tracer_V2/project.json",
         "apps/assignments/PID_Line_Tracer_V2/usb_serial.c",
         "apps/assignments/README.md",
@@ -1327,35 +1349,31 @@
         "apps/pd_M_S1/pd_M_S1.cfg",
         "apps/pd_M_S1/pd_M_S1.h",
         "apps/pd_M_S1/project.json",
-        "apps/pd_M_S2",
-        "apps/pd_M_S2/M_S2.h",
-        "apps/pd_M_S2/pd_M_S2.c",
-        "apps/pd_M_S2/pd_M_S2.cdl",
-        "apps/pd_M_S2/pd_M_S2.cfg"
+        "apps/pd_M_S2"
       ],
       "recent_commits": [
         {
-          "sha": "84a5890b",
-          "message": "fix(pid-v2): specify force press event type"
+          "sha": "47bf2544",
+          "message": "Fix truncated line trace diagnostic log fields"
         },
         {
-          "sha": "6fb334f1",
-          "message": "fix(pid-v2): declare long-press helper before USB export and document exit"
+          "sha": "258371bf",
+          "message": "Fix renamed encoder diagnostic tick counter"
         },
         {
-          "sha": "c8b3fb7b",
-          "message": "fix(pid-v2): honor force sensor long press during USB export"
+          "sha": "a24f315c",
+          "message": "Align PID V2 comments and debounce documentation"
         }
       ],
       "archived": false,
-      "fingerprint": "66f24fca81ffc77caf675248409574667562bb8938b0c3270a2936707d83210b",
-      "analyzed_at": "2026-11-22T23:43:47.008Z",
+      "fingerprint": "a4cdbc507d1cea38478cc5b70eb30d486188204ce26ce9b1faab91b8d625fd7f",
+      "analyzed_at": "2026-11-27T01:52:04.273Z",
       "profile": {
-        "purpose": "SPIKE-RTアプリをブラウザーで編集・ビルド・Hubへ書き込み、USBシリアルログを確認するためのツールキット。",
-        "architecture": "apps/以下のCアプリをGitHub Actionsでビルドし、成果物をGitHub Pagesへ公開する。ブラウザーからWebUSB/DFUでHubに書き込み、Web Serialで実行ログを表示する。変更のないアプリのファームウェアはハッシュ確認後に再利用する構成と説明されている。",
+        "purpose": "SPIKE-RTアプリの編集、GitHub Actionsでのビルド、GitHub Pages経由のSPIKE Prime Hubへの書き込みとUSBシリアルログ確認を行うWebツールキット。",
+        "architecture": "apps/以下のCアプリをActionsでビルドし、ファームウェアとカタログをPagesへ公開。ブラウザ側はWebUSB/DFUで書き込み、Web Serialでログを表示する構成。READMEでは差分ビルドと成果物キャッシュも説明されている。",
         "technologies": [
           "C",
-          "Python（GitHub Actionsスクリプト）",
+          "Python",
           "SPIKE-RT v0.2.0",
           "GitHub Actions",
           "GitHub Pages",
@@ -1365,74 +1383,69 @@
           "SHA-256"
         ],
         "algorithms": [
-          "左右カラーセンサーの反射光差を使うPIDライントレース。ゲインはkp=1.0、ki=0.1、kd=0.1、周期は10 ms。",
-          "フォースセンサー入力を2サンプル連続確認するデバウンス処理。",
-          "アプリのソースと設定のSHA-256に基づく差分ビルド・成果物再利用。"
+          "PID制御（比例・積分・微分項を使用、制御周期10 msとして定義）",
+          "押下・解放を連続サンプルで判定するデバウンス",
+          "アプリのソースと設定のSHA-256に基づく差分ビルド・成果物再利用"
         ],
         "hardware": [
           "LEGO SPIKE Prime Hub",
-          "SPIKE Hubのモーター、カラーセンサー、フォースセンサー",
-          "PIDサンプルの接続例: モーターA/E、カラーセンサーB/F、フォースセンサーC"
+          "PUPモーター",
+          "カラーセンサー",
+          "フォースセンサー"
         ],
         "interfaces": [
-          "ブラウザー上のWebUSBによるDFUファームウェア書き込み",
-          "ブラウザー上のWeb Serialによる115200 bpsログ表示",
-          "アプリ入力形式: apps/<app>/<app>.c。任意で.h、.cfg、.cdl、project.jsonを配置",
-          "GitHub Actionsの課題作成ワークフロー"
+          "WebUSBによるDFUファームウェア書き込み（ロード先0x08008000）",
+          "Web Serialによる115200 bpsのログ表示",
+          "SPIKE-RTのmain_task()エントリポイント",
+          "apps/<app>/<app>.cおよび任意のproject.jsonによるアプリ追加"
         ],
         "reusable_components": [
           {
-            "name": "PID_Line_Tracer",
-            "purpose": "2つのカラーセンサーによるPIDライントレース例。モーター・センサー初期化、異常時停止、フォースセンサーによる開始/停止切替を含む。機体固有のポート割当やSPIKE-RT APIへの適応が必要。",
+            "name": "PIDライントレーサーとフォースセンサー操作",
+            "purpose": "左右カラーセンサーの反射光差を使うPID制御例。A/Eモーター、B/Dカラーセンサー、Cフォースセンサーの割り当てと、押下・解放判定、モーター初期化の例を含む。",
             "evidence": [
               "apps/assignments/PID_Line_Tracer/PID_Line_Tracer.c",
               "apps/assignments/PID_Line_Tracer/PID_Line_Tracer.h"
             ]
           },
           {
-            "name": "usb_serial.cの出力アダプター",
-            "purpose": "low_putchar()からSPIKE-RTのUSB標準出力関数pbsys_usb_stdout_put_char()へ1文字を渡す薄いアダプター。シリアル出力接続の参考にできる。",
+            "name": "周期制御タスクの宣言例",
+            "purpose": "制御タスクとtick handlerの関数宣言を含むヘッダー。周期制御を組み込む際の構成例として再利用できるが、実装詳細は提示資料から確認できない。",
+            "evidence": [
+              "apps/assignments/PID_Line_Tracer_V2/PID_Line_Tracer_V2.h"
+            ]
+          },
+          {
+            "name": "USBシリアル文字出力アダプター",
+            "purpose": "low_putcharからSPIKE-RTのUSB標準出力関数へ文字を渡す小さな接続層。",
             "evidence": [
               "apps/assignments/PID_Line_Tracer_V2/usb_serial.c"
             ]
           },
           {
-            "name": "アプリ追加の最小構成",
-            "purpose": "フォルダー名と同じ名前のCファイルを置く構成。標準の.h/.cfg/.cdl生成や任意のproject.jsonによる表示情報付与を利用できる。",
+            "name": "差分ビルド・ファームウェア再利用フロー",
+            "purpose": "変更のあったアプリだけをビルドし、未変更の成果物を検証して再利用する仕組み。設定やキャッシュの変更時に全再ビルドする条件もREADMEに記載されている。",
             "evidence": [
-              "README.md"
-            ]
-          },
-          {
-            "name": "差分ビルドと課題作成の自動化",
-            "purpose": "ハッシュを使った変更アプリの選別、成果物再利用、サンプルからの課題作成を実現する構成。各スクリプトの詳細な入出力やエラー処理は提示情報だけでは確認できない。",
-            "evidence": [
-              ".github/scripts/incremental-firmware.py",
-              ".github/scripts/create-assignment.py",
-              ".github/workflows/build-and-deploy.yml",
-              ".github/workflows/create-assignment.yml"
+              "README.md",
+              ".github/workflows/build-and-deploy.yml"
             ]
           }
         ],
         "constraints": [
-          "WebUSB書き込み先はREADMEでSPIKE Prime HubのDFUモードに限定され、load addressは0x08008000、boot addressは0x08000000、最大サイズは992 KiBとされている。",
-          "Web Serialは115200 bpsでポートを開き、VID/PIDで候補を絞らない仕様と説明されている。",
-          "差分ビルドのキャッシュが消失・破損・期限切れの場合は再ビルドが必要。",
-          "PIDサンプルの制御ループ全体やPID_Line_Tracer_V2の実装は提示抜粋で確認できず、挙動の全容は未確認。",
-          "README記載の実機確認状況は説明上の情報であり、この分析では独立に検証していない。"
+          "PID制御の実機性能やセンサー校正条件は提示資料から確認できない。",
+          "PID_Line_Tracer.cの提示内容は一部抜粋のため、制御ループ全体の動作は確認できない。",
+          "READMEによれば、WindowsでWinUSB未設定時の新規ドライバー割り当て経路は最終実機確認待ち。",
+          "ファームウェア再利用はGitHub Actionsキャッシュに依存し、キャッシュ消失後は再ビルドが必要。"
         ],
         "maturity": "ツール",
-        "confidence": "medium",
+        "confidence": "low",
         "evidence": [
           "README.md",
           "apps/assignments/PID_Line_Tracer/PID_Line_Tracer.c",
           "apps/assignments/PID_Line_Tracer/PID_Line_Tracer.h",
           "apps/assignments/PID_Line_Tracer_V2/PID_Line_Tracer_V2.h",
           "apps/assignments/PID_Line_Tracer_V2/usb_serial.c",
-          ".github/scripts/incremental-firmware.py",
-          ".github/scripts/create-assignment.py",
-          ".github/workflows/build-and-deploy.yml",
-          ".github/workflows/create-assignment.yml"
+          ".github/workflows/build-and-deploy.yml"
         ]
       }
     },
@@ -12002,7 +12015,7 @@
     "temesotejam/layer-workbench": {
       "url": "https://github.com/temesotejam/layer-workbench",
       "default_branch": "main",
-      "pushed_at": "2026-11-26T01:07:08Z",
+      "pushed_at": "2026-11-27T01:18:41Z",
       "available_paths": [
         ".github",
         ".github/workflows",
@@ -12090,6 +12103,7 @@
         "scripts/edit_native_3mf_build_transform.py",
         "scripts/export-bridge-arch-stl.mjs",
         "scripts/export_core_fixture_facets.py",
+        "scripts/fan_request_diagnostic.py",
         "scripts/fetch-upstream-v250-fixture.py",
         "scripts/fetch-upstream-v250-multi-vendor-fixture.py",
         "scripts/gap-ring-fixture.mjs",
@@ -12202,94 +12216,106 @@
         "scripts/test-process-preset-inheritance.mjs",
         "scripts/test-process-profile-unit.mjs",
         "scripts/test-process-profile.mjs",
-        "scripts/test-slice-stl-process-application.mjs",
-        "scripts/test-support-extrusion-diagnostic.mjs"
+        "scripts/test-slice-stl-process-application.mjs"
       ],
       "recent_commits": [
         {
-          "sha": "4c816140",
-          "message": "Prepare: recover failed greedy viewer arrangements with bounded alternate orders (#249)"
+          "sha": "cb8b145b",
+          "message": "Support and verify restricted single-slot native top surface flow (#273)"
         },
         {
-          "sha": "24c9f152",
-          "message": "Prepare: greedy arrange all loose meshes with atomic viewer history (#245)"
+          "sha": "c8d28dbc",
+          "message": "Support and verify bounded native bottom surface flow ratio (#272)"
         },
         {
-          "sha": "694f0bd9",
-          "message": "Merge pull request #244 from temesotejam/ui/prepare-find-space-20261125"
+          "sha": "4502b7b9",
+          "message": "Support and verify isolated native sparse infill combination height cap (#271)"
         }
       ],
       "archived": false,
-      "fingerprint": "e54489c3d47f85103d9a2d6a2a6a5868568083c868c3335679cbc0f37c49e22f",
-      "analyzed_at": "2026-11-26T01:53:31.735Z",
+      "fingerprint": "8cb14a16e7aaec5d2f840221c2106104b6b7f1392a6a2cb971d0bd19c736f552",
+      "analyzed_at": "2026-11-27T01:51:27.178Z",
       "profile": {
-        "purpose": "ブラウザー上の3Dプリント準備環境と、OrcaSlicerのWebAssembly移植・互換性を調査する個人用ワークベンチ。READMEでは、現状のUIはファイル一覧などの表示シェルで、スライス機能やエンジン接続は未実装と説明されています。",
-        "architecture": "ブラウザーUI（app.js）と、3MF解析・互換性診断・エンジン適応を行うスクリプト群、検証用GitHub Actionsで構成。READMEによればOrcaSlicer v2.5.0のheadless WASM候補は検証されていますが、UIからの呼び出しや本番ブラウザーでの稼働は確認されていません。",
+        "purpose": "ブラウザー上の3Dプリント準備環境と、OrcaSlicerのWebAssembly候補を検証する個人用プロジェクト。READMEによれば、現行UIは表示用シェルで、WASMエンジンによるスライスやプロファイル読込には未接続。",
+        "architecture": "Three.jsベースのブラウザーUIと、3MF構造・配置・編集所有権などを調べるPython／JavaScript診断スクリプト群を分離。別途、上流OrcaSlicer v2.5.0のヘッドレスWASMビルド向け適応スクリプトがある。README上の候補ビルド成功は、全機能の互換性やブラウザー公開準備完了を意味しない。",
         "technologies": [
-          "JavaScript ES modules",
-          "Three.js（OrbitControls、TransformControls、STL/OBJ/3MF loadersのimportを確認）",
+          "JavaScript",
+          "Three.js",
           "Python",
-          "OrcaSlicer v2.5.0",
-          "WebAssembly / Emscripten"
+          "WebAssembly",
+          "Emscripten",
+          "OrcaSlicer v2.5.0（README記載の候補エンジン）"
         ],
         "algorithms": [
-          "3MFのビルド項目・コンポーネント階層をたどる配置監査と、変換行列によるワールド座標境界の算出",
-          "3MFオブジェクトの実参照回数に基づく、インスタンス単位編集向けcopy-on-write判定",
-          "入力サイズ・要素数・階層深度などに上限を設けた3MF監査"
+          "3MFの複合オブジェクト階層をたどる配置変換の合成（監査コード）",
+          "インスタンス単位編集に必要なコピーオンライト判定（オブジェクト訪問回数に基づく）",
+          "3MF単位を保持したままmm換算の診断境界を計算"
         ],
         "hardware": [],
         "interfaces": [
-          "ブラウザーUIでのSTL・3MF・OBJファイル選択（READMEでは現状、一覧表示まで）",
-          "3MF ZIP/XMLを入力とする監査・診断スクリプト",
-          "GitHub Actionsによるビルド・互換性・ブラウザー検証"
+          "ブラウザーUIでのSTL・3MF・OBJ入力（READMEでは現状、選択ファイルの一覧表示まで）",
+          "3MF ZIP/XMLを対象とする読み取り専用監査スクリプト",
+          "監査レポートのJSON出力（スクリプト実装）",
+          "GitHub Actionsによるビルド・互換性検証（提示されたワークフロー一覧）"
         ],
         "reusable_components": [
           {
-            "name": "3MFモデル監査関数群",
-            "purpose": "単位、ID、変換値、頂点・三角形などを検証し、制限付きでモデルを読み取る。変換値は生の3MF形式で扱い、完全なプロジェクト互換性は保証しない。",
+            "name": "3MF単位・変換・境界の検証関数",
+            "purpose": "parse_model_unitが既定単位と単位換算係数を検証し、parse_transformが12要素の有限な変換値を検証。diagnostic_bounds_mmは元座標を変更せず診断用境界をmm換算する。",
             "evidence": [
               "scripts/audit_3mf_scene.py"
             ]
           },
           {
-            "name": "ネイティブ3MF配置監査",
-            "purpose": "build/component変換を合成し、メッシュ配置とmm単位の境界情報を算出する。複数モデル部品の単位が異なる場合は処理を拒否する。",
+            "name": "3MFシーン監査",
+            "purpose": "auditがZIP構造、モデルXML、オブジェクト、メッシュ、ビルド項目を読み取り、要素数や値の上限を設けて検査する。",
             "evidence": [
-              "scripts/audit_native_3mf_instance_placement.py"
+              "scripts/audit_3mf_scene.py"
             ]
           },
           {
-            "name": "3MF編集所有権プリフライト",
-            "purpose": "ビルド項目からオブジェクトの訪問回数を数え、共有リソースを一つのインスタンスだけ編集する場合のcopy-on-write必要性を報告する。実際の編集は行わない。",
+            "name": "3MF編集所有権の事前監査",
+            "purpose": "audit_edit_ownershipがビルド項目ごとのオブジェクト訪問数を数え、共有・反復利用を検出する。単一インスタンスの編集で他の配置に影響する可能性を評価できるが、ファイルの編集やメタデータ所有権の保証は行わない。",
             "evidence": [
               "scripts/audit_native_3mf_edit_ownership.py"
             ]
           },
           {
-            "name": "OrcaWasm v2.5.0適応スクリプト",
-            "purpose": "上流パッチャーをv2.5.0のソース構成に合わせる。期待する変更箇所がない場合に停止するガードや、WASM対象外機能の除外を含む。",
+            "name": "ネイティブ3MF配置監査",
+            "purpose": "inspect_placementsがオブジェクト階層をたどり、コンポーネント変換を合成してメッシュ配置とmm単位の境界を算出する。混在単位は未対応として拒否する。",
             "evidence": [
-              "scripts/adapt-orcawasm-v2.5.0.py"
+              "scripts/audit_native_3mf_instance_placement.py"
+            ]
+          },
+          {
+            "name": "ビューアー用配置・履歴・カメラ補助",
+            "purpose": "app.jsから空間配置、変換履歴、カメラ適合関連の関数を利用している。各モジュールの実装詳細や他プロジェクトへの適用条件は提示情報だけでは確認できない。",
+            "evidence": [
+              "app.js",
+              "scripts/prepare-camera-fit.mjs",
+              "scripts/prepare-find-space.mjs",
+              "scripts/prepare-viewer-transform-history.mjs"
             ]
           }
         ],
         "constraints": [
-          "READMEによればブラウザーUIはWASMエンジン、プロファイル、スライサーに未接続で、完全なデスクトップ機能互換性も確認されていません。",
-          "GitHub Pagesで必要なSharedArrayBuffer用クロスオリジン分離の実運用は未検証です。",
-          "3MF監査はCore形式の限定的な範囲であり、ベンダー固有メタデータや完全なセマンティック往復を保証しません。",
-          "一部スクリプトがimportする補助モジュールの実装は、提示されたファイル一覧・抜粋から確認できません。"
+          "提示されたREADMEでは、モデル形状の描画、プロファイル読込、WASMエンジン呼出し、スライスは未実装。",
+          "3MF監査は限定されたCoreモデル構造を対象とし、完全なプロジェクト意味論や不透明なスライサーメタデータの互換性を保証しない。",
+          "WASM候補の検証結果はテストされた経路に限られ、デスクトップ機能との完全な同等性やブラウザー配備可能性は未確認。",
+          "マルチスレッド候補にはSharedArrayBufferとクロスオリジン分離が必要だが、READMEではPages上での実運用検証が未完了。",
+          "抜粋とファイル一覧に基づく分析であり、未提示ファイルの実装詳細は評価していない。"
         ],
-        "maturity": "実験",
+        "maturity": "試作",
         "confidence": "medium",
         "evidence": [
           "README.md",
           "app.js",
           "scripts/audit_3mf_scene.py",
-          "scripts/audit_native_3mf_instance_placement.py",
           "scripts/audit_native_3mf_edit_ownership.py",
+          "scripts/audit_native_3mf_instance_placement.py",
           "scripts/adapt-orcawasm-v2.5.0.py",
-          ".github/workflows/build-wasm-candidate.yml",
-          ".github/workflows/browser-e2e.yml"
+          "docs/V250_PARITY_LEDGER.md",
+          ".github/workflows/verify-engine-browser.yml"
         ]
       }
     },
